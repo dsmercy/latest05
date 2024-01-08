@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FormLabel } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
-import FormWizard from "react-form-wizard-component";
+// import FormWizard from "react-form-wizard-component";
 import "react-form-wizard-component/dist/style.css";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
@@ -20,13 +20,13 @@ import Select from "react-select";
 import makeAnimated from "react-select/animated";
 import { JobSeekerPrefrence } from "./JobSeekerPrefrence";
 import { JobseekerExperience } from "./JobseekerExperience";
+import FormWizard from "../../components/wizard/FormWizard";
 
 const JobSeekerForm = () => {
   const animatedComponents = makeAnimated();
   const [tabInfo, setTabInfo] = useState({ prevIndex: 0, nextIndex: 1 });
   const [validated, setValidated] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState([]);
-  const [data, setData] = useState("");
   const [degree, setDegree] = useState([]);
   const [study, setStudy] = useState([]);
   const [university, setUniversity] = useState([]);
@@ -36,23 +36,25 @@ const JobSeekerForm = () => {
   const [fieldOfStudy, setFieldOfStudy] = useState("");
   const [universityName, setUniversityName] = useState("");
   const [yearOfCompletion, setYearOfCompletion] = useState("");
+  const [stepIndex, setStepIndex] = useState(0);
   const jobSeekerData = useAccountStore((state) => state.jobSeekerData);
+  const getUser = useAccountStore((state) => state.getUser);
+  const educationData = useAccountStore((state) => state.educationData);
+  const saveEducation = useAccountStore((state) => state.saveEducation);
+  const clearEducation = useAccountStore((state) => state.clearEducation);
   const [eduData, setEduData] = useState([]);
-  const [location, setLocation] = useState("");
-  const [middleName, setMiddleName] = useState("");
-  const [fetch, setFetch]=useState(true);
   const [searchParams] = useSearchParams();
-  const email = searchParams.get("email");
 
   const defaultValues = {
     firstName: jobSeekerData.data.firstName,
-    middleName: middleName,
+    middleName: jobSeekerData.data.middleName,
     lastName: jobSeekerData.data.lastName,
     email: jobSeekerData.data.email,
     phoneNumber: jobSeekerData.data.phoneNumber,
-    currentLocation: location,
+    currentLocation: jobSeekerData.data.currentLocation,
   };
-  const {register,formState: { errors },handleSubmit,} = useForm({ defaultValues, mode: "all" });
+
+  const {register, reset, getValues, formState: { errors }, trigger ,handleSubmit,} = useForm({ defaultValues, mode: "onSubmit" });
 
   const options = skills.map((item) => [
     {
@@ -64,8 +66,70 @@ const JobSeekerForm = () => {
   const handleSkills = (selected) => {
     setSelectedOptions(selected);
   };
-  // console.log(skills,"skills")
-  //   console.log(options, 'options')
+
+  const handleNextButton = () => {
+    if (stepIndex === 0) {
+      // console.log(`handleNextButton called with stepIndex ${stepIndex}`);
+      const formValues = getValues();
+      // console.log('Form Values:', formValues);
+      // Manually trigger validation for specific fields
+        if (formValues.firstName == '' || formValues.lastName == ''|| formValues.phoneNumber == ''|| formValues.currentLocation == ''|| formValues.email == '') {
+          trigger(['firstName', 'lastName','phoneNumber','currentLocation','email']);
+          return false;
+        } else {
+
+          const formData = {
+            firstName: formValues.firstName,
+            middleName: formValues.middleName,
+            lastName: formValues.lastName,
+            email: formValues.email,
+            phoneNumber: formValues.phoneNumber,
+            currentLocation: formValues.currentLocation,
+          };
+
+          Services.Profile.updateJobSeeker(formData)
+            .then((response) => {
+              getUser();
+              setStepIndex(prevStepIndex => prevStepIndex + 1);
+              clearEducation();
+              return true;
+            })
+            .catch((errors) => {
+              console.log(errors);
+            });          
+          return true;
+        }
+    }
+    if (stepIndex === 1) {
+      console.log(`handleNextButton called with stepIndex ${stepIndex}`);
+      console.log(`educationData.length ${educationData.lenght}`);
+
+      // Manually trigger validation for specific fields
+      if (educationData.length === 0) {
+        trigger(['degreeName', 'fieldOfStudy', 'universityName', 'yearOfCompletion']);
+        toast.success("Please Add Education to List", {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+        return false;
+      } else {
+        Services.Profile.setJobSeekerDetails(educationData)
+          .then((response) => {
+            // getUser();
+            setStepIndex(prevStepIndex => prevStepIndex + 1);
+            return true;
+          })
+          .catch((errors) => {
+            console.log(errors);
+          });
+        return true;
+      }
+    }
+  };
+
+  const handlePrevButton = () => {
+    if (stepIndex === 1) { trigger(['firstName', 'lastName','phoneNumber','currentLocation','email']); }
+    if (stepIndex === 2) { trigger(['degreeName', 'fieldOfStudy','universityName','yearOfCompletion']); }
+  }
 
   const changeKeyValue = () => {
     let newArray = [];
@@ -152,61 +216,73 @@ const JobSeekerForm = () => {
     setValidated(true);
   };
 // const value = email;
-  const tabChanged = ({ prevIndex, nextIndex }) => {
-if(prevIndex===1 && nextIndex===2 && fetch ){
-  console.log("vghfhfhdc")
- Services.Profile.getUpdatedUser().then((response)=>{
-    console.log(response);
-  }).catch((errors)=>{
-    console.log(errors);
-  })
-  setFetch(false);
-  return
-}
+//   const tabChanged = ({ prevIndex, nextIndex }) => {
+// if(prevIndex===1 && nextIndex===2 && fetch ){
+//   console.log("vghfhfhdc")
+//  Services.Profile.getUpdatedUser().then((response)=>{
+//     console.log(response);
+//   }).catch((errors)=>{
+//     console.log(errors);
+//   })
+//   setFetch(false);
+//   return
+// }
 
-     console.log("prevIndex", prevIndex);
-    console.log("nextIndex", nextIndex);
-  };
- 
+//      console.log("prevIndex", prevIndex);
+//     console.log("nextIndex", nextIndex);
+//   }; 
 
-  const body = [
-    {
-      degreeName: degreeName.id,
-      fieldOfStudy: fieldOfStudy.id,
-      clgName: universityName.id,
-      yearofCompletion: yearOfCompletion,
-    },
-  ];
   const handleEductaion = () => {
-    Services.Profile.setJobSeekerDetails(body)
-      .then((response) => {
-        // console.log(response);
-        toast.success(response.message, {
-          position: toast.POSITION.TOP_RIGHT,
-        });
 
-        Services.Profile.getJobSeekerDetails()
-          .then((resData) => {
-            // setEduData(resData?.data);
-            setEduData([...eduData, ...resData?.data]);
-          })
-          .catch((errors) => {
-            console.log(errors);
-          });
-      })
-      .catch((errors) => console.log(errors));
+    const formValues = getValues();
+    console.log('formValues',formValues);
+    const eduData = [
+      {
+        degreeName: formValues.degreeName,
+        fieldOfStudy: formValues.fieldOfStudy,
+        universityName: formValues.universityName,
+        yearOfCompletion: formValues.yearOfCompletion,
+      },
+    ];
+
+    saveEducation(eduData);
+
+    reset({
+      degreeName: "",
+      fieldOfStudy: "",
+      universityName: "",
+      yearOfCompletion: "",
+    })
+    
+    // Services.Profile.setJobSeekerDetails(body)
+    //   .then((response) => {
+    //     // console.log(response);
+    //     toast.success(response.message, {
+    //       position: toast.POSITION.TOP_RIGHT,
+    //     });
+
+    //     Services.Profile.getJobSeekerDetails()
+    //       .then((resData) => {
+    //         // setEduData(resData?.data);
+    //         setEduData([...eduData, ...resData?.data]);
+    //       })
+    //       .catch((errors) => {
+    //         console.log(errors);
+    //       });
+    //   })
+    //   .catch((errors) => console.log(errors));
   };
 
-  const handleContinue = () => {
+  // const handleContinue = () => {
 
-    Services.Profile.updateJobSeeker(defaultValues)
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((errors) => {
-        console.log(errors);
-      });
-  };
+  //   Services.Profile.updateJobSeeker(defaultValues)
+  //     .then((response) => {
+  //       console.log(response);
+  //     })
+  //     .catch((errors) => {
+  //       console.log(errors);
+  //     });
+  // };
 
   return (
     <>
@@ -252,28 +328,9 @@ if(prevIndex===1 && nextIndex===2 && fetch ){
                     shape="circle"
                     color="#1DA425"
                     onComplete={handleComplete}
-                    onTabChange={tabChanged}
-                    nextButtonTemplate={(handleNext) => (
-                      <div
-                        className="wizard-footer-right"
-                        style={{
-                          backgroundColor: "rgb(29, 164, 37)",
-                          borderColor: "rgb(29, 164, 37)",
-                          borderRadius: "4px",
-                        }}
-                      >
-                        <button
-                          className="wizard-btn"
-                          type="submit"
-                          onClick={() => {
-                            handleContinue();
-                            handleNext();
-                          }}
-                        >
-                          Continue
-                        </button>
-                      </div>
-                    )}
+                    // onTabChange={tabChanged}
+                    handleNextButton = {handleNextButton}
+                    handlePrevButton = {handlePrevButton}
                   >
                     {/* -------------------------First Form---------------- */}
 
@@ -294,7 +351,6 @@ if(prevIndex===1 && nextIndex===2 && fetch ){
                               placeholder="First Name"
                               aria-label="Firstname"
                               aria-describedby="basic-addon1"
-                              value={data.firstName}
                               {...register("firstName", { required: true })}
                               isInvalid={!!errors.firstName}
                             />
@@ -310,8 +366,6 @@ if(prevIndex===1 && nextIndex===2 && fetch ){
                               aria-describedby="basic-addon1"
                               {...register("middleName")}
                               isInvalid={!!errors.middleName}
-                              value={middleName}
-                              onChange={(e) => setMiddleName(e.target.value)}
                             />
                           </InputGroup>
                         </Col>
@@ -326,7 +380,6 @@ if(prevIndex===1 && nextIndex===2 && fetch ){
                               placeholder="Last Name"
                               aria-label="Lastname"
                               aria-describedby="basic-addon1"
-                              value={data.lastName}
                               {...register("lastName", { required: true })}
                               isInvalid={!!errors.lastName}
                             />
@@ -344,7 +397,6 @@ if(prevIndex===1 && nextIndex===2 && fetch ){
                               placeholder="Email"
                               aria-label="Email"
                               aria-describedby="basic-addon1"
-                              value={data.email}
                               {...register("email", {
                                 required: true,
                                 pattern: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/i,
@@ -365,7 +417,6 @@ if(prevIndex===1 && nextIndex===2 && fetch ){
                               placeholder="Phone Number"
                               aria-label="PhoneNumber"
                               aria-describedby="basic-addon1"
-                              value={data.phoneNumber}
                               {...register("phoneNumber", {
                                 required: true,
                                 maxLength: 10,
@@ -391,10 +442,8 @@ if(prevIndex===1 && nextIndex===2 && fetch ){
                               placeholder="Current Location"
                               aria-label="Current Location"
                               aria-describedby="basic-addon1"
-                              value={location}
-                              {...register("location", { required: true })}
-                              isInvalid={!!errors.location}
-                              onChange={(e) => setLocation(e.target.value)}
+                              {...register("currentLocation", { required: true })}
+                              isInvalid={!!errors.currentLocation}
                             />
                           </InputGroup>
                         </Col>
@@ -409,8 +458,8 @@ if(prevIndex===1 && nextIndex===2 && fetch ){
                     >
                       <h5>Education & Skills</h5>
                       <span className="bord"></span>
-                      {eduData.length
-                        ? eduData.map((edu) => <EducationForm eduData={edu} />)
+                      {educationData && educationData.length > 0
+                        ? educationData.map((edu, index) => <EducationForm eduData={edu} key={index} />)
                         : ""}
                       <Row>
                         <Col>
@@ -422,21 +471,12 @@ if(prevIndex===1 && nextIndex===2 && fetch ){
                             className="mb-3"
                             {...register("degreeName", { required: true })}
                             isInvalid={!!errors.degreeName}
-                            onChange={(e) => {
-                              const selectedItem = degree.find(
-                                (item) => item.degreeName === e.target.value
-                              );
-                              setDegreeName({
-                                id: selectedItem.id,
-                                value: selectedItem.degreeName,
-                              });
-                            }}
                           >
                             <option value="">Open this select menu </option>
                             {degree?.map((item) => (
                               <option
                                 id={item.id}
-                                value={item?.degreeName}
+                                value={item.id}
                                 key={item?.id}
                               >
                                 {item?.degreeName}
@@ -460,21 +500,12 @@ if(prevIndex===1 && nextIndex===2 && fetch ){
                             className="mb-3"
                             {...register("fieldOfStudy", { required: true })}
                             isInvalid={!!errors.fieldOfStudy}
-                            onChange={(e) => {
-                              const selectedItem = study.find(
-                                (item) => item.fieldOfStudy === e.target.value
-                              );
-                              setFieldOfStudy({
-                                id: selectedItem.id,
-                                value: selectedItem.fieldOfStudy,
-                              });
-                            }}
                           >
                             <option value="">Open this select menu </option>
                             {study.map((item) => (
                               <option
                                 id={item.id}
-                                value={item.fieldOfStudy}
+                                value={item.id}
                                 key={item.id}
                               >
                                 {item.fieldOfStudy}
@@ -498,21 +529,12 @@ if(prevIndex===1 && nextIndex===2 && fetch ){
                             className="mb-3"
                             {...register("universityName", { required: true })}
                             isInvalid={!!errors.universityName}
-                            onChange={(e) => {
-                              const selectedItem = university?.find(
-                                (item) => item.university === e.target.value
-                              );
-                              setUniversityName({
-                                id: selectedItem.id,
-                                value: selectedItem.university,
-                              });
-                            }}
                           >
                             <option value="">Open this select menu </option>
                             {university?.map((item) => (
                               <option
                                 id={item.id}
-                                value={item.university}
+                                value={item.id}
                                 key={item.id}
                               >
                                 {item.university}
@@ -538,15 +560,12 @@ if(prevIndex===1 && nextIndex===2 && fetch ){
                               required: true,
                             })}
                             isInvalid={!!errors.yearOfCompletion}
-                            onChange={(e) =>
-                              setYearOfCompletion(e.target.value)
-                            }
                           >
                             <option value="">Open this select menu </option>
                             {year.map((item, index) => (
                               <option
                                 value={item.yearOfCompletion}
-                                key={item.index}
+                                key={index}
                               >
                                 {item.yearOfCompletion}
                               </option>
@@ -591,7 +610,7 @@ if(prevIndex===1 && nextIndex===2 && fetch ){
                     <JobseekerExperience tabInfo={tabInfo}/>
 
                     {/* -----------------------Forth Form--------------- */}
-                    <JobSeekerPrefrence tabInfo={tabInfo} />
+                    {/* <JobSeekerPrefrence tabInfo={tabInfo} /> */}
                   </FormWizard>
                 </Form>
               </div>

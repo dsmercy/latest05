@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
-import FormWizard from "react-form-wizard-component";
+// import FormWizard from "react-form-wizard-component";
 import { FormLabel } from 'react-bootstrap';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Form from 'react-bootstrap/Form';
 import { useForm } from "react-hook-form";
 import Services from '../../services/Services';
+import FormWizard from '../../components/wizard/FormWizard';
 
 export const JobSeekerPrefrence = ({ tabInfo }) => {
  // const {prevIndex,nextIndex} = props?.onTabChange?.onTabChange;
@@ -37,11 +38,6 @@ const body ={
 
   return (
     <>
-      <Form
-        noValidate
-        validated={validated}
-        onSubmit={handleSubmit(handleFinish)}
-      >
         <FormWizard.TabContent title="Job Preference" icon="fa fa-check">
           <h5>Job Preference</h5>
           <span className="bord"></span>
@@ -175,7 +171,6 @@ const body ={
             />
           </InputGroup>
         </FormWizard.TabContent>
-      </Form>
     </>
   );
 }

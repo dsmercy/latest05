@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import FormWizard from "react-form-wizard-component";
+// import FormWizard from "react-form-wizard-component";
 import { FormLabel } from "react-bootstrap";
 import InputGroup from "react-bootstrap/InputGroup";
 import Form from "react-bootstrap/Form";
@@ -9,6 +9,7 @@ import { useForm } from "react-hook-form";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
 import Services from "../../services/Services";
 import { AddPosition } from "./AddPosition";
+import FormWizard from "../../components/wizard/FormWizard";
 
 export const JobseekerExperience = ({ tabInfo }) => {
   const [companyName, setCompanyName] = useState("");
@@ -66,11 +67,6 @@ export const JobseekerExperience = ({ tabInfo }) => {
   };
   return (
     <>
-      <Form
-        noValidate
-        validated={validated}
-        onSubmit={handleSubmit(handleAddPosition)}
-      >
         <FormWizard.TabContent title="Experience" icon="fa fa-check">
           <h5>Experience</h5>
           <span className="bord"></span>
@@ -312,7 +308,6 @@ export const JobseekerExperience = ({ tabInfo }) => {
             </div>
           </div>
         </FormWizard.TabContent>
-      </Form>
     </>
   );
 };
