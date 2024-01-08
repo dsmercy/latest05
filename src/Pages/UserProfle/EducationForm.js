@@ -7,8 +7,8 @@ export default function EducationForm(props) {
     <>
       {eduData && <div className='edit-educ-sec'>
         {" "}
-        <h4>{eduData.degreeName},{eduData.fieldOfStudy}<span><i className='fa fa-close'></i></span></h4>
-        <p>{eduData.universityName} | {eduData.yearOfCompletion} <span>Edit</span></p>
+        <h4>{eduData.degreeName[1]},{eduData.fieldOfStudy[1]}<span><i className='fa fa-close'></i></span></h4>
+        <p>{eduData.universityName[1]} | {eduData.yearOfCompletion[1]} <span>Edit</span></p>
 
       </div>
       }

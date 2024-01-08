@@ -112,7 +112,18 @@ const JobSeekerForm = () => {
         });
         return false;
       } else {
-        Services.Profile.setJobSeekerDetails(educationData)
+
+        const formData = educationData.map(obj => {
+          const newObj = {};
+          for (const key in obj) {
+            if (obj.hasOwnProperty(key) && Array.isArray(obj[key]) && obj[key].length > 0) {
+              newObj[key] = obj[key][0];
+            }
+          }
+          return newObj;
+        });
+
+        Services.Profile.setJobSeekerDetails(formData)
           .then((response) => {
             // getUser();
             setStepIndex(prevStepIndex => prevStepIndex + 1);
@@ -238,10 +249,10 @@ const JobSeekerForm = () => {
     console.log('formValues',formValues);
     const eduData = [
       {
-        degreeName: formValues.degreeName,
-        fieldOfStudy: formValues.fieldOfStudy,
-        universityName: formValues.universityName,
-        yearOfCompletion: formValues.yearOfCompletion,
+        degreeName: [formValues.degreeName, degree.find(obj => obj.id == formValues.degreeName).degreeName],
+        fieldOfStudy: [formValues.fieldOfStudy, study.find(obj => obj.id == formValues.fieldOfStudy).fieldOfStudy],
+        universityName: [formValues.universityName, university.find(obj => obj.id == formValues.universityName).university],
+        yearOfCompletion: [formValues.yearOfCompletion, formValues.yearOfCompletion],
       },
     ];
 
