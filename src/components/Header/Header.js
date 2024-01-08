@@ -1,8 +1,9 @@
-import React from 'react';
-import logo from '../../assets/images/Logo.png';
-import { NavLink } from 'react-router-dom';
-import useAccountStore from '../../store/useAccountStore';
-import NavDropdown from 'react-bootstrap/NavDropdown';
+import React, { useEffect } from "react";
+import logo from "../../assets/images/Logo.png";
+import { NavLink } from "react-router-dom";
+// import { updateUser } from "../../services/axiosAPI/Registration";
+import useAccountStore from "../../store/useAccountStore";
+import NavDropdown from "react-bootstrap/NavDropdown";
 import { useNavigate } from "react-router-dom";
 
 const Header = () => {
@@ -11,13 +12,13 @@ const Header = () => {
   const signOut = useAccountStore((state) => state.signOut);
   // console.log('signedInUserData',signedInUserData);
 
-  const handleChange=()=>{
-    navigate('/job-seeker-profile');
-  }
+  const handleChange = () => {
+    navigate("/job-seeker-profile");
+  };
 
-const handleChangePassword=()=>{
-  navigate('/changepassword');
-}
+  const handleChangePassword = () => {
+    navigate("/changepassword");
+  };
 
   return (
     <>
@@ -59,7 +60,6 @@ const handleChangePassword=()=>{
                 >
                   Employers
                 </NavLink>
-                
               </li>
               <li className="nav-item">
                 <NavLink className="nav-link" to="#">
@@ -77,17 +77,31 @@ const handleChangePassword=()=>{
                 </NavLink>
               </li>
             </ul>
-            <div className=''>
-            {signedInUserData ?
-            <>
-               
-                <NavDropdown title={signedInUserData.data?.users?.firstName} style={{backgroundColor:"transparent !important"}}>
-              <NavDropdown.Item onClick={handleChange}>Profile</NavDropdown.Item> <NavDropdown.Divider />
-              <NavDropdown.Item onClick={handleChangePassword}>Change Password</NavDropdown.Item> <NavDropdown.Divider />
-              <NavDropdown.Item  onClick={signOut}>Logout</NavDropdown.Item>
-              <NavDropdown.Item  onClick={signOut} style={{display:"none"}}></NavDropdown.Item>
-                              </NavDropdown>
-                </> :
+            <div className="">
+              {signedInUserData ? (
+                <>
+                  <NavDropdown
+                    title={signedInUserData.data?.users?.firstName}
+                    style={{ backgroundColor: "transparent !important" }}
+                  >
+                    <NavDropdown.Item onClick={handleChange}>
+                      Profile
+                    </NavDropdown.Item>{" "}
+                    <NavDropdown.Divider />
+                    <NavDropdown.Item onClick={handleChangePassword}>
+                      Change Password
+                    </NavDropdown.Item>{" "}
+                    <NavDropdown.Divider />
+                    <NavDropdown.Item onClick={signOut}>
+                      Logout
+                    </NavDropdown.Item>
+                    <NavDropdown.Item
+                      onClick={signOut}
+                      style={{ display: "none" }}
+                    ></NavDropdown.Item>
+                  </NavDropdown>
+                </>
+              ) : (
                 <>
                   <NavLink className="nav-link" to="/login">
                     Login
@@ -95,7 +109,8 @@ const handleChangePassword=()=>{
                   <NavLink className="nav-link reg" to="/register">
                     Register
                   </NavLink>
-                </>}
+                </>
+              )}
 
               {/* <NavLink className="nav-link reg" to="/register">
                 Register

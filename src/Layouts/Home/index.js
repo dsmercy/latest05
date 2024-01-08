@@ -13,21 +13,21 @@ import "../../assets/css/style.css";
 import "../../assets/css/responsive.css";
 import "../../assets/css/bootstrap.min.css";
 
-const HomePageBody =()=>{
-    return(
-        <>
-        <Header/>
-        <HomePageSearch/>
-        <SearchMap/>
-        <DemandingCategories/>
-        <EmployerCraousel/>
-        <CollegeCraousel/>
-        <ReviewsCraousel/>
-        <BlogsCraousel/>
-        <SearchOpportunity/>
-        <Footer/>
-        </>
-    )
-}
+const HomePageBody = () => {
+  return (
+    <>
+      <Header />
+      <HomePageSearch />
+      <SearchMap />
+      <DemandingCategories />
+      <EmployerCraousel />
+      <CollegeCraousel />
+      <ReviewsCraousel />
+      <BlogsCraousel />
+      <SearchOpportunity />
+      <Footer />
+    </>
+  );
+};
 
 export default HomePageBody;

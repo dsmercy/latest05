@@ -11,7 +11,7 @@ const useAccountStore = create(persist(devtools((set) => ({
             const userDetail = await Services.Account.userlogin(data);
             if (userDetail) {
                 set((state) => ({
-                    signedInUserData: userDetail,
+                    signedInUserData: userDetail, 
                 }));
             }
             return userDetail;
@@ -19,16 +19,17 @@ const useAccountStore = create(persist(devtools((set) => ({
             return Promise.reject({ error: error.data });
         }
     },
-    getJobSeeker: async () => {
+    getJobSeeker: async() => {
         try {
             const userDetail = await Services.Account.getJobSeeker();
             set(() => ({
-                jobSeekerData: userDetail
+                jobSeekerData: userDetail 
             }));
         } catch (error) {
             return Promise.reject({ error: error.data });
         }
     },
+
     getUser: async () => {
         try {
             const userDetail = await Services.Profile.getUpdatedUser();
@@ -49,12 +50,13 @@ const useAccountStore = create(persist(devtools((set) => ({
     clearEducation: () => {
         set(() => ({ educationData: [] }));
     },
+    
     signOut: () => {
         set(() => ({ signedInUserData: null }));
-        set(() => ({ jobSeekerData: null }));
-        set(() => ({ educationData: [] }));
         // localStorage.removeItem('account');
         // localStorage.removeItem('token');
+        set(() => ({ jobSeekerData: null }));
+        set(() => ({ educationData: [] }));
         // navigate('/login');
     },
 })), { name: 'account' }));

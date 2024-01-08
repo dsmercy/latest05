@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FormLabel } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
-// import FormWizard from "react-form-wizard-component";
+// import FormWizard from "../"
 import "react-form-wizard-component/dist/style.css";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
@@ -11,7 +11,6 @@ import benfit from "../../assets/images/Group 41634.png";
 import Header from "../../components/Header/Header";
 import { useForm } from "react-hook-form";
 import Services from "../../services/Services";
-import {useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import useAccountStore from "../../store/useAccountStore";
@@ -20,31 +19,26 @@ import Select from "react-select";
 import makeAnimated from "react-select/animated";
 import { JobSeekerPrefrence } from "./JobSeekerPrefrence";
 import { JobseekerExperience } from "./JobseekerExperience";
-import FormWizard from "../../components/wizard/FormWizard";
+import FormWizard from "../../components/Wizard/FormWizard";
 
 const JobSeekerForm = () => {
   const animatedComponents = makeAnimated();
-  const [tabInfo, setTabInfo] = useState({ prevIndex: 0, nextIndex: 1 });
+  const [stepIndex, setStepIndex] = useState(0);
+  const getUser = useAccountStore((state) => state.getUser);
+  const educationData = useAccountStore((state) => state.educationData);
+  const saveEducation = useAccountStore((state) => state.saveEducation);
+  const clearEducation = useAccountStore((state) => state.clearEducation);
   const [validated, setValidated] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState([]);
+  const [data, setData] = useState("");
   const [degree, setDegree] = useState([]);
   const [study, setStudy] = useState([]);
   const [university, setUniversity] = useState([]);
   const [year, setYear] = useState([]);
   const [skills, setSkills] = useState([]);
-  const [degreeName, setDegreeName] = useState({});
-  const [fieldOfStudy, setFieldOfStudy] = useState("");
-  const [universityName, setUniversityName] = useState("");
-  const [yearOfCompletion, setYearOfCompletion] = useState("");
-  const [stepIndex, setStepIndex] = useState(0);
   const jobSeekerData = useAccountStore((state) => state.jobSeekerData);
-  const getUser = useAccountStore((state) => state.getUser);
-  const educationData = useAccountStore((state) => state.educationData);
-  const saveEducation = useAccountStore((state) => state.saveEducation);
-  const clearEducation = useAccountStore((state) => state.clearEducation);
-  const [eduData, setEduData] = useState([]);
-  const [searchParams] = useSearchParams();
-
+  //const [tabInfo, setTabInfo] = useState({ prevIndex: 0, nextIndex: 1 });
+ 
   const defaultValues = {
     firstName: jobSeekerData.data.firstName,
     middleName: jobSeekerData.data.middleName,
@@ -53,25 +47,20 @@ const JobSeekerForm = () => {
     phoneNumber: jobSeekerData.data.phoneNumber,
     currentLocation: jobSeekerData.data.currentLocation,
   };
-
-  const {register, resetField, getValues, formState: { errors }, trigger ,handleSubmit,} = useForm({ defaultValues, mode: "onSubmit" });
-
+  const {register, resetField, getValues, formState: { errors }, trigger ,handleSubmit,} = useForm({ defaultValues, mode: "onSubmit" }); 
   const options = skills.map((item) => [
     {
       value: item.skillName,
       label: item.skillName,
     },
   ]);
-
+ 
   const handleSkills = (selected) => {
     setSelectedOptions(selected);
   };
-
   const handleNextButton = () => {
     if (stepIndex === 0) {
-      // console.log(`handleNextButton called with stepIndex ${stepIndex}`);
       const formValues = getValues();
-      // console.log('Form Values:', formValues);
       // Manually trigger validation for specific fields
         if (formValues.firstName == '' || formValues.lastName == ''|| formValues.phoneNumber == ''|| formValues.currentLocation == ''|| formValues.email == '') {
           trigger(['firstName', 'lastName','phoneNumber','currentLocation','email']);
@@ -101,30 +90,25 @@ const JobSeekerForm = () => {
         }
     }
     if (stepIndex === 1) {
-      console.log(`handleNextButton called with stepIndex ${stepIndex}`);
-      console.log(`educationData.length ${educationData.lenght}`);
-
-      // Manually trigger validation for specific fields
+       // Manually trigger validation for specific fields
       if (educationData.length === 0) {
-        trigger(['degreeName', 'fieldOfStudy', 'universityName', 'yearOfCompletion']);
-        toast.success("Please Add Education to List", {
+        trigger(['degreeName', 'fieldOfStudy', 'clgName', 'yearOfCompletion']);
+        toast.error("Please Add Education to List", {
           position: toast.POSITION.TOP_RIGHT,
         });
         return false;
       } else {
-
         const formData = educationData.map(obj => {
-          const newObj = {};
-          for (const key in obj) {
-            if (obj.hasOwnProperty(key) && Array.isArray(obj[key]) && obj[key].length > 0) {
-              newObj[key] = obj[key][0];
-            }
+        const newObj = {};
+        for (const key in obj) {
+          if (obj.hasOwnProperty(key) && Array.isArray(obj[key]) && obj[key].length > 0) {
+            newObj[key] = obj[key][0];
           }
-          return newObj;
-        });
-
-        Services.Profile.setJobSeekerDetails(formData)
-          .then((response) => {
+        }
+        return newObj;
+      });
+     
+      Services.Profile.setJobSeekerDetails(formData).then((response) => {
             // getUser();
             setStepIndex(prevStepIndex => prevStepIndex + 1);
             return true;
@@ -132,14 +116,26 @@ const JobSeekerForm = () => {
           .catch((errors) => {
             console.log(errors);
           });
+          const skill =selectedOptions.map((item)=>item.id);
+          console.log(skill);
+          const skills={skillMasterId:skill};
+          console.log(skills)
+          Services.Profile.setJobSeekerSkills(skills).then((res)=>console.log(res)).catch((errors)=>console.log(errors))
         return true;
       }
+    }
+   
+  if(stepIndex===3){
+    console.log("3rd step",selectedOptions)
+    setStepIndex(prevStepIndex => prevStepIndex + 1);
+
+    Services.Profile.setJobSeekerExperience().then((res)=>console.log(res)).catch((errors)=>console.log(errors))
     }
   };
 
   const handlePrevButton = () => {
     if (stepIndex === 1) { trigger(['firstName', 'lastName','phoneNumber','currentLocation','email']); }
-    if (stepIndex === 2) { trigger(['degreeName', 'fieldOfStudy','universityName','yearOfCompletion']); }
+    if (stepIndex === 2) { trigger(['degreeName', 'fieldOfStudy','clgName','yearOfCompletion']); }
     setStepIndex(prevStepIndex => prevStepIndex - 1);
   }
 
@@ -157,7 +153,7 @@ const JobSeekerForm = () => {
       }
       newArray.push(newObejct);
     }
-   
+
     return newArray;
   };
   const newOptions = changeKeyValue();
@@ -223,26 +219,10 @@ const JobSeekerForm = () => {
   const handleComplete = (data) => {
     // console.log("Form completed!", data);
   };
-  
-  const handleFormSubmit = async () => {
+
+   const handleFormSubmit = async () => {
     setValidated(true);
   };
-// const value = email;
-//   const tabChanged = ({ prevIndex, nextIndex }) => {
-// if(prevIndex===1 && nextIndex===2 && fetch ){
-//   console.log("vghfhfhdc")
-//  Services.Profile.getUpdatedUser().then((response)=>{
-//     console.log(response);
-//   }).catch((errors)=>{
-//     console.log(errors);
-//   })
-//   setFetch(false);
-//   return
-// }
-
-//      console.log("prevIndex", prevIndex);
-//     console.log("nextIndex", nextIndex);
-//   }; 
 
   const handleEductaion = () => {
 
@@ -252,49 +232,22 @@ const JobSeekerForm = () => {
       {
         degreeName: [formValues.degreeName, degree.find(obj => obj.id == formValues.degreeName).degreeName],
         fieldOfStudy: [formValues.fieldOfStudy, study.find(obj => obj.id == formValues.fieldOfStudy).fieldOfStudy],
-        universityName: [formValues.universityName, university.find(obj => obj.id == formValues.universityName).university],
+        clgName: [formValues.clgName, university.find(obj => obj.id == formValues.clgName).university],
         yearOfCompletion: [formValues.yearOfCompletion, formValues.yearOfCompletion],
       },
     ];
-
     saveEducation(eduData);
-
-    //reset fields
     resetField("degreeName");
     resetField("fieldOfStudy");
     resetField("universityName");
     resetField("yearOfCompletion");
-
-    
-    // Services.Profile.setJobSeekerDetails(body)
-    //   .then((response) => {
-    //     // console.log(response);
-    //     toast.success(response.message, {
-    //       position: toast.POSITION.TOP_RIGHT,
-    //     });
-
-    //     Services.Profile.getJobSeekerDetails()
-    //       .then((resData) => {
-    //         // setEduData(resData?.data);
-    //         setEduData([...eduData, ...resData?.data]);
-    //       })
-    //       .catch((errors) => {
-    //         console.log(errors);
-    //       });
-    //   })
-    //   .catch((errors) => console.log(errors));
-  };
-
-  // const handleContinue = () => {
-
-  //   Services.Profile.updateJobSeeker(defaultValues)
-  //     .then((response) => {
-  //       console.log(response);
-  //     })
-  //     .catch((errors) => {
-  //       console.log(errors);
-  //     });
-  // };
+    // reset({
+    //   degreeName: "",
+    //   fieldOfStudy: "",
+    //   clgName: "",
+    //   yearOfCompletion: "",
+    // })
+  }
 
   return (
     <>
@@ -340,9 +293,8 @@ const JobSeekerForm = () => {
                     shape="circle"
                     color="#1DA425"
                     onComplete={handleComplete}
-                    // onTabChange={tabChanged}
-                    handleNextButton = {handleNextButton}
-                    handlePrevButton = {handlePrevButton}
+                    handleNextButton={handleNextButton}
+                    handlePrevButton={handlePrevButton}
                   >
                     {/* -------------------------First Form---------------- */}
 
@@ -363,6 +315,7 @@ const JobSeekerForm = () => {
                               placeholder="First Name"
                               aria-label="Firstname"
                               aria-describedby="basic-addon1"
+                              value={data.firstName}
                               {...register("firstName", { required: true })}
                               isInvalid={!!errors.firstName}
                             />
@@ -392,6 +345,7 @@ const JobSeekerForm = () => {
                               placeholder="Last Name"
                               aria-label="Lastname"
                               aria-describedby="basic-addon1"
+                              value={data.lastName}
                               {...register("lastName", { required: true })}
                               isInvalid={!!errors.lastName}
                             />
@@ -409,6 +363,7 @@ const JobSeekerForm = () => {
                               placeholder="Email"
                               aria-label="Email"
                               aria-describedby="basic-addon1"
+                              value={data.email}
                               {...register("email", {
                                 required: true,
                                 pattern: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/i,
@@ -429,6 +384,7 @@ const JobSeekerForm = () => {
                               placeholder="Phone Number"
                               aria-label="PhoneNumber"
                               aria-describedby="basic-addon1"
+                              value={data.phoneNumber}
                               {...register("phoneNumber", {
                                 required: true,
                                 maxLength: 10,
@@ -454,7 +410,9 @@ const JobSeekerForm = () => {
                               placeholder="Current Location"
                               aria-label="Current Location"
                               aria-describedby="basic-addon1"
-                              {...register("currentLocation", { required: true })}
+                              {...register("currentLocation", {
+                                required: true,
+                              })}
                               isInvalid={!!errors.currentLocation}
                             />
                           </InputGroup>
@@ -471,7 +429,9 @@ const JobSeekerForm = () => {
                       <h5>Education & Skills</h5>
                       <span className="bord"></span>
                       {educationData && educationData.length > 0
-                        ? educationData.map((edu, index) => <EducationForm eduData={edu} key={index} />)
+                        ? educationData.map((edu, index) => (
+                            <EducationForm eduData={edu} key={index} />
+                          ))
                         : ""}
                       <Row>
                         <Col>
@@ -539,8 +499,8 @@ const JobSeekerForm = () => {
                           <Form.Select
                             aria-label="Default select example"
                             className="mb-3"
-                            {...register("universityName", { required: true })}
-                            isInvalid={!!errors.universityName}
+                            {...register("clgName", { required: true })}
+                            isInvalid={!!errors.clgName}
                           >
                             <option value="">Open this select menu </option>
                             {university?.map((item) => (
@@ -575,10 +535,7 @@ const JobSeekerForm = () => {
                           >
                             <option value="">Open this select menu </option>
                             {year.map((item, index) => (
-                              <option
-                                value={item.yearOfCompletion}
-                                key={index}
-                              >
+                              <option value={item.yearOfCompletion} key={index}>
                                 {item.yearOfCompletion}
                               </option>
                             ))}
@@ -619,10 +576,15 @@ const JobSeekerForm = () => {
 
                     {/* ---------------Third Form -----------------*/}
 
-                    <JobseekerExperience tabInfo={tabInfo}/>
+                    <JobseekerExperience
+                      changeKeyValue={changeKeyValue}
+                      options={options}
+                      selectedOptions={selectedOptions}
+                      handleSkills={handleSkills}
+                    />
 
                     {/* -----------------------Forth Form--------------- */}
-                    {/* <JobSeekerPrefrence tabInfo={tabInfo} /> */}
+                    <JobSeekerPrefrence />
                   </FormWizard>
                 </Form>
               </div>

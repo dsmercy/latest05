@@ -17,11 +17,11 @@ const ViewProfileDetail = () => {
     <Row>
       <Col>
       <h4>Basic Details</h4>
-    <span class="bord"></span>
+    <span className="bord"></span>
       </Col>
       <Col>
       <div className='user-profile-update'>
-      <p className=''><i class="fa fa-edit"></i> Update</p>
+      <p className=''><i className="fa fa-edit"></i> Update</p>
       </div>
         
         </Col>
@@ -68,11 +68,11 @@ const ViewProfileDetail = () => {
     <Row>
       <Col>
       <h4>Education & Skills</h4>
-    <span class="bord"></span>
+    <span className="bord"></span>
       </Col>
       <Col>
       <div className='user-profile-update'>
-      <p className=''><i class="fa fa-edit"></i> Update</p>
+      <p className=''><i className="fa fa-edit"></i> Update</p>
       </div>
         
         </Col>
@@ -120,11 +120,11 @@ const ViewProfileDetail = () => {
     <Row>
       <Col>
       <h4>Experience</h4>
-    <span class="bord"></span>
+    <span className="bord"></span>
       </Col>
       <Col>
       <div className='user-profile-update'>
-      <p className=''><i class="fa fa-edit"></i> Update</p>
+      <p className=''><i className="fa fa-edit"></i> Update</p>
       </div>
         
         </Col>
@@ -196,11 +196,11 @@ const ViewProfileDetail = () => {
     <Row>
       <Col>
       <h4>Job Preference</h4>
-    <span class="bord"></span>
+    <span className="bord"></span>
       </Col>
       <Col>
       <div className='user-profile-update'>
-      <p className=''><i class="fa fa-edit"></i> Update</p>
+      <p className=''><i className="fa fa-edit"></i> Update</p>
       </div>
         
         </Col>

@@ -1,5 +1,6 @@
 import axiosPrivate from "../axiosintercepter/Intercepter";
 import { showAPIError } from "../../Utility/apiutils";
+
 export async function updateUser() {
   axiosPrivate
     .post("Account/", {

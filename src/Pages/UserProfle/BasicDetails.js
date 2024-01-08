@@ -11,6 +11,10 @@ import Services from "../../services/Services";
 
 export default function BasicDetails() {
 
+  const [middleName, setMiddleName] = useState("");
+  const [data, setData] = useState("");
+  const [location, setLocation] = useState("");
+  const jobSeekerData = useAccountStore((state) => state.jobSeekerData);
   const defaultValues = {
     firstName: jobSeekerData.data.firstName,
     middleName: middleName,
@@ -19,10 +23,8 @@ export default function BasicDetails() {
     phoneNumber: jobSeekerData.data.phoneNumber,
     currentLocation: location,
   };
-  const jobSeekerData = useAccountStore((state) => state.jobSeekerData);
-  const [middleName, setMiddleName] = useState("");
-  const [data, setData] = useState("");
-  const [location, setLocation] = useState("");
+ 
+  
 
   const {
     register,

@@ -24,7 +24,11 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const {register,formState: { errors },handleSubmit} = useForm({ mode: "all" });
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+  } = useForm({ mode: "all" });
   const [otpField, setOtpField] = useState(false);
   const [selectedRadio, setSelectedRadio] = useState();
   const [checked, setChecked] = useState(true);
@@ -65,7 +69,7 @@ const finalOtp= `${otpValue?.otp1}${otpValue?.otp2}${otpValue?.otp3}${otpValue?.
   const showOtpField = () => {
     setOtpField(true);
     setChecked(!checked);
-  
+
     Services.Account.generateOTP(email)
       .then((response) => {
         toast.success(response.message, {
@@ -102,9 +106,10 @@ const finalOtp= `${otpValue?.otp1}${otpValue?.otp2}${otpValue?.otp3}${otpValue?.
       })
       .catch((errors) => {
         console.log(errors, "login error");
-        toast.error("Please verify your account with verfication email sent to your account.", {
-          position: toast.POSITION.TOP_RIGHT,
-        });
+        toast.error(
+          "There is something wrong.",{
+            position: toast.POSITION.TOP_RIGHT,}
+        );
       });
   };
 
@@ -114,231 +119,236 @@ const finalOtp= `${otpValue?.otp1}${otpValue?.otp2}${otpValue?.otp3}${otpValue?.
   
   return (
     <>
-    {loading ?<Loader loading={loading}/>:
-      <div className="log-bg">
-        <div className="log-cent">
-          <div className="log-card">
-            <h4>Login</h4>
-            <p>Enter your credentials to access your account.</p>
+      {loading ? (
+        <Loader loading={loading} />
+      ) : (
+        <div className="log-bg">
+          <div className="log-cent">
+            <div className="log-card">
+              <h4>Login</h4>
+              <p>Enter your credentials to access your account.</p>
 
-            <Form
-              noValidate
-              validated={validated}
-              onSubmit={handleSubmit(handleSubmitForm)}
-            >
-              <FormLabel>Enter your Email / Phone</FormLabel>
+              <Form
+                noValidate
+                validated={validated}
+                onSubmit={handleSubmit(handleSubmitForm)}
+              >
+                <FormLabel>Enter your Email / Phone</FormLabel>
 
-              <InputGroup className="mb-3">
-                <InputGroup.Text id="basic-addon1">
-                  <i className="fa fa-user"></i>
-                </InputGroup.Text>
+                <InputGroup className="mb-3">
+                  <InputGroup.Text id="basic-addon1">
+                    <i className="fa fa-user"></i>
+                  </InputGroup.Text>
 
-                <Form.Control
-                  type="email"
-                  placeholder="Enter email"
-                  {...register("email", {
-                    required: true,
-                    pattern: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/i,
-                  })}
-                  isInvalid={!!errors.email}
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-                <Form.Control.Feedback type="invalid">
-                  Please enter a valid email address.
-                </Form.Control.Feedback>
-              </InputGroup>
+                  <Form.Control
+                    type="email"
+                    placeholder="Enter email"
+                    {...register("email", {
+                      required: true,
+                      pattern: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/i,
+                    })}
+                    isInvalid={!!errors.email}
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    Please enter a valid email address.
+                  </Form.Control.Feedback>
+                </InputGroup>
 
-              <Form.Group>
-                <FormLabel>Login Using</FormLabel>
-
-                {["radio"].map((type) => (
-                  <div key={`default-${type}`} className="mb-3">
-                    <Form.Check
-                      checked={checked}
-                      readOnly
-                      inline
-                      label="Password"
-                      name="group1"
-                      type={type}
-                      id={`inline-${type}-1`}
-                      onClick={showPasswordField}
-                    />
-
-                    <Form.Check
-                      inline
-                      label="OTP"
-                      name="group1"
-                      value={selectedRadio}
-                      type={type}
-                      id={`inline-${type}-2`}
-                      onClick={showOtpField}
-                    />
-                  </div>
-                ))}
-              </Form.Group>
-
-              {!otpField ? (
                 <Form.Group>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel>Login Using</FormLabel>
 
-                  <InputGroup className="mb-3">
-                    <InputGroup.Text id="basic-addon1">
-                      <i className="fa fa-lock"></i>
-                    </InputGroup.Text>
+                  {["radio"].map((type) => (
+                    <div key={`default-${type}`} className="mb-3">
+                      <Form.Check
+                        checked={checked}
+                        readOnly
+                        inline
+                        label="Password"
+                        name="group1"
+                        type={type}
+                        id={`inline-${type}-1`}
+                        onClick={showPasswordField}
+                      />
 
-                    <Form.Control
-                      type={showPassword ? "text" : "password"}
-                      placeholder="Password"
-                      {...register("password", {
-                        required: true,
-                        minLength: 8,
-                      })}
-                      isInvalid={!!errors.password}
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                    />
-                    <InputGroup.Text>
-                      {showPassword ? (
-                        <i
-                          className="fa fa-eye"
-                          onClick={handleShowPassword}
-                        ></i>
-                      ) : (
-                        <i
-                          className="fa fa-eye-slash"
-                          aria-hidden="true"
-                          onClick={handleShowPassword}
-                        ></i>
-                      )}
-                    </InputGroup.Text>
-                    <Form.Control.Feedback type="invalid">
-                      Please enter a password with at least 8 characters.
-                    </Form.Control.Feedback>
-                  </InputGroup>
+                      <Form.Check
+                        inline
+                        label="OTP"
+                        name="group1"
+                        value={selectedRadio}
+                        type={type}
+                        id={`inline-${type}-2`}
+                        onClick={showOtpField}
+                      />
+                    </div>
+                  ))}
                 </Form.Group>
-              ) : (
-                <Form className="form-otp">
-                  <p>Enter verification code sent by mobile/email</p>
-                  <input
-                    className="otp"
-                    name="otp1"
-                    type="text"
-                    maxLength="1"
-                    value={otpValue.otp1}
-                    onChange={(e) => handleOtpValue(e)}
-                  />
-                  <input
-                    className="otp"
-                    name="otp2"
-                    type="text"
-                    maxLength="1"
-                    value={otpValue.otp2}
-                    onChange={(e) => handleOtpValue(e)}
-                  />
-                  <input
-                    className="otp"
-                    name="otp3"
-                    type="text"
-                    maxLength="1"
-                    value={otpValue.otp3}
-                    onChange={(e) => handleOtpValue(e)}
-                  />
-                  <input
-                    className="otp"
-                    name="otp4"
-                    type="text"
-                    maxLength="1"
-                    value={otpValue.otp4}
-                    onChange={(e) => handleOtpValue(e)}
-                  />
-                  <input
-                    className="otp"
-                    name="otp5"
-                    type="text"
-                    maxLength="1"
-                    value={otpValue.otp5}
-                    onChange={(e) => handleOtpValue(e)}
-                  />
-                  <input
-                    className="otp"
-                    name="otp6"
-                    type="text"
-                    maxLength="1"
-                    value={otpValue.otp6}
-                    onChange={(e) => handleOtpValue(e)}
-                  />
-                </Form>
-              )}
-              <div style={{ display: "flex" }}>
-                <p>{otpField && timer > 0 ? `Time Ramaining ${timer} ` : ""}</p>
-                {
-                  <p
-                    style={{
-                      color: timer > 0 ? "#DFE3E8" : "#FF5630",
-                      cursor: "pointer",
-                      marginRight: "20px",
-                    }}
-                    onClick={resendOTP}
-                  >
-                    {otpField ? "Resend OTP" : ""}
-                  </p>
-                }
-              </div>
-              <Form.Group className="remember">
-                {["checkbox"].map((type) => (
-                  <div key={`default-${type}`} className="mb-3">
-                    <Form.Check
-                      inline
-                      label="Remember me"
-                      name="group3"
-                      type={type}
-                      id={`inline-${type}-1`}
-                    />
-                  </div>
-                ))}
 
+                {!otpField ? (
+                  <Form.Group>
+                    <FormLabel>Password</FormLabel>
+
+                    <InputGroup className="mb-3">
+                      <InputGroup.Text id="basic-addon1">
+                        <i className="fa fa-lock"></i>
+                      </InputGroup.Text>
+
+                      <Form.Control
+                        type={showPassword ? "text" : "password"}
+                        placeholder="Password"
+                        {...register("password", {
+                          required: true,
+                          minLength: 8,
+                        })}
+                        isInvalid={!!errors.password}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                      />
+                      <InputGroup.Text>
+                        {showPassword ? (
+                          <i
+                            className="fa fa-eye"
+                            onClick={handleShowPassword}
+                          ></i>
+                        ) : (
+                          <i
+                            className="fa fa-eye-slash"
+                            aria-hidden="true"
+                            onClick={handleShowPassword}
+                          ></i>
+                        )}
+                      </InputGroup.Text>
+                      <Form.Control.Feedback type="invalid">
+                        Please enter a password with at least 8 characters.
+                      </Form.Control.Feedback>
+                    </InputGroup>
+                  </Form.Group>
+                ) : (
+                  <Form className="form-otp">
+                    <p>Enter verification code sent by mobile/email</p>
+                    <input
+                      className="otp"
+                      name="otp1"
+                      type="text"
+                      maxLength="1"
+                      value={otpValue.otp1}
+                      onChange={(e) => handleOtpValue(e)}
+                    />
+                    <input
+                      className="otp"
+                      name="otp2"
+                      type="text"
+                      maxLength="1"
+                      value={otpValue.otp2}
+                      onChange={(e) => handleOtpValue(e)}
+                    />
+                    <input
+                      className="otp"
+                      name="otp3"
+                      type="text"
+                      maxLength="1"
+                      value={otpValue.otp3}
+                      onChange={(e) => handleOtpValue(e)}
+                    />
+                    <input
+                      className="otp"
+                      name="otp4"
+                      type="text"
+                      maxLength="1"
+                      value={otpValue.otp4}
+                      onChange={(e) => handleOtpValue(e)}
+                    />
+                    <input
+                      className="otp"
+                      name="otp5"
+                      type="text"
+                      maxLength="1"
+                      value={otpValue.otp5}
+                      onChange={(e) => handleOtpValue(e)}
+                    />
+                    <input
+                      className="otp"
+                      name="otp6"
+                      type="text"
+                      maxLength="1"
+                      value={otpValue.otp6}
+                      onChange={(e) => handleOtpValue(e)}
+                    />
+                  </Form>
+                )}
+                <div style={{ display: "flex" }}>
+                  <p>
+                    {otpField && timer > 0 ? `Time Ramaining ${timer} ` : ""}
+                  </p>
+                  {
+                    <p
+                      style={{
+                        color: timer > 0 ? "#DFE3E8" : "#FF5630",
+                        cursor: "pointer",
+                        marginRight: "20px",
+                      }}
+                      onClick={resendOTP}
+                    >
+                      {otpField ? "Resend OTP" : ""}
+                    </p>
+                  }
+                </div>
+                <Form.Group className="remember">
+                  {["checkbox"].map((type) => (
+                    <div key={`default-${type}`} className="mb-3">
+                      <Form.Check
+                        inline
+                        label="Remember me"
+                        name="group3"
+                        type={type}
+                        id={`inline-${type}-1`}
+                      />
+                    </div>
+                  ))}
+
+                  <span>
+                    <Button variant="link" onClick={handleForgetPassword}>
+                      Forgot Password{" "}
+                    </Button>
+                  </span>
+                </Form.Group>
+
+                <div className="login-btn">
+                  <Button variant="" type="submit">
+                    Login
+                  </Button>
+                </div>
+              </Form>
+
+              <div className="log-contiune">
+                <p>or contiune with</p>
+              </div>
+
+              <div className="social-icon text-center1">
+                <div className="">
+                  <img src={google} alt="image" />
+                </div>
+                <div className="">
+                  <img src={facebook} alt="image" />
+                </div>
+                <div className="">
+                  <img src={instagram} alt="image" />
+                </div>
+              </div>
+
+              <div className="register-now">
                 <span>
-                  <Button variant="link" onClick={handleForgetPassword}>
-                    Forgot Password{" "}
+                  Not a member
+                  <Button variant="link" onClick={handleRegister}>
+                    Register Now
                   </Button>
                 </span>
-              </Form.Group>
-
-              <div className="login-btn">
-                <Button variant="" type="submit">
-                  Login
-                </Button>
               </div>
-            </Form>
-
-            <div className="log-contiune">
-              <p>or contiune with</p>
-            </div>
-
-            <div className="social-icon text-center1">
-              <div className="">
-                <img src={google} alt="image" />
-              </div>
-              <div className="">
-                <img src={facebook} alt="image" />
-              </div>
-              <div className="">
-                <img src={instagram} alt="image" />
-              </div>
-            </div>
-
-            <div className="register-now">
-              <span>
-                Not a member
-                <Button variant="link" onClick={handleRegister}>
-                  Register Now
-                </Button>
-              </span>
             </div>
           </div>
         </div>
-      </div>}
+      )}
     </>
   );
 };

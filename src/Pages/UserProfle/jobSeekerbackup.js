@@ -3,7 +3,7 @@ import { FormLabel } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
-import FormWizard from "react-form-wizard-component";
+//import FormWizard from "react-form-wizard-component";
 import "react-form-wizard-component/dist/style.css";
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
