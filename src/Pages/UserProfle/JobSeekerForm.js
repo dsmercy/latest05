@@ -54,7 +54,7 @@ const JobSeekerForm = () => {
     currentLocation: jobSeekerData.data.currentLocation,
   };
 
-  const {register, reset, getValues, formState: { errors }, trigger ,handleSubmit,} = useForm({ defaultValues, mode: "onSubmit" });
+  const {register, resetField, getValues, formState: { errors }, trigger ,handleSubmit,} = useForm({ defaultValues, mode: "onSubmit" });
 
   const options = skills.map((item) => [
     {
@@ -140,6 +140,7 @@ const JobSeekerForm = () => {
   const handlePrevButton = () => {
     if (stepIndex === 1) { trigger(['firstName', 'lastName','phoneNumber','currentLocation','email']); }
     if (stepIndex === 2) { trigger(['degreeName', 'fieldOfStudy','universityName','yearOfCompletion']); }
+    setStepIndex(prevStepIndex => prevStepIndex - 1);
   }
 
   const changeKeyValue = () => {
@@ -258,12 +259,12 @@ const JobSeekerForm = () => {
 
     saveEducation(eduData);
 
-    reset({
-      degreeName: "",
-      fieldOfStudy: "",
-      universityName: "",
-      yearOfCompletion: "",
-    })
+    //reset fields
+    resetField("degreeName");
+    resetField("fieldOfStudy");
+    resetField("universityName");
+    resetField("yearOfCompletion");
+
     
     // Services.Profile.setJobSeekerDetails(body)
     //   .then((response) => {
