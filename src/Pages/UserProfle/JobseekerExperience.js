@@ -11,10 +11,11 @@ import Services from "../../services/Services";
 import { AddPosition } from "./AddPosition";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
+import useAccountStore from "../../store/useAccountStore";
 
 export const JobseekerExperience = (props) => {
 
-  const {changeKeyValue,options,selectedOptions,handleSkills}=props;
+  const {changeKeyValue,options,selectedOptions,handleSkills,register,errors, getValues}=props;
   //console.log(handleSkills,"handleSkills")
   const newOptions = changeKeyValue();
   const animatedComponents = makeAnimated();
@@ -28,57 +29,50 @@ export const JobseekerExperience = (props) => {
   const [salaryTypeId, setSalaryTypeId] = useState(0);
   const [yearOfExperience, setYearOfExperience] = useState("");
   const [validated, setValidated] = useState(false);
-  const {register,formState: { errors },handleSubmit} = useForm({ mode: "all" });
   const [expData, setExpData]=useState([]);
-    
-  const newArrayList = [];
-  const details = {
-    expTypes: experience,
-    currentEmployee: true,
-    companyName: companyName,
-    jobTitle: jobTitle,
-    jobDescription: comment,
-    startDate: startDate,
-    endDate: endDate,
-    salary: salary,
-    skillId: [
-      1
-    ],
-    yearOfExperience: yearOfExperience,
-    salaryTypeId: salaryTypeId,
-  };
- 
-  newArrayList.push(details);
-   //console.log("newArrayList", newArrayList);
-//    const handleAddPosition = () => {
-//     Services.Profile.setJobSeekerExperience(newArrayList)
-//    .then((response) => {
-//      console.log(response, "response");
- 
-//      // Update parent component's state with the new experience data
-//      onExperienceDataChange([...experienceData, ...newArrayList]);
-//    })
-//    .catch((errors) => {
-//      console.log(errors);
-//    });
-//  };
+  const experienceData = useAccountStore((state) => state.experienceData);
+  const saveExperience = useAccountStore((state) => state.saveExperience);
+
  
   const handleAddPosition = () => {
-       Services.Profile.setJobSeekerExperience(newArrayList)
-      .then((response) => {
-        console.log(response,"response");
-      })
-      .catch((errors) => {
-        console.log(errors);
-      });
+    const formValues = getValues();
 
-      Services.Profile.getJobSeekerExperience().then((resData)=>{
-        console.log(resData);
-        setExpData([...expData,...resData?.data]);
-      }).catch((errors)=>{
-        console.log(errors);
-      })
+    const formData = [{
+      expTypes: formValues.experience,
+      currentEmployee: formValues.experience,
+      companyName: formValues.companyName,
+      yearOfExperience: formValues.yearOfExperience,
+      jobTitle: formValues.jobTitle,
+      startDate: formValues.startDate,
+      endDate: formValues.endDate,
+      skillId: [
+        1
+      ],
+      jobDescription: formValues.comment,
+      salaryTypeId: formValues.salaryTypeId,
+      salary: formValues.salary,
+    }];
+
+    saveExperience(formData);
+    console.log('formData',formData);
+
+    // Services.Profile.setJobSeekerExperience(formData)
+    //   .then((response) => {
+    //     console.log(response, "response");
+    //   })
+    //   .catch((errors) => {
+    //     console.log(errors);
+    //   });
+
+    // Services.Profile.getJobSeekerExperience().then((resData) => {
+    //   console.log(resData);
+    //   setExpData([...expData, ...resData?.data]);
+    // }).catch((errors) => {
+    //   console.log(errors);
+    // })
   };
+
+
   return (
     <>
       <FormWizard.TabContent title="Experience" icon="fa fa-check">
@@ -98,9 +92,7 @@ export const JobseekerExperience = (props) => {
                     id="1"
                     name="exper"
                     {...register("experience")}
-                    onChange={(e) => {
-                      setExperience(e.target.id);
-                    }}
+                    
                   />{" "}
                   <label htmlFor="exper">I'm Experienced</label>
                 </h4>
@@ -116,9 +108,7 @@ export const JobseekerExperience = (props) => {
                     id="2"
                     name="exper"
                     {...register("Fresher")}
-                    onChange={(e) => {
-                      setExperience(e.target.id);
-                    }}
+                    
                   />{" "}
                   <label htmlFor="fresher">I’m a Fresher</label>{" "}
                 </h4>
@@ -133,18 +123,14 @@ export const JobseekerExperience = (props) => {
               className="form-check-input"
               type="radio"
               id="1"
-              name="current"
-              value={true}
-              {...register("current")}
+              {...register("currentEmployee")}
             />
             <label htmlFor="eyes">Yes </label>
             <input
               className="form-check-input"
               type="radio"
               id="0"
-              name="current"
-              value={false}
-              {...register("current")}
+              {...register("currentEmployee")}
             />
             <label htmlFor="eno">No </label>
           </div>
@@ -158,10 +144,8 @@ export const JobseekerExperience = (props) => {
               placeholder="Company name"
               aria-label="Company"
               aria-describedby="basic-addon1"
-              value={companyName}
               {...register("companyName", { required: true })}
               isInvalid={!!errors.companyName}
-              onChange={(e) => setCompanyName(e.target.value)}
             />
           </InputGroup>
 
@@ -176,7 +160,6 @@ export const JobseekerExperience = (props) => {
               aria-describedby="basic-addon1"
               {...register("yearOfExperience", { required: true })}
               isInvalid={!!errors.yearOfExperience}
-              onChange={(e) => setYearOfExperience(e.target.value)}
             />
             <Form.Control.Feedback type="invalid">
               This field is required.
@@ -192,10 +175,8 @@ export const JobseekerExperience = (props) => {
               placeholder="Job Title"
               aria-label="JobTitle"
               aria-describedby="basic-addon1"
-              value={jobTitle}
               {...register("jobTitle", { required: true })}
               isInvalid={!!errors.jobTitle}
-              onChange={(e) => setJobTitle(e.target.value)}
             />
           </InputGroup>
 
@@ -208,9 +189,7 @@ export const JobseekerExperience = (props) => {
                 <Form.Control
                   {...register("startDate", { required: true })}
                   isInvalid={!!errors.startDate}
-                  type="date"
-                  value={startDate}
-                  onChange={(e) => setStartDate(e.target.value)}
+                  type="date"                 
                 />
                 <Form.Control.Feedback type="invalid">
                   This field is required.
@@ -227,8 +206,7 @@ export const JobseekerExperience = (props) => {
                   {...register("endDate", { required: true })}
                   isInvalid={!!errors.endDate}
                   type="date"
-                  value={endDate}
-                  onChange={(e) => setEndDate(e.target.value)}
+
                 />
                 <Form.Control.Feedback type="invalid">
                   This field is required.
@@ -269,7 +247,6 @@ export const JobseekerExperience = (props) => {
               placeholder="Leave a comment here"
               style={{ height: "100px" }}
               {...register("comment")}
-              onChange={(e) => setComment(e.target.value)}
             />
           </FloatingLabel>
 
@@ -279,27 +256,24 @@ export const JobseekerExperience = (props) => {
               className="form-check-input"
               type="radio"
               id="1"
-              name="salary"
+              {...register("salaryTypeId")}
               value="hourly"
-              onChange={(e) => setSalaryTypeId(e.target.id)}
             />
             <label htmlFor="hourly">Hourly </label>
             <input
               className="form-check-input"
               type="radio"
               id="2"
-              name="salary"
+              {...register("salaryTypeId")}
               value="monthly"
-              onChange={(e) => setSalaryTypeId(e.target.id)}
             />
             <label htmlFor="monthly">Monthly</label>
             <input
               className="form-check-input"
               type="radio"
               id="3"
-              name="salary"
+              {...register("salaryTypeId")}
               value="annually"
-              onChange={(e) => setSalaryTypeId(e.target.id)}
             />
             <label htmlFor="annually">Annually </label>
           </div>
@@ -310,8 +284,7 @@ export const JobseekerExperience = (props) => {
               placeholder=""
               aria-label="skills"
               aria-describedby="basic-addon1"
-              value={salary}
-              onChange={(e) => setSalary(e.target.value)}
+              {...register("salary")}
             />
             <Form.Control.Feedback type="invalid">
               This field is required.

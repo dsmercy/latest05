@@ -6,6 +6,7 @@ const useAccountStore = create(persist(devtools((set) => ({
     signedInUserData: null,
     jobSeekerData: null,
     educationData: [],
+    experienceData: [],
     signInUser: async (data) => {
         try {
             const userDetail = await Services.Account.userlogin(data);
@@ -45,6 +46,13 @@ const useAccountStore = create(persist(devtools((set) => ({
             educationData: prevState.educationData.length === 0
                 ? educationDetail  // If educationData is empty, assign the new values directly
                 : [...prevState.educationData, ...educationDetail],  // If not empty, append the new values
+        }));
+    },
+    saveExperience: (experienceDetail) => {
+        set((prevState) => ({
+            experienceData: prevState.experienceData.length === 0
+                ? experienceDetail  // If educationData is empty, assign the new values directly
+                : [...prevState.experienceData, ...experienceDetail],  // If not empty, append the new values
         }));
     },
     clearEducation: () => {

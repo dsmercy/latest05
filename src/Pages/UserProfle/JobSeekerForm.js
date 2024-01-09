@@ -27,7 +27,6 @@ const JobSeekerForm = () => {
   const getUser = useAccountStore((state) => state.getUser);
   const educationData = useAccountStore((state) => state.educationData);
   const saveEducation = useAccountStore((state) => state.saveEducation);
-  const clearEducation = useAccountStore((state) => state.clearEducation);
   const [validated, setValidated] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [data, setData] = useState("");
@@ -80,7 +79,7 @@ const JobSeekerForm = () => {
             .then((response) => {
               getUser();
               setStepIndex(prevStepIndex => prevStepIndex + 1);
-              clearEducation();
+              // clearEducation();
               return true;
             })
             .catch((errors) => {
@@ -125,7 +124,7 @@ const JobSeekerForm = () => {
       }
     }
    
-  if(stepIndex===3){
+  if(stepIndex===2){
     console.log("3rd step",selectedOptions)
     setStepIndex(prevStepIndex => prevStepIndex + 1);
 
@@ -135,7 +134,7 @@ const JobSeekerForm = () => {
 
   const handlePrevButton = () => {
     if (stepIndex === 1) { trigger(['firstName', 'lastName','phoneNumber','currentLocation','email']); }
-    if (stepIndex === 2) { trigger(['degreeName', 'fieldOfStudy','clgName','yearOfCompletion']); }
+    // if (stepIndex === 2) { trigger(['degreeName', 'fieldOfStudy','clgName','yearOfCompletion']); }
     setStepIndex(prevStepIndex => prevStepIndex - 1);
   }
 
@@ -227,7 +226,6 @@ const JobSeekerForm = () => {
   const handleEductaion = () => {
 
     const formValues = getValues();
-    console.log('formValues',formValues);
     const eduData = [
       {
         degreeName: [formValues.degreeName, degree.find(obj => obj.id == formValues.degreeName).degreeName],
@@ -287,7 +285,7 @@ const JobSeekerForm = () => {
                 <Form
                   noValidate
                   validated={validated}
-                  onSubmit={handleSubmit(handleFormSubmit)}
+                  
                 >
                   <FormWizard
                     shape="circle"
@@ -581,6 +579,9 @@ const JobSeekerForm = () => {
                       options={options}
                       selectedOptions={selectedOptions}
                       handleSkills={handleSkills}
+                      register={register}
+                      errors={errors}
+                      getValues={getValues}
                     />
 
                     {/* -----------------------Forth Form--------------- */}
