@@ -38,8 +38,8 @@ export const JobseekerExperience = (props) => {
     const formValues = getValues();
 
     const formData = [{
-      expTypes: formValues.experience,
-      currentEmployee: formValues.experience,
+      expTypes: parseInt(formValues.experience[0]),
+      currentEmployee: formValues.currentEmployee,
       companyName: formValues.companyName,
       yearOfExperience: formValues.yearOfExperience,
       jobTitle: formValues.jobTitle,
@@ -88,9 +88,9 @@ export const JobseekerExperience = (props) => {
                 <h4>
                   <input
                     className="form-check-input"
-                    type="checkbox"
+                    type="radio"
                     id="1"
-                    name="exper"
+                    value="1"
                     {...register("experience")}
                     
                   />{" "}
@@ -106,9 +106,8 @@ export const JobseekerExperience = (props) => {
                     className="form-check-input"
                     type="checkbox"
                     id="2"
-                    name="exper"
-                    {...register("Fresher")}
-                    
+                    value="2"
+                    {...register("experience")}                    
                   />{" "}
                   <label htmlFor="fresher">I’m a Fresher</label>{" "}
                 </h4>
