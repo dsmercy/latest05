@@ -44,8 +44,19 @@ const useAccountStore = create(persist(devtools((set) => ({
     saveEducation: (educationDetail) => {
         set((prevState) => ({
             educationData: prevState.educationData.length === 0
-                ? educationDetail  // If educationData is empty, assign the new values directly
-                : [...prevState.educationData, ...educationDetail],  // If not empty, append the new values
+                ? educationDetail.map((item) => ({
+                    ...item,
+                    id: 1,
+                }))
+                : [...prevState.educationData, ...educationDetail.map((item) => ({
+                    ...item,
+                    id: Math.max(...prevState.educationData.map(item => item.id)) + 1,
+                }))],  // If not empty, append the new values
+        }));
+    },
+    deleteEducationById: (educationId) => {
+        set((prevState) => ({
+            educationData: prevState.educationData.filter(item => item.id !== educationId),
         }));
     },
     saveExperience: (experienceDetail) => {

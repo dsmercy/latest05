@@ -27,6 +27,7 @@ const JobSeekerForm = () => {
   const getUser = useAccountStore((state) => state.getUser);
   const educationData = useAccountStore((state) => state.educationData);
   const saveEducation = useAccountStore((state) => state.saveEducation);
+  const deleteEducationById = useAccountStore((state) => state.deleteEducationById);
   const [validated, setValidated] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [data, setData] = useState("");
@@ -46,7 +47,7 @@ const JobSeekerForm = () => {
     phoneNumber: jobSeekerData.data.phoneNumber,
     currentLocation: jobSeekerData.data.currentLocation,
   };
-  const {register, resetField, getValues, formState: { errors }, trigger ,handleSubmit,} = useForm({ defaultValues, mode: "onSubmit" }); 
+  const {register, resetField, getValues, setValue, formState: { errors }, trigger ,handleSubmit,} = useForm({ defaultValues, mode: "onSubmit" }); 
   const options = skills.map((item) => [
     {
       value: item.skillName,
@@ -239,7 +240,17 @@ const JobSeekerForm = () => {
     resetField("degreeName");
     resetField("fieldOfStudy");
     resetField("universityName");
-    resetField("yearOfCompletion");   
+    resetField("yearOfCompletion");
+  }
+
+  const onEditClick = (id) =>{
+    const edu = educationData.find(item => item.id === id);
+    console.log('edu', edu);
+    setValue("degreeName",edu.degreeName[0]);
+    setValue("fieldOfStudy",edu.fieldOfStudy[0]);
+    setValue("clgName",edu.clgName[0]);
+    setValue("yearOfCompletion",edu.yearOfCompletion[0]);
+    deleteEducationById(id);
   }
 
   return (
@@ -423,7 +434,7 @@ const JobSeekerForm = () => {
                       <span className="bord"></span>
                       {educationData && educationData.length > 0
                         ? educationData.map((edu, index) => (
-                            <EducationForm eduData={edu} key={index} />
+                            <EducationForm eduData={edu} key={index} onEditClick={onEditClick} />
                           ))
                         : ""}
                       <Row>
