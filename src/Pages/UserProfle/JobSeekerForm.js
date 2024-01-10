@@ -125,10 +125,10 @@ const JobSeekerForm = () => {
     }
    
   if(stepIndex===2){
-    console.log("3rd step",selectedOptions)
-    setStepIndex(prevStepIndex => prevStepIndex + 1);
-
-    Services.Profile.setJobSeekerExperience().then((res)=>console.log(res)).catch((errors)=>console.log(errors))
+    Services.Profile.setJobSeekerExperience().then((res)=>{ 
+      console.log(res);
+    }).catch((errors)=>console.log(errors))
+    return true
     }
   };
 
@@ -216,7 +216,8 @@ const JobSeekerForm = () => {
   };
 
   const handleComplete = (data) => {
-    // console.log("Form completed!", data);
+   console.log("Form completed!", data);
+
   };
 
    const handleFormSubmit = async () => {
@@ -238,13 +239,7 @@ const JobSeekerForm = () => {
     resetField("degreeName");
     resetField("fieldOfStudy");
     resetField("universityName");
-    resetField("yearOfCompletion");
-    // reset({
-    //   degreeName: "",
-    //   fieldOfStudy: "",
-    //   clgName: "",
-    //   yearOfCompletion: "",
-    // })
+    resetField("yearOfCompletion");   
   }
 
   return (
@@ -290,7 +285,7 @@ const JobSeekerForm = () => {
                   <FormWizard
                     shape="circle"
                     color="#1DA425"
-                    onComplete={handleComplete}
+                    onComplete={handleSubmit(handleComplete)}
                     handleNextButton={handleNextButton}
                     handlePrevButton={handlePrevButton}
                   >
@@ -585,7 +580,11 @@ const JobSeekerForm = () => {
                     />
 
                     {/* -----------------------Forth Form--------------- */}
-                    <JobSeekerPrefrence />
+                    <JobSeekerPrefrence
+                    register={register}
+                    errors={errors}
+                    getValues={getValues}
+                     />
                   </FormWizard>
                 </Form>
               </div>

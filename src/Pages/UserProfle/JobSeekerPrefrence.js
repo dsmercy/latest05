@@ -7,39 +7,23 @@ import { useForm } from "react-hook-form";
 import Services from '../../services/Services';
 import FormWizard from "../../components/Wizard/FormWizard"
 
-export const JobSeekerPrefrence = ({ tabInfo }) => {
- // const {prevIndex,nextIndex} = props?.onTabChange?.onTabChange;
-  const [validated] = useState(false);
-  const [jobtype, setJobtype]= useState(0);
-  const [empType,setEmpType]= useState(0);
-  const [preferenceLocation,setPreferenceLocation]= useState('');
-  const [salaryTypeId,setSalaryTypeId]=useState(0);
-  const[expectedSalary,setExpectedSalary]=useState(0);
-  const {register,formState: { errors },handleSubmit} = useForm({  mode: 'all' });
+export const JobSeekerPrefrence = (props) => {
+  const {register,errors,getValues}=props;
 
-const body ={
-  preferenceLocation:preferenceLocation,
-  jobTypeMasterId: jobtype,
-  employmentTypeId:empType,
-  salaryTypeId:salaryTypeId,
-  expectedSalary:expectedSalary
-}
-
-    const handleFinish=()=>{
-        Services.Profile.setJobSeekerPreference(body).then((response)=>{
-        console.log(response);
-      }).catch((errors)=>{
-        console.log(errors);
-      })
+    const formData = getValues();
+    const body = {
+      preferenceLocation: formData.preferenceLocation,
+      jobTypeMasterId: parseInt(formData.jobTypeMasterId),
+      employmentTypeId: parseInt(formData.employmentTypeId),
+      salaryTypeId: parseInt(formData.salaryTypeId),
+      expectedSalary: formData.expectedSalary
     }
-   
-    console.log(tabInfo.prevIndex);
-    console.log(tabInfo.nextIndex);
+    console.log(body);
 
   return (
     <>
     
-        <FormWizard.TabContent title="Job Preference" icon="fa fa-check">
+        <FormWizard.TabContent title="Job Preference" icon="fa fa-check" >
           <h5>Job Preference</h5>
           <span className="bord"></span>
 
@@ -54,8 +38,6 @@ const body ={
               aria-describedby="basic-addon1"
               {...register("preferenceLocation", { required: true })}
               isInvalid={!!errors.preferenceLocation}
-              value={preferenceLocation}
-              onChange={(e) => setPreferenceLocation(e.target.value)}
             />
           </InputGroup>
 
@@ -66,34 +48,29 @@ const body ={
             <input
               className="form-check-input"
               type="radio"
-              id="1"
-              name="job-type"
-              value="permanent"
+              value={1}
+              id="permanent"
               {...register("employmentTypeId", { required: true })}
               isInvalid={!!errors.employmentTypeId}
-              onChange={(e) => setJobtype(e.target.id)}
+              
             />
             <label htmlFor="perm">Permanent </label>
             <input
               className="form-check-input"
               type="radio"
-              id="2"
-              name="job-type"
-              value="Temporay"
+              value={2}
+              id="Temporay"
               {...register("employmentTypeId", { required: true })}
               isInvalid={!!errors.employmentTypeId}
-              onChange={(e) => setJobtype(e.target.id)}
             />
             <label htmlFor="temp">Temporary/Contract</label>
             <input
               className="form-check-input"
               type="radio"
-              id="3"
-              name="job-type"
-              value="both"
+              value={3}
+              id="both"
               {...register("employmentTypeId", { required: true })}
               isInvalid={!!errors.employmentTypeId}
-              onChange={(e) => setJobtype(e.target.id)}
             />
             <label htmlFor="both">Both </label>
           </div>
@@ -105,24 +82,24 @@ const body ={
               className="form-check-input"
               type="radio"
               id="1"
-              name="job-type"
-              onChange={(e) => setEmpType(e.target.id)}
+              value={1}
+             {...register("jobTypeMasterId", { required: true })}
             />
             <label htmlFor="perm">Full time </label>
             <input
               className="form-check-input"
               type="radio"
               id="2"
-              name="job-type"
-              onChange={(e) => setEmpType(e.target.id)}
+              value={2}
+              {...register("jobTypeMasterId", { required: true })}
             />
             <label htmlFor="temp">Part time</label>
             <input
               className="form-check-input"
               type="radio"
               id="3"
-              name="job-type"
-              onChange={(e) => setEmpType(e.target.id)}
+              value={3}
+              {...register("jobTypeMasterId", { required: true })}
             />
             <label htmlFor="both">Remote </label>
           </div>
@@ -134,24 +111,24 @@ const body ={
               className="form-check-input"
               type="radio"
               id="1"
-              name="salary"
-              onChange={(e) => setSalaryTypeId(e.target.id)}
+              value={1}
+              {...register("salaryTypeId", { required: true })}
             />
             <label htmlFor="perm">Hourly </label>
             <input
               className="form-check-input"
               type="radio"
               id="2"
-              name="salary"
-              onChange={(e) => setSalaryTypeId(e.target.id)}
+              value={2}
+              {...register("salaryTypeId", { required: true })}
             />
             <label htmlFor="temp">Monthly</label>
             <input
               className="form-check-input"
               type="radio"
               id="3"
-              name="salary"
-              onChange={(e) => setSalaryTypeId(e.target.id)}
+              value={3}
+              {...register("salaryTypeId", { required: true })}
             />
             <label htmlFor="both">Annually </label>
           </div>
@@ -167,8 +144,6 @@ const body ={
               aria-describedby="basic-addon1"
               {...register("expectedSalary", { required: true })}
               isInvalid={!!errors.expectedSalary}
-              value={expectedSalary}
-              onChange={(e) => setExpectedSalary(e.target.value)}
             />
           </InputGroup>
         </FormWizard.TabContent>
