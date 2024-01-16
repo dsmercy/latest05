@@ -1,10 +1,51 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Col, Container, Row } from 'react-bootstrap'
 import Footer from '../../components/Footer/Footer'
 import Header from '../../components/Header/Header'
+import Services from '../../services/Services'
+import { useNavigate } from 'react-router'
 
 
 const ViewProfileDetail = () => {
+  const [jobSeekerDetails, setJobSeekerDetails]=useState([]);
+  const [accountDetails, setAccountDetails]=useState([]);
+  const [jobSeekerExperience,setJobSeekerExperience]=useState([]);
+  const [preferred,setPreferred]=useState([]);
+  const navigate = useNavigate();
+
+  useEffect(()=>{
+    getAllDetails();
+  },[])
+
+  const handleEdit=()=>{
+    navigate('/job-seeker-form');
+  }
+
+  const getAllDetails=()=>{
+      //user jobseebseeker academic details
+    Services.Profile.getJobSeekerDetails()
+      .then((res) => {
+        setJobSeekerDetails(res.data[0])
+      })
+      .catch((errors) => console.log(errors));
+
+      //user details with location
+      Services.Profile.getUpdatedUser()
+        .then((res) => {
+          setAccountDetails(res.data);
+        })
+        .catch((errors) => console.log(errors));
+
+        //user Experience Details
+        Services.Profile.getJobSeekerExperience().then((res) => {
+          setJobSeekerExperience(res.data[0]);
+        }).catch((errors) => console.log(errors));
+
+        //user Preference
+        Services.Profile.getJobSeekerPreference().then((response)=>{
+          setPreferred(response.data)
+        }).catch((errors)=>console.log(errors))
+  }
   return (
     <>
     <Header />
@@ -21,7 +62,7 @@ const ViewProfileDetail = () => {
       </Col>
       <Col>
       <div className='user-profile-update'>
-      <p className=''><i className="fa fa-edit"></i> Update</p>
+      <p className='' onClick={handleEdit}><i className="fa fa-edit"></i> Edit</p>
       </div>
         
         </Col>
@@ -33,7 +74,7 @@ const ViewProfileDetail = () => {
            <p> Full Name </p>
         </Col>
         <Col>
-        <p> Alex Smith</p>
+        <p>{accountDetails.firstName}{" "}{accountDetails.middleName} {accountDetails.lastName}</p>
         </Col>
       </Row>
       <Row className='user-row-border '>
@@ -41,7 +82,7 @@ const ViewProfileDetail = () => {
            <p> Email</p>
         </Col>
         <Col>
-        <p> alex.smith@gmail.com</p>
+        <p> {accountDetails.email}</p>
         </Col>
       </Row>
       <Row className='user-row-border '>
@@ -49,7 +90,7 @@ const ViewProfileDetail = () => {
            <p> Phone Number </p>
         </Col>
         <Col>
-        <p> +1 9090909090</p>
+        <p>{accountDetails?.phoneNumber}</p>
         </Col>
       </Row>
       <Row className='user-row-border '>
@@ -57,7 +98,7 @@ const ViewProfileDetail = () => {
            <p> Current Location </p>
         </Col>
         <Col>
-        <p>Alex Smith</p>
+        <p>{accountDetails?.currentLocation}</p>
         </Col>
       </Row>
 
@@ -72,7 +113,7 @@ const ViewProfileDetail = () => {
       </Col>
       <Col>
       <div className='user-profile-update'>
-      <p className=''><i className="fa fa-edit"></i> Update</p>
+      <p className='' onClick={handleEdit}><i className="fa fa-edit"></i> Edit</p>
       </div>
         
         </Col>
@@ -85,7 +126,7 @@ const ViewProfileDetail = () => {
            <p> Degree  </p>
         </Col>
         <Col>
-        <p> Computer Science</p>
+        <p>{jobSeekerDetails?.degreeName}</p>
         </Col>
       </Row>
       <Row className='user-row-border '>
@@ -93,7 +134,7 @@ const ViewProfileDetail = () => {
            <p> Field Of Study</p>
         </Col>
         <Col>
-        <p> Computer</p>
+        <p> {jobSeekerDetails?.fieldOfStudyId}</p>
         </Col>
       </Row>
       <Row className='user-row-border '>
@@ -101,12 +142,12 @@ const ViewProfileDetail = () => {
            <p> School/University </p>
         </Col>
         <Col>
-        <p>The University of Alabama</p>
+        <p>{jobSeekerDetails?.collegeName}</p>
         </Col>
       </Row>
       <Row className='user-row-border '>
         <Col>
-           <p> Year of Completion </p>
+           <p> {jobSeekerDetails?.yearofCompletion}</p>
         </Col>
         <Col>
         <p>2023</p>
@@ -124,7 +165,7 @@ const ViewProfileDetail = () => {
       </Col>
       <Col>
       <div className='user-profile-update'>
-      <p className=''><i className="fa fa-edit"></i> Update</p>
+      <p className='' onClick={handleEdit}><i className="fa fa-edit"></i> Edit</p>
       </div>
         
         </Col>
@@ -137,7 +178,7 @@ const ViewProfileDetail = () => {
            <p> Company Name </p>
         </Col>
         <Col>
-        <p> Chetu Inc.</p>
+        <p> {jobSeekerExperience?.companyName}</p>
         </Col>
       </Row>
       <Row className='user-row-border '>
@@ -145,7 +186,7 @@ const ViewProfileDetail = () => {
            <p> Job Title</p>
         </Col>
         <Col>
-        <p> UI/UX Engineer</p>
+        <p> {jobSeekerExperience?.jobTitle}</p>
         </Col>
       </Row>
       <Row className='user-row-border '>
@@ -161,7 +202,7 @@ const ViewProfileDetail = () => {
            <p> Job Description</p>
         </Col>
         <Col>
-        <p>job title, job purpose, job duties and responsibilities, required qualifications, preferred qualifications, and working conditions.</p>
+        <p>{jobSeekerExperience?.jobDescription}</p>
         </Col>
       </Row>
       <Row className='user-row-border '>
@@ -169,7 +210,7 @@ const ViewProfileDetail = () => {
            <p> Current Salary</p>
         </Col>
         <Col>
-        <p>$700</p>
+        <p>${jobSeekerExperience?.salary}</p>
         </Col>
       </Row>
       <Row className='user-row-border '>
@@ -177,7 +218,7 @@ const ViewProfileDetail = () => {
            <p> Start Date </p>
         </Col>
         <Col>
-        <p>November 2023</p>
+        <p>{jobSeekerExperience?.startDate}</p>
         </Col>
       </Row>
       <Row className='user-row-border '>
@@ -185,7 +226,7 @@ const ViewProfileDetail = () => {
            <p> This is your current employee </p>
         </Col>
         <Col>
-        <p>Yes</p>
+        <p>{jobSeekerExperience?.currentEmployee===true?"Yes":"No"}</p>
         </Col>
       </Row>
 
@@ -200,20 +241,23 @@ const ViewProfileDetail = () => {
       </Col>
       <Col>
       <div className='user-profile-update'>
-      <p className=''><i className="fa fa-edit"></i> Update</p>
+      <p className='' onClick={handleEdit}><i className="fa fa-edit" ></i> Edit</p>
       </div>
         
         </Col>
     </Row>
 
-
-    <div className='user-basic-detail'>
+{
+  preferred.map((item)=>{
+return(
+<div className='user-basic-detail'>
       <Row className='user-row-border '>
         <Col>
            <p> Preferred Location  </p>
         </Col>
         <Col>
-        <p> Washington D.C. and Boston</p>
+        {item.preferenceLocation}
+        
         </Col>
       </Row>
       <Row className='user-row-border '>
@@ -221,7 +265,7 @@ const ViewProfileDetail = () => {
            <p> Employment Type</p>
         </Col>
         <Col>
-        <p> Part Time</p>
+        <p> {item.employmentTypeId}</p>
         </Col>
       </Row>
       <Row className='user-row-border '>
@@ -229,7 +273,7 @@ const ViewProfileDetail = () => {
            <p> Job Type </p>
         </Col>
         <Col>
-        <p>Both</p>
+        <p>{item.jobTypeId===1?"Permanent":""}</p>
         </Col>
       </Row>
       <Row className='user-row-border '>
@@ -237,13 +281,17 @@ const ViewProfileDetail = () => {
            <p>Expected Salary Annualy ($)</p>
         </Col>
         <Col>
-        <p>700</p>
+        <p>{item.expecteSalary}</p>
         </Col>
       </Row>
- 
+      <hr className="dashed"/>
 
 
     </div>
+)
+  })
+}
+    
 
 
 

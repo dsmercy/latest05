@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FormLabel } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
-// import FormWizard from "../"
+import FormWizard from "../../components/Wizard/FormWizard";
 import "react-form-wizard-component/dist/style.css";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
@@ -19,15 +19,15 @@ import Select from "react-select";
 import makeAnimated from "react-select/animated";
 import { JobSeekerPrefrence } from "./JobSeekerPrefrence";
 import { JobseekerExperience } from "./JobseekerExperience";
-import FormWizard from "../../components/Wizard/FormWizard";
+import { useNavigate } from "react-router-dom";
 
 const JobSeekerForm = () => {
+  const navigate = useNavigate();
   const animatedComponents = makeAnimated();
   const [stepIndex, setStepIndex] = useState(0);
   const getUser = useAccountStore((state) => state.getUser);
   const educationData = useAccountStore((state) => state.educationData);
   const saveEducation = useAccountStore((state) => state.saveEducation);
-  const deleteEducationById = useAccountStore((state) => state.deleteEducationById);
   const [validated, setValidated] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [data, setData] = useState("");
@@ -36,9 +36,11 @@ const JobSeekerForm = () => {
   const [university, setUniversity] = useState([]);
   const [year, setYear] = useState([]);
   const [skills, setSkills] = useState([]);
+  const[eduDetails,setEduDetails]=useState([]);
   const jobSeekerData = useAccountStore((state) => state.jobSeekerData);
-  //const [tabInfo, setTabInfo] = useState({ prevIndex: 0, nextIndex: 1 });
- 
+  const experienceData = useAccountStore((state) => state.experienceData);
+  const savePreference = useAccountStore((state) => state.savePreference); 
+  const deleteEducationById = useAccountStore((state) => state.deleteEducationById);
   const defaultValues = {
     firstName: jobSeekerData.data.firstName,
     middleName: jobSeekerData.data.middleName,
@@ -47,97 +49,128 @@ const JobSeekerForm = () => {
     phoneNumber: jobSeekerData.data.phoneNumber,
     currentLocation: jobSeekerData.data.currentLocation,
   };
-  const {register, resetField, getValues, setValue, formState: { errors }, trigger ,handleSubmit,} = useForm({ defaultValues, mode: "onSubmit" }); 
+  const {register,resetField,
+    getValues,
+    formState: { errors },
+    trigger,
+    handleSubmit,
+    setValue,
+  } = useForm({ defaultValues, mode: "onSubmit" });
   const options = skills.map((item) => [
     {
       value: item.skillName,
       label: item.skillName,
     },
   ]);
- 
+
   const handleSkills = (selected) => {
     setSelectedOptions(selected);
   };
+
   const handleNextButton = () => {
     if (stepIndex === 0) {
       const formValues = getValues();
-      // Manually trigger validation for specific fields
-        if (formValues.firstName == '' || formValues.lastName == ''|| formValues.phoneNumber == ''|| formValues.currentLocation == ''|| formValues.email == '') {
-          trigger(['firstName', 'lastName','phoneNumber','currentLocation','email']);
-          return false;
-        } else {
-
-          const formData = {
-            firstName: formValues.firstName,
-            middleName: formValues.middleName,
-            lastName: formValues.lastName,
-            email: formValues.email,
-            phoneNumber: formValues.phoneNumber,
-            currentLocation: formValues.currentLocation,
-          };
-
-          Services.Profile.updateJobSeeker(formData)
-            .then((response) => {
-              getUser();
-              setStepIndex(prevStepIndex => prevStepIndex + 1);
-              // clearEducation();
-              return true;
-            })
-            .catch((errors) => {
-              console.log(errors);
-            });          
-          return true;
-        }
-    }
-    if (stepIndex === 1) {
-       // Manually trigger validation for specific fields
-      if (educationData.length === 0) {
-        trigger(['degreeName', 'fieldOfStudy', 'clgName', 'yearOfCompletion']);
-        toast.error("Please Add Education to List", {
-          position: toast.POSITION.TOP_RIGHT,
-        });
+      if (
+        formValues.firstName == "" ||
+        formValues.lastName == "" ||
+        formValues.phoneNumber == "" ||
+        formValues.currentLocation == "" ||
+        formValues.email == ""
+      ) {
+        trigger([
+          "firstName",
+          "lastName",
+          "phoneNumber",
+          "currentLocation",
+          "email",
+        ]);
         return false;
       } else {
-        const formData = educationData.map(obj => {
-        const newObj = {};
-        for (const key in obj) {
-          if (obj.hasOwnProperty(key) && Array.isArray(obj[key]) && obj[key].length > 0) {
-            newObj[key] = obj[key][0];
-          }
-        }
-        return newObj;
-      });
-     
-      Services.Profile.setJobSeekerDetails(formData).then((response) => {
-            // getUser();
-            setStepIndex(prevStepIndex => prevStepIndex + 1);
+        const formData = {
+          firstName: formValues.firstName,
+          middleName: formValues.middleName,
+          lastName: formValues.lastName,
+          email: formValues.email,
+          phoneNumber: formValues.phoneNumber,
+          currentLocation: formValues.currentLocation,
+        };
+
+        Services.Profile.updateJobSeeker(formData)
+          .then((response) => {
+            getUser();
+            setStepIndex((prevStepIndex) => prevStepIndex + 1);
+            // clearEducation();
             return true;
           })
           .catch((errors) => {
             console.log(errors);
           });
-          const skill =selectedOptions.map((item)=>item.id);
-          console.log(skill);
-          const skills={skillMasterId:skill};
-          console.log(skills)
-          Services.Profile.setJobSeekerSkills(skills).then((res)=>console.log(res)).catch((errors)=>console.log(errors))
         return true;
       }
     }
-   
-  if(stepIndex===2){
-    Services.Profile.setJobSeekerExperience().then((res)=>{ 
-      console.log(res);
-    }).catch((errors)=>console.log(errors))
-    return true
+    if (stepIndex === 1) {
+      // Manually trigger validation for specific fields
+      if (educationData.length === 0) {
+        trigger(["degreeName", "fieldOfStudy", "clgName", "yearOfCompletion"]);
+        toast.error("Please Add Education to List", {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+        return false;
+      } else {
+        const formData = educationData.map((obj) => {
+          const newObj = {};
+          for (const key in obj) {
+            if (
+              obj.hasOwnProperty(key) &&
+              Array.isArray(obj[key]) &&
+              obj[key].length > 0
+            ) {
+              newObj[key] = obj[key][0];
+            }
+          }
+          return newObj;
+        });
+
+        Services.Profile.setJobSeekerDetails(formData)
+          .then((response) => {
+            // getUser();
+            setStepIndex((prevStepIndex) => prevStepIndex + 1);
+            return true;
+          })
+          .catch((errors) => {
+            console.log(errors);
+          });
+        const skill = selectedOptions.map((item) => item.id);
+        const skills = { skillMasterId: skill };
+        Services.Profile.setJobSeekerSkills(skills)
+          .then((res) => console.log(res))
+          .catch((errors) => console.log(errors));
+        return true;
+      }
+    }
+
+    if (stepIndex === 2) {
+      setStepIndex((prevStepIndex) => prevStepIndex + 1);
+      Services.Profile.setJobSeekerExperience(experienceData)
+        .then((res) => console.log(res))
+        .catch((errors) => console.log(errors));
+      return true;
     }
   };
 
   const handlePrevButton = () => {
-    if (stepIndex === 1) { trigger(['firstName', 'lastName','phoneNumber','currentLocation','email']); }
+    if (stepIndex === 1) {
+      trigger([
+        "firstName",
+        "lastName",
+        "phoneNumber",
+        "currentLocation",
+        "email",
+      ]);
+    }
     // if (stepIndex === 2) { trigger(['degreeName', 'fieldOfStudy','clgName','yearOfCompletion']); }
-    setStepIndex(prevStepIndex => prevStepIndex - 1);
-  }
+    setStepIndex((prevStepIndex) => prevStepIndex - 1);
+  };
 
   const changeKeyValue = () => {
     let newArray = [];
@@ -164,6 +197,7 @@ const JobSeekerForm = () => {
     getUniversity();
     getYear();
     getSkills();
+    // getEducationDetails();
   }, []);
 
   const getDegree = () => {
@@ -216,24 +250,60 @@ const JobSeekerForm = () => {
       });
   };
 
-  const handleComplete = (data) => {
-   console.log("Form completed!", data);
+// const getEducationDetails=()=>{
+//   Services.Profile.getJobSeekerDetails().then((res)=>{
+//     console.log(res.data[0]);
+//    setEduDetails(res.data[0]);
+//   //  saveEducation(res.data[0]);
+//   })
+// }
 
+
+  const handleComplete = (data) => {
+  const formData = getValues();
+  const body = {
+    preferenceLocation: formData.preferenceLocation,
+    jobTypeMasterId: parseInt(formData.jobTypeMasterId), 
+    employmentTypeId: parseInt(formData.employmentTypeId),
+    salaryTypeId: parseInt(formData.salaryTypeId),
+    expectedSalary: formData.expectedSalary,
+  };
+  savePreference(body);
+ 
+    Services.Profile.setJobSeekerPreference(body)
+      .then((res) => {
+        console.log(res);
+        navigate("/job-seeker-profile");
+      })
+      .catch((errors) => {
+        console.log(errors);
+      });
   };
 
-   const handleFormSubmit = async () => {
+  const handleFormSubmit = async () => {
     setValidated(true);
   };
 
   const handleEductaion = () => {
-
     const formValues = getValues();
     const eduData = [
       {
-        degreeName: [formValues.degreeName, degree.find(obj => obj.id == formValues.degreeName).degreeName],
-        fieldOfStudy: [formValues.fieldOfStudy, study.find(obj => obj.id == formValues.fieldOfStudy).fieldOfStudy],
-        clgName: [formValues.clgName, university.find(obj => obj.id == formValues.clgName).university],
-        yearOfCompletion: [formValues.yearOfCompletion, formValues.yearOfCompletion],
+        degreeName: [
+          formValues.degreeName,
+          degree.find((obj) => obj.id == formValues.degreeName).degreeName,
+        ],
+        fieldOfStudy: [
+          formValues.fieldOfStudy,
+          study.find((obj) => obj.id == formValues.fieldOfStudy).fieldOfStudy,
+        ],
+        clgName: [
+          formValues.clgName,
+          university.find((obj) => obj.id == formValues.clgName).university,
+        ],
+        yearOfCompletion: [
+          formValues.yearOfCompletion,
+          formValues.yearOfCompletion,
+        ],
       },
     ];
     saveEducation(eduData);
@@ -241,18 +311,15 @@ const JobSeekerForm = () => {
     resetField("fieldOfStudy");
     resetField("universityName");
     resetField("yearOfCompletion");
-  }
-
-  const onEditClick = (id) =>{
-    const edu = educationData.find(item => item.id === id);
-    console.log('edu', edu);
-    setValue("degreeName",edu.degreeName[0]);
-    setValue("fieldOfStudy",edu.fieldOfStudy[0]);
-    setValue("clgName",edu.clgName[0]);
-    setValue("yearOfCompletion",edu.yearOfCompletion[0]);
+  };
+  const onEditClick = (id) => {
+    const edu = educationData.find((item) => item.id === id);
+    setValue("degreeName", edu.degreeName[0]);
+    setValue("fieldOfStudy", edu.fieldOfStudy[0]);
+    setValue("clgName", edu.clgName[0]);
+    setValue("yearOfCompletion", edu.yearOfCompletion[0]);
     deleteEducationById(id);
-  }
-
+  };
   return (
     <>
       <Header />
@@ -288,15 +355,11 @@ const JobSeekerForm = () => {
                 </h4>
                 <p>This helps us tailor our suggestions for you.</p>
 
-                <Form
-                  noValidate
-                  validated={validated}
-                  
-                >
+                <Form noValidate validated={validated}>
                   <FormWizard
                     shape="circle"
                     color="#1DA425"
-                    onComplete={handleSubmit(handleComplete)}
+                    onComplete={() => handleSubmit(handleComplete())}
                     handleNextButton={handleNextButton}
                     handlePrevButton={handlePrevButton}
                   >
@@ -434,7 +497,13 @@ const JobSeekerForm = () => {
                       <span className="bord"></span>
                       {educationData && educationData.length > 0
                         ? educationData.map((edu, index) => (
-                            <EducationForm eduData={edu} key={index} onEditClick={onEditClick} />
+                            <EducationForm
+                              eduData={edu}
+                              eduDetails={eduDetails}
+                              key={index}
+                              setValue={setValue}
+                              onEditClick={onEditClick}
+                            />
                           ))
                         : ""}
                       <Row>
@@ -579,23 +648,32 @@ const JobSeekerForm = () => {
                     </FormWizard.TabContent>
 
                     {/* ---------------Third Form -----------------*/}
+                    <FormWizard.TabContent title="Experience" icon="fa fa-check">
+                      <h5>Experience</h5>
+                      <span className="bord"></span>
 
-                    <JobseekerExperience
-                      changeKeyValue={changeKeyValue}
-                      options={options}
-                      selectedOptions={selectedOptions}
-                      handleSkills={handleSkills}
-                      register={register}
-                      errors={errors}
-                      getValues={getValues}
-                    />
-
+                      <JobseekerExperience
+                        changeKeyValue={changeKeyValue}
+                        options={options}
+                        selectedOptions={selectedOptions}
+                        handleSkills={handleSkills}
+                        register={register}
+                        errors={errors}
+                        getValues={getValues}
+                        setValue={setValue}
+                        resetField={resetField}
+                      />
+                    </FormWizard.TabContent>
                     {/* -----------------------Forth Form--------------- */}
-                    <JobSeekerPrefrence
-                    register={register}
-                    errors={errors}
-                    getValues={getValues}
-                     />
+                    <FormWizard.TabContent title="Job Preference" icon="fa fa-check">
+                      <h5>Job Preference</h5>
+                      <span className="bord"></span>
+                      <JobSeekerPrefrence
+                        register={register}
+                        errors={errors}
+                        title="Job Preferences"
+                      />
+                    </FormWizard.TabContent>
                   </FormWizard>
                 </Form>
               </div>

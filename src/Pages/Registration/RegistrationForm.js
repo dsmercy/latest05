@@ -216,7 +216,7 @@ const getRole=()=>{
               </Row>
 
               {["checkbox"].map((type) => (
-                <div key={`default-${type}`} className="mb-3 d-flex">
+                <div key={`default-${type}`} className="mb-3 d-flex" >
                   <Form.Check
                     inline={true}
                     name="group3"

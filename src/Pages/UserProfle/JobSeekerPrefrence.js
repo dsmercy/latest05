@@ -1,31 +1,15 @@
 import React, { useState } from 'react'
-// import FormWizard from "react-form-wizard-component";
 import { FormLabel } from 'react-bootstrap';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Form from 'react-bootstrap/Form';
-import { useForm } from "react-hook-form";
-import Services from '../../services/Services';
-import FormWizard from "../../components/Wizard/FormWizard"
+import FormWizard from "../../components/Wizard/FormWizard";
+import useAccountStore from '../../store/useAccountStore';
 
 export const JobSeekerPrefrence = (props) => {
-  const {register,errors,getValues}=props;
-
-    const formData = getValues();
-    const body = {
-      preferenceLocation: formData.preferenceLocation,
-      jobTypeMasterId: parseInt(formData.jobTypeMasterId),
-      employmentTypeId: parseInt(formData.employmentTypeId),
-      salaryTypeId: parseInt(formData.salaryTypeId),
-      expectedSalary: formData.expectedSalary
-    }
-    console.log(body);
-
-  return (
+  const { register, errors} = props;
+   return (
     <>
-    
-        <FormWizard.TabContent title="Job Preference" icon="fa fa-check" >
-          <h5>Job Preference</h5>
-          <span className="bord"></span>
+   
 
           <FormLabel>
             Preferred Location <span className="text-danger">*</span>
@@ -48,18 +32,19 @@ export const JobSeekerPrefrence = (props) => {
             <input
               className="form-check-input"
               type="radio"
-              value={1}
               id="permanent"
+              name="job-type"
+              value={1}
               {...register("employmentTypeId", { required: true })}
               isInvalid={!!errors.employmentTypeId}
-              
             />
             <label htmlFor="perm">Permanent </label>
             <input
               className="form-check-input"
               type="radio"
+              id="temporary"
+              name="job-type"
               value={2}
-              id="Temporay"
               {...register("employmentTypeId", { required: true })}
               isInvalid={!!errors.employmentTypeId}
             />
@@ -67,8 +52,9 @@ export const JobSeekerPrefrence = (props) => {
             <input
               className="form-check-input"
               type="radio"
-              value={3}
               id="both"
+              name="job-type"
+              value={3}
               {...register("employmentTypeId", { required: true })}
               isInvalid={!!errors.employmentTypeId}
             />
@@ -83,7 +69,8 @@ export const JobSeekerPrefrence = (props) => {
               type="radio"
               id="1"
               value={1}
-             {...register("jobTypeMasterId", { required: true })}
+              name="job-type"
+              {...register("jobTypeMasterId", { required: true })}
             />
             <label htmlFor="perm">Full time </label>
             <input
@@ -91,6 +78,7 @@ export const JobSeekerPrefrence = (props) => {
               type="radio"
               id="2"
               value={2}
+              name="job-type"
               {...register("jobTypeMasterId", { required: true })}
             />
             <label htmlFor="temp">Part time</label>
@@ -98,10 +86,11 @@ export const JobSeekerPrefrence = (props) => {
               className="form-check-input"
               type="radio"
               id="3"
+              name="job-type"
               value={3}
               {...register("jobTypeMasterId", { required: true })}
             />
-            <label htmlFor="both">Remote </label>
+            <label htmlFor="both">Remote</label>
           </div>
           <div className="job-type">
             <h5>
@@ -112,6 +101,7 @@ export const JobSeekerPrefrence = (props) => {
               type="radio"
               id="1"
               value={1}
+              name="salary"
               {...register("salaryTypeId", { required: true })}
             />
             <label htmlFor="perm">Hourly </label>
@@ -120,6 +110,7 @@ export const JobSeekerPrefrence = (props) => {
               type="radio"
               id="2"
               value={2}
+              name="salary"
               {...register("salaryTypeId", { required: true })}
             />
             <label htmlFor="temp">Monthly</label>
@@ -128,6 +119,7 @@ export const JobSeekerPrefrence = (props) => {
               type="radio"
               id="3"
               value={3}
+              name="salary"
               {...register("salaryTypeId", { required: true })}
             />
             <label htmlFor="both">Annually </label>
@@ -146,7 +138,7 @@ export const JobSeekerPrefrence = (props) => {
               isInvalid={!!errors.expectedSalary}
             />
           </InputGroup>
-        </FormWizard.TabContent>
+        
      </>
   );
 }

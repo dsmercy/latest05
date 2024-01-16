@@ -15,6 +15,7 @@ import PrivateRoute from "./PrivateRoutes";
 import { VerifyEmail } from "../Pages/Registration/VerifyEmail";
 import ViewProfileDetail from "../Pages/UserProfle/ViewProfileDetails";
 import ViewJobSeekerProfileDetails from "../Pages/UserProfle/ViewProfileDetails";
+import RecuriterDashboard from "../Pages/Recruiter/Dashboard/index.jsx";
 const AppRoutes = () => {
   return (
     <>
@@ -28,13 +29,73 @@ const AppRoutes = () => {
         <Route exact path="/ConfirmEmail" element={<VerifyEmail />} />
         <Route exact path="/profile-details" element={<ViewProfileDetail />} />
         <Route exact path="/job-seeker-details" element={<BasicDetails />} />
-        <Route exact path="/job-seeker-resume-uplaod" element={<PrivateRoute><JobSeekerResumeUplaod /></PrivateRoute>}/>
-        <Route exact path="/job-seeker-resume-tracking" element={ <PrivateRoute><JobSeekerResumTracking /></PrivateRoute>}/>
-        <Route path="/job-seeker-profile" element={<PrivateRoute><ViewJobSeekerProfileDetails /></PrivateRoute>}/>
-        <Route path="/job-seeker-form" element={ <PrivateRoute><JobSeekerForm /></PrivateRoute>}/>
-        <Route path="/userdashboard" element={<PrivateRoute><UserDashboard /></PrivateRoute>}/>
-        <Route path="/changepassword" element={<PrivateRoute><ChangePassword /></PrivateRoute>}/>
-        </Routes>
+        <Route
+          exact
+          path="/job-seeker-resume-uplaod"
+          element={
+            <PrivateRoute>
+              <JobSeekerResumeUplaod />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          exact
+          path="/job-seeker-resume-tracking"
+          element={
+            <PrivateRoute>
+              <JobSeekerResumTracking />
+            </PrivateRoute>
+          }
+        />
+         <Route
+          path="/job-seeker-profile"
+          element={
+            <PrivateRoute>
+              <ViewJobSeekerProfileDetails />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/job-seeker-form"
+          element={
+            <PrivateRoute>
+              <JobSeekerForm />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/userdashboard"
+          element={
+            <PrivateRoute>
+              <UserDashboard />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/changepassword"
+          element={
+            <PrivateRoute>
+              <ChangePassword />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/job-seeker-form"
+          element={
+            <PrivateRoute>
+              <JobSeekerForm />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/recruiterDashboard"
+          element={
+            <PrivateRoute>
+              <RecuriterDashboard />
+            </PrivateRoute>
+          }
+        />
+      </Routes>
     </>
   );
 };

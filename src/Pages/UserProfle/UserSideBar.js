@@ -14,7 +14,7 @@ export const UserSideBar = () => {
   const signedInUserData = useAccountStore((state) => state.signedInUserData);
 
   const completeProfile = () => {
-    navigate(`/job-seeker-profile`);
+    navigate('/job-seeker-form');
   };
 
   return (

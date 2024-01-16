@@ -32,21 +32,13 @@ if (storeData) {
 const Account = {
   userlogin: (values) => requests.post("Account/Login", values),
   register: (values) => requests.post("Account/SignUp", values),
-  forgetPassword: (values) =>
-    requests.post(
-      `Account/ForgotPassword?Email=${values.email}&Domain=${values.domain}`
-    ),
-  generateOTP: (values) =>
-    requests.post(`Account/GenerateOTP?Email=${values}`, values),
+  forgetPassword: (values) =>requests.post(`Account/ForgotPassword?Email=${values.email}&Domain=${values.domain}`),
+  generateOTP: (values) =>requests.post(`Account/GenerateOTP?Email=${values}`, values),
   resetPassword: (values) => requests.post(`Account/ResetPassword`, values),
   changePassword: (values) => requests.post(`Account/ChangePassword`, values),
   getJobSeeker: () => requests.get(`Account/GetUser?emailid=${email}`),
   getRole: (value) => requests.get("Account/GetRoles", value),
-  confirmEmail: (values) =>
-    requests.post(
-      `Account/ConfirmEmail?token=${values.token}&email=${values.Email}`,
-      values
-    ),
+  confirmEmail: (values) =>requests.post(`Account/ConfirmEmail?token=${values.token}&email=${values.Email}`,values),
 };
 
 const Profile={

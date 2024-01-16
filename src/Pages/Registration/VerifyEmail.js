@@ -26,10 +26,7 @@ export const VerifyEmail = () => {
 
     Services.Account.confirmEmail(body).then((response) => {
       console.log(response);
-      if(response.staus===200){
-        setDisable(false);
-      }
-      toast.success(response.message, {
+       toast.success(response.message, {
         position: toast.POSITION.TOP_RIGHT,
       });
     }).catch((errors)=>{

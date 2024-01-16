@@ -441,6 +441,14 @@ footer {
   cursor: pointer;
 }
 
+/* .react-form-wizard .wizard-card-footer .wizard-footer-left button {
+  float: left;
+  color: var(--bg-green);
+  background: transparent !important;
+  border-radius: 6px;
+} */
+
+
 /*================ Employee dashboard ==============================*/
 
  .employee-dashboard h5 {

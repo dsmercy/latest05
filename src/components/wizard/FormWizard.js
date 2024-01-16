@@ -109,7 +109,7 @@ const FormWizard = forwardRef(
     };
 
     const handleSubmit = () => {
-      if (typeof onComplete === "function") onComplete();
+      onComplete();
     };
 
     const renderTabs = () => {
@@ -155,6 +155,7 @@ const FormWizard = forwardRef(
       borderColor: color,
       borderRadius: "4px",
     };
+    
     const isVertical = layout === "vertical" ? "vertical" : "horizontal";
 
     return (
