@@ -41,6 +41,7 @@ const JobSeekerForm = () => {
   const experienceData = useAccountStore((state) => state.experienceData);
   const savePreference = useAccountStore((state) => state.savePreference); 
   const deleteEducationById = useAccountStore((state) => state.deleteEducationById);
+  const getEducation = useAccountStore((state) => state.getEducation);
   const defaultValues = {
     firstName: jobSeekerData.data.firstName,
     middleName: jobSeekerData.data.middleName,
@@ -135,6 +136,7 @@ const JobSeekerForm = () => {
           .then((response) => {
             // getUser();
             setStepIndex((prevStepIndex) => prevStepIndex + 1);
+            getEducation();
             return true;
           })
           .catch((errors) => {
@@ -198,6 +200,7 @@ const JobSeekerForm = () => {
     getYear();
     getSkills();
     // getEducationDetails();
+    getEducation();
   }, []);
 
   const getDegree = () => {

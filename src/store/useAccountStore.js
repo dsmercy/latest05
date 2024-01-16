@@ -46,40 +46,54 @@ const useAccountStore = create(
       },
       saveEducation: (educationDetail) => {
         set((prevState) => ({
-            educationData: prevState.educationData.length === 0
-                ? educationDetail.map((item) => ({
-                    ...item,
-                    id: 1,
-                }))
-                : [...prevState.educationData, ...educationDetail.map((item) => ({
-                    ...item,
-                    id: Math.max(...prevState.educationData.map(item => item.id)) + 1,
-                }))],  // If not empty, append the new values
+          educationData: prevState.educationData.length === 0
+            ? educationDetail.map((item) => ({
+              ...item,
+              id: 1,
+            }))
+            : [...prevState.educationData, ...educationDetail.map((item) => ({
+              ...item,
+              id: Math.max(...prevState.educationData.map(item => item.id)) + 1,
+            }))],  // If not empty, append the new values
         }));
-    },
+      },
+      getEducation: async () => {
+        try {
+          const userDetail = await Services.Profile.getJobSeekerDetails();
+          const updatedUserDetail = userDetail.data.map((obj, index) => ({
+            ...obj,
+            "id": index + 1
+          }));
+          set(() => ({
+            educationData: updatedUserDetail,
+          }));
+        } catch (error) {
+          return Promise.reject({ error: error.data });
+        }
+      },
       deleteEducationById: (educationId) => {
         set((prevState) => ({
-            educationData: prevState.educationData.filter(item => item.id !== educationId),
+          educationData: prevState.educationData.filter(item => item.id !== educationId),
         }));
-    },
+      },
       saveExperience: (experienceDetail) => {
         set((prevState) => ({
           experienceData: prevState.experienceData.length === 0
-              ? experienceDetail.map((item)=>({
-                ...item,
-                id:1,
-              }))
-              : [...prevState.experienceData, ...experienceDetail.map((item)=>({
-                ...item,
-                id: Math.max(...prevState.experienceData.map(item => item.id)) + 1,
-              }))],
+            ? experienceDetail.map((item) => ({
+              ...item,
+              id: 1,
+            }))
+            : [...prevState.experienceData, ...experienceDetail.map((item) => ({
+              ...item,
+              id: Math.max(...prevState.experienceData.map(item => item.id)) + 1,
+            }))],
         }));
       },
       deleteExperiencById: (experienceId) => {
         set((prevState) => ({
           experienceData: prevState.experienceData.filter(item => item.id !== experienceId),
         }));
-    },
+      },
       savePreference: (preferenceDetail) => {
         set((prevState) => ({
           preferenceData: { ...prevState.preferenceData, ...preferenceDetail },
