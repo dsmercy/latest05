@@ -7,8 +7,11 @@ import micro from "../../../assets/images/Microsoft_logo_(2012) 2.png";
 import microl from "../../../assets/images/images 3.png";
 import { Link } from "react-router-dom";
 import { UserProfileBody } from "../../UserProfle/UserProfileBody";
+import { JobSearch } from "../../UserProfle/JobSearch";
+import useJobsStore from "../../../store/useJobsStore";
 
 const SearchResult = () => {
+  const jobsList = useJobsStore((state) => state.jobsList);
   return (
     <>
       <Header />
@@ -19,90 +22,7 @@ const SearchResult = () => {
       </div>
 
       <Container>
-        <div className="search-result-container">
-          <Row className="w-100">
-            <Col lg={4} sm={12}>
-              {/* <i className='fa fa-search'></i> */}
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Enter skill / designation /company name"
-                name=""
-              />
-            </Col>
-            <Col lg={3} sm={12}>
-              <select className="form-select">
-                <option>Select Experience</option>
-                <option>2</option>
-                <option>3</option>
-                <option>4</option>
-              </select>
-            </Col>
-
-            <Col lg={3} sm={12}>
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Enter Location"
-                name=""
-              />
-            </Col>
-            <Col lg={2} sm={12}>
-              <div className="search-container-btn">
-                <Button variant="">Search</Button>
-              </div>
-            </Col>
-          </Row>
-        </div>
-
-        <div className="search-result-filter">
-          <Row>
-            <Col>
-              <select className="form-select">
-                <option>Date of Posted</option>
-                <option>2</option>
-                <option>3</option>
-                <option>4</option>
-              </select>
-            </Col>
-
-            <Col>
-              <select className="form-select">
-                <option>Industry</option>
-                <option>2</option>
-                <option>3</option>
-                <option>4</option>
-              </select>
-            </Col>
-
-            <Col>
-              <select className="form-select">
-                <option>Job Type</option>
-                <option>2</option>
-                <option>3</option>
-                <option>4</option>
-              </select>
-            </Col>
-
-            <Col>
-              <select className="form-select">
-                <option>Education</option>
-                <option>2</option>
-                <option>3</option>
-                <option>4</option>
-              </select>
-            </Col>
-
-            <Col>
-              <select className="form-select">
-                <option>Salary</option>
-                <option>2</option>
-                <option>3</option>
-                <option>4</option>
-              </select>
-            </Col>
-          </Row>
-        </div>
+        <JobSearch />
 
         <Row>
           <Col>
@@ -116,7 +36,50 @@ const SearchResult = () => {
               </select>
             </div>
 
-            <div className="search-result-card">
+            {jobsList?.map((item, index) => {
+            return (
+              <div key={index}>
+                <div className="search-result-card">
+                  <img src={micro} alt="image" />
+                  <i
+                    className="fa fa-bookmark-o" style={{color:'green'}}
+                  ></i>
+                  <p>
+                    3.4 <i className="fa fa-star" />
+                  </p>
+                  <h4>{item.title}</h4>
+                  <h5>Full Time</h5>
+                  <span>
+                    <i className="fa fa-briefcase"></i>
+                    {item.minimumExperience}-{item.maximumExperience} Yrs
+                  </span>
+                  <span>
+                    <i className="fa fa-usd"></i>
+                    {item.annualCTC ? item.annualCTC : "Not disclosed"}
+                  </span>
+                  <span>
+                    <i className="fa fa-map-marker"></i>
+                    New York,NY
+                  </span>
+                  <div className="dash-desc">
+                    <p>{item.description}</p>
+                  </div>
+                  <div className="dash-prog">
+                    <Row>
+                      <Col>
+                        <div className="apply-now">
+                          <Button variant="">
+                            Apply Now <i className="fa fa-chevron-right"></i>
+                          </Button>
+                        </div>
+                      </Col>
+                    </Row>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+            {/* <div className="search-result-card">
               <img src={micro} alt="image" />
               <i className="fa fa-bookmark-o"></i>
               <p className="rating">
@@ -161,54 +124,8 @@ const SearchResult = () => {
               <div className="timer">
                 <i className="fa fa-clock-o"></i> <span>2 days ago</span>
               </div>
-            </div>
+            </div>*/}
 
-            <div className="search-result-card">
-              <img src={micro} alt="image" />
-              <i className="fa fa-bookmark-o"></i>
-              <p className="rating">
-                3.4 <i className="fa fa-star" />
-              </p>
-              <div className="search-full">
-                <h4>Visual Designer</h4>
-                <h5>Full Time</h5>
-              </div>
-
-              <span>
-                <i className="fa fa-briefcase"></i>
-                3-8 Yrs
-              </span>
-              <span>
-                <i className="fa fa-usd"></i>
-                Not disclosed
-              </span>
-              <span>
-                <i className="fa fa-map-marker"></i>
-                New York,NY
-              </span>
-              <div className="search-desc">
-                <p className="para">
-                  You will be expected to create Visual appealing design keeping
-                  in mind There are many variations of passages of Lorem Ipsum
-                  available, but the majority have suffered alteration in some
-                  form
-                </p>
-              </div>
-
-              <div className="sear-skill">
-                <p>UI Designer</p>
-
-                <p>UX Designer</p>
-
-                <p>Visual Design</p>
-
-                <p>Typography</p>
-              </div>
-
-              <div className="timer">
-                <i className="fa fa-clock-o"></i> <span>2 days ago</span>
-              </div>
-            </div>
           </Col>
 
           <Col>

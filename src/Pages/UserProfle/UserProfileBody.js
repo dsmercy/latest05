@@ -5,17 +5,16 @@ import appstore from "../../assets/images/app-store-google-play-logo 3.png";
 import googleplay from "../../assets/images/app-store-google-play-logo 4.png";
 import Services from "../../services/Services";
 import { toast } from 'react-toastify';
+import useJobsStore from "../../store/useJobsStore";
 
 export const UserProfileBody = ({getJobCount}) => {
-  const [matchedJob, setMatchedJob] = useState([]);
   const [color,setColor]=useState(false);
-  useEffect(() => {
-    getMatchedJobSkill();
-  }, []);
+  const getJobsList = useJobsStore((state) => state.getJobsList);
+  const jobsList = useJobsStore((state) => state.jobsList);
 
-  const getMatchedJobSkill = () => {
-    Services.Profile.getSearchJobSKill().then((response) => setMatchedJob(response?.data)).catch((errors) =>   console.log(errors))
-  };
+  useEffect(() => {
+    getJobsList();
+  }, []);
 
    const handleSaveJob = (id) => {
     const body= { jobId: id }
@@ -40,7 +39,7 @@ export const UserProfileBody = ({getJobCount}) => {
       </div>
       <Row>
         <Col>
-          {matchedJob?.map((item, index) => {
+          {jobsList?.map((item, index) => {
             return (
               <div key={index}>
                 <div className="visual-card">

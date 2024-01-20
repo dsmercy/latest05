@@ -2,11 +2,13 @@ import React, { useEffect, useState } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import Services from "../../services/Services";
+import useJobsStore from "../../store/useJobsStore";
 
-export const JobSearch = () => {
+export const JobSearch = ({userdashboard}) => {
   const [jobType,setJobType]=useState([]);
-  const [industryType,setIndustryType]=useState([]);
+  const [industryType,setIndustryType]=useState(['IT','HR','ACCOUNTS']);
   const navigate = useNavigate();
+  const filterJobs = useJobsStore((state) => state.filterJobs);
 
   useEffect(()=>{
     getJobType();
@@ -50,25 +52,26 @@ export const JobSearch = () => {
       jobType:formState.jobType,
       // dateOfPosted:""
     }
-    console.log(body,"body")
-    Services.Job.searchJob(body).then((res)=>{console.log(res);
-      const filteredData = res.data.filter(job => 
+    filterJobs(body);
+    console.log(body, "body")
+    Services.Job.searchJob(body).then((res) => {
+      console.log(res);
+      const filteredData = res.data.filter(job =>
         job.skill.includes(body.jobSkill) &&
         job.experience === body.jobExperience &&
         job.location.includes(body.jobLocation) &&
         job.industry === body.jobIndustry &&
         job.type === body.jobType
       );
-      console.log("filteredData",filteredData);
-    }).catch((errors)=>console.log(errors))
-    navigate("/search-jobs");
+      console.log("filteredData", filteredData);
+    }).catch((errors) => console.log(errors))
+    if(userdashboard){ navigate("/search-jobs"); }
+    
   };
- 
+
   return (
     <>
-      <div className="employee-dashboard">
-        <h5>Find your dream job now</h5>
-        <div className="search-container">
+      <div className="search-container">
           <Row className="w-100">
             <Col lg={4} sm={12}>
               <input
@@ -156,7 +159,6 @@ export const JobSearch = () => {
             </Col>
           </Row>
         </div>
-      </div>
     </>
   );
 };
