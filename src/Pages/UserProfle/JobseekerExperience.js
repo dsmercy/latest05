@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import FormWizard from "../../components/Wizard/FormWizard";
 import { FormLabel } from "react-bootstrap";
 import InputGroup from "react-bootstrap/InputGroup";
 import Form from "react-bootstrap/Form";
@@ -75,15 +74,17 @@ export const JobseekerExperience = (props) => {
     setValue("jobTitle", exp.jobTitle);
     setValue("startDate", exp.startDate);
     setValue("endDate", exp.endDate);
-    setValue("skill", exp.skillId);
+    setValue("skill", String(exp.skillId));
     setValue("comment", exp.jobDescription);
-    setValue("salaryTypeId", exp.salaryTypeId);
+    setValue("salaryTypeId", String(exp.salaryTypeId));
     setValue("salary", exp.salary);
     deleteExperiencById(id);
   };
   return (
     <>
      
+        <h5>Experience</h5>
+        <span className="bord"></span>
         <div className="experience">
           {experienceData && experienceData.length > 0
             ? experienceData.map((edu, index) => (

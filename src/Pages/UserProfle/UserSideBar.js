@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Col, Container, Row } from "react-bootstrap";
 import ProgressBar from "react-bootstrap/ProgressBar";
 import leftImg from "../../assets/images/left-side-img.png";
@@ -6,16 +6,34 @@ import sidemenu from "../../assets/images/dash-side-menu.png";
 import { UserProfileBody } from "./UserProfileBody";
 import { useNavigate } from "react-router-dom";
 import useAccountStore from "../../store/useAccountStore";
+import Services from "../../services/Services";
 
 export const UserSideBar = () => {
   const navigate = useNavigate();
   const now = 60;
 
   const signedInUserData = useAccountStore((state) => state.signedInUserData);
+  const [appliedJob, setAppliedJob] = useState([]);
 
   const completeProfile = () => {
-    navigate('/job-seeker-form');
+    navigate("/job-seeker-form");
   };
+  const handleAppliedJob = () => {
+    navigate("/applied-jobs");
+  };
+  const handleSavedJob = () => {
+    navigate("/saved-jobs");
+  };
+
+  useEffect(() => {
+    getJobCount();
+  }, []);
+
+  const getJobCount = () => {
+    Services.Job.getAppliedJobCount().then((res) => {console.log(res.data);
+    setAppliedJob(res.data)})
+      .catch((errors) =>console.log(errors));
+     };
 
   return (
     <>
@@ -25,11 +43,14 @@ export const UserSideBar = () => {
             <div className="employee-left-side">
               <div className="john-smith">
                 <Row>
-                  <Col lg={3}>
-                    {/* <img src={leftImg} alt="image" /> */}
-                  </Col>
+                  <Col lg={3}>{/* <img src={leftImg} alt="image" /> */}</Col>
                   <Col>
-                  <h4>{signedInUserData && signedInUserData.data?.users?.firstName} {signedInUserData && signedInUserData.data?.users?.lastName}</h4>
+                    <h4>
+                      {signedInUserData &&
+                        signedInUserData.data?.users?.firstName}{" "}
+                      {signedInUserData &&
+                        signedInUserData.data?.users?.lastName}
+                    </h4>
                     <p>UI/UX Developer</p>
                   </Col>
                 </Row>
@@ -69,11 +90,11 @@ export const UserSideBar = () => {
                   </li>
                   <li>
                     <i className="fa fa-bookmark-o"></i> Saved Job{" "}
-                    <span>15</span>
+                    <span>{appliedJob.savedJobCount}</span>
                   </li>
                   <li>
                     <i className="fa fa-paper-plane-o"></i> Applied Job{" "}
-                    <span>25</span>
+                    <span>{appliedJob.jobCount}</span>
                   </li>
                   <li>
                     <i className="fa fa-comments-o"></i> Message <span>15</span>
@@ -96,15 +117,17 @@ export const UserSideBar = () => {
             </div>
           </Col>
 
-          <Col lg={9} sm={12}>
+           <Col lg={9} sm={12}>
             <div className="employee-right-side">
               <Row>
                 <Col lg={4} sm={12}>
                   <div className="job-card applied-card">
                     <Row>
                       <Col>
-                        <h4>20</h4>
-                        <p>Applied Job</p>
+                        <div onClick={handleAppliedJob}>
+                          <h4>{appliedJob.jobCount}</h4>
+                          <p>Applied Job</p>
+                        </div>
                       </Col>
                       <Col>
                         <i className="fa fa-paper-plane" />
@@ -117,11 +140,13 @@ export const UserSideBar = () => {
                   <div className="job-card saved-card">
                     <Row>
                       <Col>
-                        <h4>18</h4>
-                        <p>Saved Job</p>
+                        <div onClick={handleSavedJob}>
+                          <h4>{appliedJob.savedJobCount}</h4>
+                          <p>Saved Job</p>
+                        </div>
                       </Col>
                       <Col>
-                        <i className="fa fa-bookmark"></i>
+                        <i className="fa fa-bookmark" ></i>
                       </Col>
                     </Row>
                   </div>
@@ -131,7 +156,7 @@ export const UserSideBar = () => {
                   <div className="job-card resume-card">
                     <Row>
                       <Col>
-                        <h4>16</h4>
+                        <h4>{appliedJob.resumeViewCount}</h4>
                         <p>Resume View</p>
                       </Col>
                       <Col>
@@ -142,7 +167,7 @@ export const UserSideBar = () => {
                 </Col>
               </Row>
 
-              <UserProfileBody />
+              <UserProfileBody getJobCount={getJobCount} />
             </div>
           </Col>
         </Row>

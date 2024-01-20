@@ -55,13 +55,27 @@ const Profile={
     setJobSeekerExperience: (values)=> requests.post('JobSeeker/PostJobSeekerExperience',(values)),
     getJobSeekerExperience:()=>requests.get('JobSeeker/GetJobSeekerExperience'),
     setJobSeekerPreference:(values)=>requests.post('JobSeeker/PostJobSeekerPreference',(values)),
-    getJobSeekerPreference:()=>requests.get('JobSeeker/GetJobSeekerPreference')
+    getJobSeekerPreference:()=>requests.get('JobSeeker/GetJobSeekerPreference'),
+    getSearchJobSKill:()=>requests.get("JobSeeker/SearchJobBasedOnSkill"),
+}
+
+const Job={
+  getAppliedJobCount:()=>requests.get('Job/CountAppliedJob'),
+  getApplyJobList:()=>requests.get("Job/ApplyJobList"),
+  getSavedJobList: ()=>requests.get('Job/SavedJobList'),
+  postSavedJob:(values)=>requests.post("Job/SavedJob",(values)),
+  postUnsavedJob:(values)=>requests.post("Job/UnSavedJob",(values)),
+  searchJob:(values)=>requests.post('Job/FindJobs',(values)),
+  jobTypeList:()=>requests.get('Master/GetJobTypesList'),
+  industryList:()=>requests.get('Master/GetIndustry'),
+  applyJob:(values)=>requests.post('Job/ApplyJob',(values))
 }
 
 
 const Services = {
   Account,
   Profile,
+  Job
 };
 
 

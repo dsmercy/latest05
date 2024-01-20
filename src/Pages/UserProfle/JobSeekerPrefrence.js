@@ -2,14 +2,13 @@ import React, { useState } from 'react'
 import { FormLabel } from 'react-bootstrap';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Form from 'react-bootstrap/Form';
-import FormWizard from "../../components/Wizard/FormWizard";
-import useAccountStore from '../../store/useAccountStore';
 
 export const JobSeekerPrefrence = (props) => {
   const { register, errors} = props;
    return (
     <>
-   
+      <h5>Job Preference</h5>
+          <span className="bord"></span>
 
           <FormLabel>
             Preferred Location <span className="text-danger">*</span>
@@ -138,7 +137,6 @@ export const JobSeekerPrefrence = (props) => {
               isInvalid={!!errors.expectedSalary}
             />
           </InputGroup>
-        
      </>
   );
 }

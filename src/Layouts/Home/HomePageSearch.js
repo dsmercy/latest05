@@ -3,6 +3,10 @@ import group from "../../assets/images/Group 41384.png";
 // import { updateUser } from "../../services/axiosAPI/Registration";
 
 const HomePageSearch = () => {
+
+  const handleSearch=()=>{
+    
+  }
   
   return (
     <>
@@ -115,7 +119,7 @@ const HomePageSearch = () => {
             </div>
 
             <div className="col-lg-3 col-12 flt">
-              <button type="button" className="btn btn-dark">
+              <button type="button" className="btn btn-dark" onClick={handleSearch}>
                 Search
               </button>
             </div>

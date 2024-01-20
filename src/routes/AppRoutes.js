@@ -16,6 +16,10 @@ import { VerifyEmail } from "../Pages/Registration/VerifyEmail";
 import ViewProfileDetail from "../Pages/UserProfle/ViewProfileDetails";
 import ViewJobSeekerProfileDetails from "../Pages/UserProfle/ViewProfileDetails";
 import RecuriterDashboard from "../Pages/Recruiter/Dashboard/index.jsx";
+import AppliedJobList from "../Pages/JobSeekerFlow/JobSeekerJobListing/AppliedJobList";
+import SavedJobList from "../Pages/JobSeekerFlow/JobSeekerJobListing/SavedJobList";
+import JobSearchResult from "../Pages/JobSeekerFlow/JobSeekerJobSerach/JobSearchResult";
+import PreviewJobinFullScreen from "../Pages/JobSeekerFlow/JobSeekerJobSerach/PreviewJobinFullScreen";
 const AppRoutes = () => {
   return (
     <>
@@ -29,72 +33,18 @@ const AppRoutes = () => {
         <Route exact path="/ConfirmEmail" element={<VerifyEmail />} />
         <Route exact path="/profile-details" element={<ViewProfileDetail />} />
         <Route exact path="/job-seeker-details" element={<BasicDetails />} />
-        <Route
-          exact
-          path="/job-seeker-resume-uplaod"
-          element={
-            <PrivateRoute>
-              <JobSeekerResumeUplaod />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          exact
-          path="/job-seeker-resume-tracking"
-          element={
-            <PrivateRoute>
-              <JobSeekerResumTracking />
-            </PrivateRoute>
-          }
-        />
-         <Route
-          path="/job-seeker-profile"
-          element={
-            <PrivateRoute>
-              <ViewJobSeekerProfileDetails />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/job-seeker-form"
-          element={
-            <PrivateRoute>
-              <JobSeekerForm />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/userdashboard"
-          element={
-            <PrivateRoute>
-              <UserDashboard />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/changepassword"
-          element={
-            <PrivateRoute>
-              <ChangePassword />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/job-seeker-form"
-          element={
-            <PrivateRoute>
-              <JobSeekerForm />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/recruiterDashboard"
-          element={
-            <PrivateRoute>
-              <RecuriterDashboard />
-            </PrivateRoute>
-          }
-        />
+        <Route exact path="/job-seeker-resume-uplaod" element={<PrivateRoute><JobSeekerResumeUplaod /></PrivateRoute>}/>
+        <Route exact path="/job-seeker-resume-tracking" element={<PrivateRoute><JobSeekerResumTracking/></PrivateRoute>}/>
+        <Route exact path="/applied-jobs" element={<PrivateRoute><AppliedJobList /></PrivateRoute>}/>
+        <Route exact path="/saved-jobs" element={<PrivateRoute><SavedJobList /></PrivateRoute>}/>
+        <Route exact path="/search-jobs" element={<PrivateRoute><JobSearchResult /></PrivateRoute>}/>
+        <Route exact path="/job-seeker-profile" element={<PrivateRoute><ViewJobSeekerProfileDetails /></PrivateRoute>}/>
+        <Route exact path="/prview-Job-Details" element={<PrivateRoute><PreviewJobinFullScreen /></PrivateRoute>}/>
+        <Route exact path="/job-seeker-form" element={<PrivateRoute><JobSeekerForm /></PrivateRoute>}/>
+        <Route exact path="/userdashboard" element={<PrivateRoute><UserDashboard /></PrivateRoute>}/>
+        <Route exact path="/changepassword" element={<PrivateRoute><ChangePassword /></PrivateRoute>}/>
+        <Route exact path="/job-seeker-form" element={<PrivateRoute><JobSeekerForm /></PrivateRoute>}/>
+        <Route exact path="/recruiterDashboard" element={<PrivateRoute><RecuriterDashboard /></PrivateRoute>}/>
       </Routes>
     </>
   );

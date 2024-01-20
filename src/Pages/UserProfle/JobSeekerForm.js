@@ -36,12 +36,12 @@ const JobSeekerForm = () => {
   const [university, setUniversity] = useState([]);
   const [year, setYear] = useState([]);
   const [skills, setSkills] = useState([]);
-  const[eduDetails,setEduDetails]=useState([]);
   const jobSeekerData = useAccountStore((state) => state.jobSeekerData);
   const experienceData = useAccountStore((state) => state.experienceData);
   const savePreference = useAccountStore((state) => state.savePreference); 
   const deleteEducationById = useAccountStore((state) => state.deleteEducationById);
   const getEducation = useAccountStore((state) => state.getEducation);
+  const getExperience = useAccountStore((state) => state.getExperience);
   const defaultValues = {
     firstName: jobSeekerData.data.firstName,
     middleName: jobSeekerData.data.middleName,
@@ -50,13 +50,7 @@ const JobSeekerForm = () => {
     phoneNumber: jobSeekerData.data.phoneNumber,
     currentLocation: jobSeekerData.data.currentLocation,
   };
-  const {register,resetField,
-    getValues,
-    formState: { errors },
-    trigger,
-    handleSubmit,
-    setValue,
-  } = useForm({ defaultValues, mode: "onSubmit" });
+  const {register,resetField,getValues,formState: { errors },trigger,handleSubmit,setValue,} = useForm({ defaultValues, mode: "onSubmit" });
   const options = skills.map((item) => [
     {
       value: item.skillName,
@@ -134,8 +128,7 @@ const JobSeekerForm = () => {
 
         Services.Profile.setJobSeekerDetails(formData)
           .then((response) => {
-            // getUser();
-            setStepIndex((prevStepIndex) => prevStepIndex + 1);
+           setStepIndex((prevStepIndex) => prevStepIndex + 1);
             getEducation();
             return true;
           })
@@ -153,9 +146,11 @@ const JobSeekerForm = () => {
 
     if (stepIndex === 2) {
       setStepIndex((prevStepIndex) => prevStepIndex + 1);
-      Services.Profile.setJobSeekerExperience(experienceData)
+      getExperience();
+         Services.Profile.setJobSeekerExperience(experienceData)
         .then((res) => console.log(res))
         .catch((errors) => console.log(errors));
+       
       return true;
     }
   };
@@ -199,8 +194,8 @@ const JobSeekerForm = () => {
     getUniversity();
     getYear();
     getSkills();
-    // getEducationDetails();
     getEducation();
+    getExperience();
   }, []);
 
   const getDegree = () => {
@@ -252,16 +247,6 @@ const JobSeekerForm = () => {
         console.log(errors);
       });
   };
-
-// const getEducationDetails=()=>{
-//   Services.Profile.getJobSeekerDetails().then((res)=>{
-//     console.log(res.data[0]);
-//    setEduDetails(res.data[0]);
-//   //  saveEducation(res.data[0]);
-//   })
-// }
-
-
   const handleComplete = (data) => {
   const formData = getValues();
   const body = {
@@ -502,7 +487,6 @@ const JobSeekerForm = () => {
                         ? educationData.map((edu, index) => (
                             <EducationForm
                               eduData={edu}
-                              eduDetails={eduDetails}
                               key={index}
                               setValue={setValue}
                               onEditClick={onEditClick}
@@ -651,10 +635,10 @@ const JobSeekerForm = () => {
                     </FormWizard.TabContent>
 
                     {/* ---------------Third Form -----------------*/}
-                    <FormWizard.TabContent title="Experience" icon="fa fa-check">
-                      <h5>Experience</h5>
-                      <span className="bord"></span>
-
+                    <FormWizard.TabContent
+                      title="Experience"
+                      icon="fa fa-check"
+                    >
                       <JobseekerExperience
                         changeKeyValue={changeKeyValue}
                         options={options}
@@ -668,14 +652,11 @@ const JobSeekerForm = () => {
                       />
                     </FormWizard.TabContent>
                     {/* -----------------------Forth Form--------------- */}
-                    <FormWizard.TabContent title="Job Preference" icon="fa fa-check">
-                      <h5>Job Preference</h5>
-                      <span className="bord"></span>
-                      <JobSeekerPrefrence
-                        register={register}
-                        errors={errors}
-                        title="Job Preferences"
-                      />
+                    <FormWizard.TabContent
+                      title="Job Preference"
+                      icon="fa fa-check"
+                    >
+                      <JobSeekerPrefrence register={register} errors={errors} />
                     </FormWizard.TabContent>
                   </FormWizard>
                 </Form>
