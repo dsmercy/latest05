@@ -8,14 +8,20 @@ import kantar from "../../../assets/images/kantar.png";
 import google from "../../../assets/images/google.png";
 import shell from "../../../assets/images/shell.png";
 import Services from "../../../services/Services";
+import Pagination from "react-pagination-bootstrap";
 
 const AppliedJobList = () => {
 const [appliedJob, setAppliedJob]=useState([]);
+const [activePage, setActivePage]=useState(1);
+  const NumOfDataDisplay= 3;
 
   useEffect(()=>{
     appliedJobList();
   },[])
   
+  const handlePageChange=(pageNumber)=> {
+    setActivePage(pageNumber);
+  }
 
 const appliedJobList=()=>{
   Services.Job.getApplyJobList().then((res)=>{console.log(res); setAppliedJob(res.data)})
@@ -33,7 +39,7 @@ const appliedJobList=()=>{
             </h4>
           </div>
 {
-  appliedJob.map((item,index)=>{
+  appliedJob?.slice((activePage-1)*NumOfDataDisplay,activePage*NumOfDataDisplay)?.map((item,index)=>{
     return(
   <div key={index}>
 <div className="applied-job-card">
@@ -84,6 +90,14 @@ const appliedJobList=()=>{
         </div>
 
       </Container>
+      <div style={{display: "flex", justifyContent: "center"}}>
+      <Pagination
+          activePage={activePage}
+          itemsCountPerPage={NumOfDataDisplay}
+          totalItemsCount={appliedJob.length}
+          onChange={handlePageChange}
+        />
+        </div>
       <Footer />
     </>
   );

@@ -6,12 +6,13 @@ import bread from "../../../assets/images/job-profile 2.png";
 import micro from "../../../assets/images/Microsoft_logo_(2012) 2.png";
 import microl from "../../../assets/images/images 3.png";
 import { Link } from "react-router-dom";
-import { UserProfileBody } from "../../UserProfle/UserProfileBody";
 import { JobSearch } from "../../UserProfle/JobSearch";
 import useJobsStore from "../../../store/useJobsStore";
+import { UserProfileBody } from "../../UserProfle/UserProfileBody";
 
 const SearchResult = () => {
   const jobsList = useJobsStore((state) => state.jobsList);
+ 
   return (
     <>
       <Header />
@@ -22,8 +23,7 @@ const SearchResult = () => {
       </div>
 
       <Container>
-        <JobSearch />
-
+      <JobSearch />
         <Row>
           <Col>
             <div className="sear-inner">
@@ -35,7 +35,6 @@ const SearchResult = () => {
                 <option>4</option>
               </select>
             </div>
-
             {jobsList?.map((item, index) => {
             return (
               <div key={index}>
@@ -79,53 +78,7 @@ const SearchResult = () => {
               </div>
             );
           })}
-            {/* <div className="search-result-card">
-              <img src={micro} alt="image" />
-              <i className="fa fa-bookmark-o"></i>
-              <p className="rating">
-                3.4 <i className="fa fa-star" />
-              </p>
-              <div className="search-full">
-                <h4>Visual Designer</h4>
-                <h5>Full Time</h5>
-              </div>
-
-              <span>
-                <i className="fa fa-briefcase"></i>
-                3-8 Yrs
-              </span>
-              <span>
-                <i className="fa fa-usd"></i>
-                Not disclosed
-              </span>
-              <span>
-                <i className="fa fa-map-marker"></i>
-                New York,NY
-              </span>
-              <div className="search-desc">
-                <p className="para">
-                  You will be expected to create Visual appealing design keeping
-                  in mind There are many variations of passages of Lorem Ipsum
-                  available, but the majority have suffered alteration in some
-                  form
-                </p>
-              </div>
-
-              <div className="sear-skill">
-                <p>UI Designer</p>
-
-                <p>UX Designer</p>
-
-                <p>Visual Design</p>
-
-                <p>Typography</p>
-              </div>
-
-              <div className="timer">
-                <i className="fa fa-clock-o"></i> <span>2 days ago</span>
-              </div>
-            </div>*/}
-
+          
           </Col>
 
           <Col>

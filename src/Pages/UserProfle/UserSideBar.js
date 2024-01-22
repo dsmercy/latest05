@@ -88,11 +88,11 @@ export const UserSideBar = () => {
                   <li className="active">
                     <i className="fa fa-home"></i> Home{" "}
                   </li>
-                  <li>
+                  <li onClick={handleSavedJob}>
                     <i className="fa fa-bookmark-o"></i> Saved Job{" "}
                     <span>{appliedJob.savedJobCount}</span>
                   </li>
-                  <li>
+                  <li  onClick={handleAppliedJob}> 
                     <i className="fa fa-paper-plane-o"></i> Applied Job{" "}
                     <span>{appliedJob.jobCount}</span>
                   </li>

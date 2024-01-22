@@ -16,7 +16,7 @@ import Services from "../../services/Services";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import useAccountStore from "../../store/useAccountStore";
-import Loader from "../../components/Loader";
+import Loader from "../../components/Constants/Loader";
 
 const Login = () => {
   const navigate = useNavigate();

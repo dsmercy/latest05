@@ -5,16 +5,25 @@ import appstore from "../../assets/images/app-store-google-play-logo 3.png";
 import googleplay from "../../assets/images/app-store-google-play-logo 4.png";
 import Services from "../../services/Services";
 import { toast } from 'react-toastify';
+import Pagination from "react-pagination-bootstrap";
 import useJobsStore from "../../store/useJobsStore";
 
+
 export const UserProfileBody = ({getJobCount}) => {
+  const [matchedJob, setMatchedJob] = useState([]);
   const [color,setColor]=useState(false);
   const getJobsList = useJobsStore((state) => state.getJobsList);
   const jobsList = useJobsStore((state) => state.jobsList);
-
+  const [activePage, setActivePage]=useState(1);
+  const NumOfDataDisplay= 4;
   useEffect(() => {
+     getMatchedJobSkill();
     getJobsList();
   }, []);
+
+  const getMatchedJobSkill = () => {
+    Services.Profile.getSearchJobSKill().then((response) => setMatchedJob(response?.data)).catch((errors) =>   console.log(errors))
+  };
 
    const handleSaveJob = (id) => {
     const body= { jobId: id }
@@ -22,27 +31,32 @@ export const UserProfileBody = ({getJobCount}) => {
         const bgcolor="greenyellow";
         setColor(bgcolor);
         getJobCount();
+        getMatchedJobSkill();
       }).catch((errors) =>console.log(errors))};
 
   const handleApplyJob=(id)=>{
     const body= { jobId: id }
-    Services.Job.applyJob(body).then((res)=>{console.log(res);getJobCount();}).catch((errors)=>console.log(errors));
-    
+    Services.Job.applyJob(body).then((res)=>{getJobCount();getMatchedJobSkill();}).catch((errors)=>console.log(errors)); 
+
   }
+  const handlePageChange=(pageNumber)=> {
+    setActivePage(pageNumber);
+  }
+    
   return (
     <>
+     <div className='employee-side'>
       <div className="match-job">
         <h4>
-          Matched <span>Jobs</span>
+          Matched <span>Jobs {matchedJob.length}</span>
         </h4>
         <p> View All</p>
       </div>
       <Row>
-        <Col>
-          {jobsList?.map((item, index) => {
+       {jobsList?.slice((activePage-1)*NumOfDataDisplay,activePage*NumOfDataDisplay)?.map((item, index) => {
             return (
-              <div key={index}>
-                <div className="visual-card">
+              <Col>
+                <div className="visual-card" key={index}>
                   <img src={micro} alt="image" />
                   <i
                     className="fa fa-bookmark-o" style={{color:'green',backgroundColor:{color}}}
@@ -80,11 +94,19 @@ export const UserProfileBody = ({getJobCount}) => {
                     </Row>
                   </div>
                 </div>
-              </div>
+                </Col>
             );
           })}
-        </Col>
+        
       </Row>
+      <div style={{display: "flex", justifyContent: "center"}}>
+      <Pagination
+          activePage={activePage}
+          itemsCountPerPage={NumOfDataDisplay}
+          totalItemsCount={matchedJob.length}
+          onChange={handlePageChange}
+        />
+        </div>
       <div className="match-job">
         <h4>
           Volunteer <span>Opportunities </span>
@@ -113,6 +135,7 @@ export const UserProfileBody = ({getJobCount}) => {
           <img src={appstore} alt="image" />
           <img src={googleplay} alt="image" />
         </h5>
+      </div>
       </div>
     </>
   );

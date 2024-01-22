@@ -10,11 +10,14 @@ import shell from "../../../assets/images/shell.png";
 import Services from "../../../services/Services";
 import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
+import Pagination from "react-pagination-bootstrap";
 
 
 const SavedJobList = () => {
 const [savedJob,setSavedJob]=useState([]);
 const navigate= useNavigate();
+const [activePage, setActivePage]=useState(1);
+  const NumOfDataDisplay= 3;
 
 useEffect(()=>{
   getSavedJobList();
@@ -25,7 +28,9 @@ Services.Job.getSavedJobList().then((res)=>{console.log(res.data);setSavedJob(re
   console.log(errors.response.data.data);
   })
 }
-
+const handlePageChange=(pageNumber)=> {
+  setActivePage(pageNumber);
+}
 
 const handleUnSaveJob = (id) => {
   const body= { jobId: id }
@@ -52,13 +57,13 @@ const handleUnSaveJob = (id) => {
             </h4>
           </div>
 
-          {savedJob.map((item, index) => {
+          {savedJob?.slice((activePage-1)*NumOfDataDisplay,activePage*NumOfDataDisplay)?.map((item, index) => {
             return (
               <div key={index}>
                 <div className="applied-job-card">
                   <img src={micro} alt="image" />
                   <div className="applied">
-                     <i
+                    <i
                       className="fa fa-bookmark-o"
                       onClick={() => handleUnSaveJob(item?.id)}
                     ></i>
@@ -102,134 +107,15 @@ const handleUnSaveJob = (id) => {
               </div>
             );
           })}
-
-          {/* <div className="applied-job-card">
-            <img src={kantar} alt="image" />
-            <div className="applied">
-              <span>Applied</span>
-              <Dropdown>
-                <Dropdown.Toggle>
-                  <i className="fa fa-ellipsis-v"></i>
-                </Dropdown.Toggle>
-                <Dropdown.Menu>
-                  <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-                  <Dropdown.Item href="#/action-2">
-                    Another action
-                  </Dropdown.Item>
-                  <Dropdown.Item href="#/action-3">
-                    Something else
-                  </Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
-            </div>
-
-            <p>
-              3.4 <i className="fa fa-star" />
-            </p>
-            <h4>UI/UX Designer</h4>
-            <h5>Full Time</h5>
-
-            <span>
-              <i className="fa fa-briefcase"></i>
-              3-8 Yrs
-            </span>
-            <span>
-              <i className="fa fa-usd"></i>
-              Not disclosed
-            </span>
-            <span>
-              <i className="fa fa-map-marker"></i>
-              New York,NY
-            </span>
-            <span className="applied-today">Applied Today</span>
-          </div> */}
-
-          {/* <div className="applied-job-card">
-            <img src={google} alt="image" />
-            <div className="applied">
-              <span>Applied</span>
-              <Dropdown>
-                <Dropdown.Toggle>
-                  <i className="fa fa-ellipsis-v"></i>
-                </Dropdown.Toggle>
-                <Dropdown.Menu>
-                  <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-                  <Dropdown.Item href="#/action-2">
-                    Another action
-                  </Dropdown.Item>
-                  <Dropdown.Item href="#/action-3">
-                    Something else
-                  </Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
-            </div>
-
-            <p>
-              3.4 <i className="fa fa-star" />
-            </p>
-            <h4>UI Developer</h4>
-            <h5>Full Time</h5>
-
-            <span>
-              <i className="fa fa-briefcase"></i>
-              3-8 Yrs
-            </span>
-            <span>
-              <i className="fa fa-usd"></i>
-              Not disclosed
-            </span>
-            <span>
-              <i className="fa fa-map-marker"></i>
-              New York,NY
-            </span>
-            <span className="applied-today">Applied Today</span>
-          </div> */}
-
-          {/* <div className="applied-job-card">
-            <img src={shell} alt="image" />
-            <div className="applied">
-              <span>Applied</span>
-              <Dropdown>
-                <Dropdown.Toggle>
-                  <i className="fa fa-ellipsis-v"></i>
-                </Dropdown.Toggle>
-                <Dropdown.Menu>
-                  <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-                  <Dropdown.Item href="#/action-2">
-                    Another action
-                  </Dropdown.Item>
-                  <Dropdown.Item href="#/action-3">
-                    Something else
-                  </Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
-            </div>
-
-            <p>
-              3.4 <i className="fa fa-star" />
-            </p>
-            <h4>Java Developer</h4>
-            <h5>Full Time</h5>
-
-            <span>
-              <i className="fa fa-briefcase"></i>
-              3-8 Yrs
-            </span>
-            <span>
-              <i className="fa fa-usd"></i>
-              Not disclosed
-            </span>
-            <span>
-              <i className="fa fa-map-marker"></i>
-              New York,NY
-            </span>
-            <span className="applied-today">Applied Today</span>
-          </div> */}
         </div>
-
-        {/* <Row>
-          <Col></Col>
-        </Row> */}
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <Pagination
+            activePage={activePage}
+            itemsCountPerPage={NumOfDataDisplay}
+            totalItemsCount={savedJob.length}
+            onChange={handlePageChange}
+          />
+        </div>
       </Container>
       <Footer />
     </>

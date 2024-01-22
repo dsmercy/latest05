@@ -6,7 +6,7 @@ import useJobsStore from "../../store/useJobsStore";
 
 export const JobSearch = ({userdashboard}) => {
   const [jobType,setJobType]=useState([]);
-  const [industryType,setIndustryType]=useState(['IT','HR','ACCOUNTS']);
+  const [industryType,setIndustryType]=useState([]);
   const navigate = useNavigate();
   const filterJobs = useJobsStore((state) => state.filterJobs);
 
@@ -39,7 +39,7 @@ export const JobSearch = ({userdashboard}) => {
       [event.target.name]: event.target.value,
     });
   };
-
+  
   console.log("form", formState)
 
   const handleSearchClick = () => {
@@ -50,13 +50,11 @@ export const JobSearch = ({userdashboard}) => {
       jobTitle:formState.jobTitle,
       jobIndustry:formState.jobIndustry,
       jobType:formState.jobType,
-      // dateOfPosted:""
+      dateOfPosted:"2024-01-20"
     }
     filterJobs(body);
-    console.log(body, "body")
-    Services.Job.searchJob(body).then((res) => {
-      console.log(res);
-      const filteredData = res.data.filter(job =>
+    Services.Job.searchJob(body).then((res)=>{console.log(res);
+      const filteredData = res.data.filter(job => 
         job.skill.includes(body.jobSkill) &&
         job.experience === body.jobExperience &&
         job.location.includes(body.jobLocation) &&
@@ -66,12 +64,11 @@ export const JobSearch = ({userdashboard}) => {
       console.log("filteredData", filteredData);
     }).catch((errors) => console.log(errors))
     if(userdashboard){ navigate("/search-jobs"); }
-    
   };
-
+ 
   return (
     <>
-      <div className="search-container">
+       <div className="search-container">
           <Row className="w-100">
             <Col lg={4} sm={12}>
               <input
@@ -113,7 +110,7 @@ export const JobSearch = ({userdashboard}) => {
             </Col>
           </Row>
         </div>
-
+       
         <div className="search-filter">
           <Row>
             <Col>
@@ -134,9 +131,7 @@ export const JobSearch = ({userdashboard}) => {
             <Col>
               <select className="form-select" name="jobType" onChange={handleInputChange}>
                 <option>Job Type</option>
-                {
-                  jobType.map((item,index)=>( <option key={index}>{item.jobTypeName}</option>))
-                }
+                {jobType.map((item,index)=>( <option key={index}>{item.jobTypeName}</option>))}
                 </select>
             </Col>
 
@@ -159,6 +154,7 @@ export const JobSearch = ({userdashboard}) => {
             </Col>
           </Row>
         </div>
+    
     </>
   );
 };
