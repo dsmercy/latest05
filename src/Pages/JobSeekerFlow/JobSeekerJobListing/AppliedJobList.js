@@ -4,9 +4,6 @@ import Header from "../../../components/Header/Header";
 import Footer from "../../../components/Footer/Footer";
 import Dropdown from "react-bootstrap/Dropdown";
 import micro from "../../../assets/images/Microsoft_logo_(2012) 2.png";
-import kantar from "../../../assets/images/kantar.png";
-import google from "../../../assets/images/google.png";
-import shell from "../../../assets/images/shell.png";
 import Services from "../../../services/Services";
 import Pagination from "react-pagination-bootstrap";
 
@@ -24,7 +21,7 @@ const [activePage, setActivePage]=useState(1);
   }
 
 const appliedJobList=()=>{
-  Services.Job.getApplyJobList().then((res)=>{console.log(res); setAppliedJob(res.data)})
+  Services.Job.getApplyJobList().then((res)=>setAppliedJob(res.data))
   .catch((errors)=>console.log(errors))
 }
 

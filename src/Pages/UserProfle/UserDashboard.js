@@ -11,7 +11,6 @@ export default function UserDashboard() {
     <>
       <Header />
       <Container>
-        {/* <JobSearch/> */}
         <div className="employee-dashboard">
           <h5>Find your dream job now</h5>
           <JobSearch userdashboard={true}/>

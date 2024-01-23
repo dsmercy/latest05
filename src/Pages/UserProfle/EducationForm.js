@@ -3,7 +3,7 @@ import useAccountStore from '../../store/useAccountStore';
 
 export default function EducationForm(props) {
     const {eduData, onEditClick} = props;
-    console.log(eduData);
+    console.log("edu",eduData)
     const deleteEducationById = useAccountStore((state) => state.deleteEducationById);
  
   return (
@@ -12,7 +12,7 @@ export default function EducationForm(props) {
       {eduData && (
         <div className="edit-educ-sec">
           <h4>
-            {eduData.degreeName},{eduData.fieldOfStudyName}
+            {eduData?.degreeName},{eduData.fieldOfStudyName}
             <span
               id={eduData.id}
               onClick={() => deleteEducationById(eduData.id)}

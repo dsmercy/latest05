@@ -4,29 +4,24 @@ import Header from "../../../components/Header/Header";
 import Footer from "../../../components/Footer/Footer";
 import Dropdown from "react-bootstrap/Dropdown";
 import micro from "../../../assets/images/Microsoft_logo_(2012) 2.png";
-import kantar from "../../../assets/images/kantar.png";
-import google from "../../../assets/images/google.png";
-import shell from "../../../assets/images/shell.png";
 import Services from "../../../services/Services";
-import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
 import Pagination from "react-pagination-bootstrap";
+import Tooltip from '@mui/material/Tooltip';
 
 
 const SavedJobList = () => {
 const [savedJob,setSavedJob]=useState([]);
-const navigate= useNavigate();
 const [activePage, setActivePage]=useState(1);
-  const NumOfDataDisplay= 3;
+const NumOfDataDisplay= 3;
 
 useEffect(()=>{
   getSavedJobList();
 },[])
 
 const getSavedJobList=()=>{
-Services.Job.getSavedJobList().then((res)=>{console.log(res.data);setSavedJob(res.data)}).catch((errors)=>{
-  console.log(errors.response.data.data);
-  })
+Services.Job.getSavedJobList().then((res)=>setSavedJob(res.data)).catch((errors)=>{
+  console.log(errors)})
 }
 const handlePageChange=(pageNumber)=> {
   setActivePage(pageNumber);
@@ -34,18 +29,15 @@ const handlePageChange=(pageNumber)=> {
 
 const handleUnSaveJob = (id) => {
   const body= { jobId: id }
-  Services.Job.postUnsavedJob(body)
-    .then((response) => {
-      console.log(response);
-      toast.success("Job removed successfully", {
-        position: toast.POSITION.TOP_RIGHT,
-      }); 
+  Services.Job.postUnsavedJob(body).then((response) => {toast.success("Job removed successfully", { position: toast.POSITION.TOP_RIGHT,}); 
       getSavedJobList();     
-      })
-    .catch((errors) => {
-      console.log(errors);
-    });
-};
+      }).catch((errors) =>console.log(errors))};
+
+const handleApplyJob=(id)=>{
+  console.log("button clicked");
+  const body= { jobId: id }
+  Services.Job.applyJob(body).then((res)=>console.log(res)).catch((errors)=>console.log(errors));    
+}
   return (
     <>
       <Header />
@@ -59,22 +51,22 @@ const handleUnSaveJob = (id) => {
 
           {savedJob?.slice((activePage-1)*NumOfDataDisplay,activePage*NumOfDataDisplay)?.map((item, index) => {
             return (
-              <div key={index}>
-                <div className="applied-job-card">
+                <div className="applied-job-card" key={index}>
                   <img src={micro} alt="image" />
                   <div className="applied">
+                  <Tooltip title="Click to Unsave" arrow>
                     <i
                       className="fa fa-bookmark-o"
                       onClick={() => handleUnSaveJob(item?.id)}
-                    ></i>
+                    ></i></Tooltip>
                     <Dropdown>
                       <Dropdown.Toggle>
                         <i className="fa fa-ellipsis-v"></i>
                       </Dropdown.Toggle>
                       <Dropdown.Menu>
-                        <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
+                        <Dropdown.Item onClick={()=>handleApplyJob(item.id)}>Apply</Dropdown.Item>
                         <Dropdown.Item href="#/action-2">
-                          Another action
+                          Preview Job
                         </Dropdown.Item>
                         <Dropdown.Item href="#/action-3">
                           Something else
@@ -104,7 +96,7 @@ const handleUnSaveJob = (id) => {
                   </span>
                   <span className="applied-today">Applied Today</span>
                 </div>
-              </div>
+              
             );
           })}
         </div>

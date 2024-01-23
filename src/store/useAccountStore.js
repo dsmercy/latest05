@@ -68,7 +68,7 @@ const useAccountStore = create(
           educationData: updatedUserDetail,
         }));
       } catch (error) {
-        return Promise.reject({ error: error.data });
+        return { error: error.data };
       }
     },
       deleteEducationById: (educationId) => {

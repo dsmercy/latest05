@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Button, Col, Container, Row } from "react-bootstrap";
 import ProgressBar from "react-bootstrap/ProgressBar";
-import leftImg from "../../assets/images/left-side-img.png";
 import sidemenu from "../../assets/images/dash-side-menu.png";
 import { UserProfileBody } from "./UserProfileBody";
 import { useNavigate } from "react-router-dom";
@@ -24,6 +23,9 @@ export const UserSideBar = () => {
   const handleSavedJob = () => {
     navigate("/saved-jobs");
   };
+  const navigateHome=()=>{
+    navigate("/userdashboard");
+  }
 
   useEffect(() => {
     getJobCount();
@@ -31,8 +33,7 @@ export const UserSideBar = () => {
 
   const getJobCount = () => {
     Services.Job.getAppliedJobCount().then((res) => {console.log(res.data);
-    setAppliedJob(res.data)})
-      .catch((errors) =>console.log(errors));
+    setAppliedJob(res.data)}).catch((errors) =>console.log(errors));
      };
 
   return (
@@ -43,7 +44,7 @@ export const UserSideBar = () => {
             <div className="employee-left-side">
               <div className="john-smith">
                 <Row>
-                  <Col lg={3}>{/* <img src={leftImg} alt="image" /> */}</Col>
+                  <Col lg={3}></Col>
                   <Col>
                     <h4>
                       {signedInUserData &&
@@ -65,17 +66,9 @@ export const UserSideBar = () => {
 
               <div className="dash-missing">
                 <h4>What are you Missing ?</h4>
-                <p>
-                  <i className="fa fa-check-circle"></i> Daily job
-                  recommendations
-                </p>
-                <p>
-                  <i className="fa fa-check-circle"></i> Job application updates
-                </p>
-                <p>
-                  <i className="fa fa-check-circle"></i> Direct jobs from
-                  recruiter
-                </p>
+                <p><i className="fa fa-check-circle"></i> Daily job recommendations</p>
+                <p><i className="fa fa-check-circle"></i> Job application updates</p>
+                <p><i className="fa fa-check-circle"></i> Direct jobs from recruiter</p>
                 <div className="complete-profile">
                   <Button variant="" onClick={completeProfile}>
                     Complete Profile
@@ -85,23 +78,11 @@ export const UserSideBar = () => {
 
               <div className="dash-menu">
                 <ul>
-                  <li className="active">
-                    <i className="fa fa-home"></i> Home{" "}
-                  </li>
-                  <li onClick={handleSavedJob}>
-                    <i className="fa fa-bookmark-o"></i> Saved Job{" "}
-                    <span>{appliedJob.savedJobCount}</span>
-                  </li>
-                  <li  onClick={handleAppliedJob}> 
-                    <i className="fa fa-paper-plane-o"></i> Applied Job{" "}
-                    <span>{appliedJob.jobCount}</span>
-                  </li>
-                  <li>
-                    <i className="fa fa-comments-o"></i> Message <span>15</span>
-                  </li>
-                  <li>
-                    <i className="fa fa-server"></i> Network{" "}
-                  </li>
+                  <li className="active" style={{cursor: "pointer"}} onClick={navigateHome}><i className="fa fa-home" ></i> Home{" "}</li>
+                  <li onClick={handleSavedJob} style={{cursor: "pointer"}}><i className="fa fa-bookmark-o"></i> Saved Job{" "}<span>{appliedJob.savedJobCount}</span></li>
+                  <li  onClick={handleAppliedJob} style={{cursor: "pointer"}}> <i className="fa fa-paper-plane-o"></i> Applied Job{" "}<span>{appliedJob.jobCount}</span></li>
+                  <li style={{cursor: "pointer"}}><i className="fa fa-comments-o"></i> Message <span>15</span> </li>
+                  <li><i className="fa fa-server"></i> Network{" "}</li>
                 </ul>
               </div>
               <div className="resume-view">
@@ -117,21 +98,19 @@ export const UserSideBar = () => {
             </div>
           </Col>
 
-           <Col lg={9} sm={12}>
-            <div className="employee-right-side">
+           <Col lg={9} sm={12} >
+            <div className="employee-right-side" >
               <Row>
                 <Col lg={4} sm={12}>
                   <div className="job-card applied-card">
                     <Row>
                       <Col>
-                        <div onClick={handleAppliedJob}>
+                        <div onClick={handleAppliedJob} >
                           <h4>{appliedJob.jobCount}</h4>
                           <p>Applied Job</p>
                         </div>
                       </Col>
-                      <Col>
-                        <i className="fa fa-paper-plane" />
-                      </Col>
+                      <Col><i className="fa fa-paper-plane" /></Col>
                     </Row>
                   </div>
                 </Col>
@@ -145,9 +124,7 @@ export const UserSideBar = () => {
                           <p>Saved Job</p>
                         </div>
                       </Col>
-                      <Col>
-                        <i className="fa fa-bookmark" ></i>
-                      </Col>
+                      <Col><i className="fa fa-bookmark"></i></Col>
                     </Row>
                   </div>
                 </Col>
@@ -159,9 +136,7 @@ export const UserSideBar = () => {
                         <h4>{appliedJob.resumeViewCount}</h4>
                         <p>Resume View</p>
                       </Col>
-                      <Col>
-                        <i className="fa fa-eye"></i>
-                      </Col>
+                      <Col><i className="fa fa-eye"></i></Col>
                     </Row>
                   </div>
                 </Col>

@@ -20,6 +20,7 @@ import AppliedJobList from "../Pages/JobSeekerFlow/JobSeekerJobListing/AppliedJo
 import SavedJobList from "../Pages/JobSeekerFlow/JobSeekerJobListing/SavedJobList";
 import JobSearchResult from "../Pages/JobSeekerFlow/JobSeekerJobSerach/JobSearchResult";
 import PreviewJobinFullScreen from "../Pages/JobSeekerFlow/JobSeekerJobSerach/PreviewJobinFullScreen";
+import ViewAllJobList from '../Pages/JobSeekerFlow/JobSeekerJobListing/ViewAllJobList.js'
 const AppRoutes = () => {
   return (
     <>
@@ -45,6 +46,7 @@ const AppRoutes = () => {
         <Route exact path="/changepassword" element={<PrivateRoute><ChangePassword /></PrivateRoute>}/>
         <Route exact path="/job-seeker-form" element={<PrivateRoute><JobSeekerForm /></PrivateRoute>}/>
         <Route exact path="/recruiterDashboard" element={<PrivateRoute><RecuriterDashboard /></PrivateRoute>}/>
+        <Route exact path="/view-all-jobs" element={<PrivateRoute><ViewAllJobList /></PrivateRoute>}/>
       </Routes>
     </>
   );

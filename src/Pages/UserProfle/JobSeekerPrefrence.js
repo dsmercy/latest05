@@ -37,7 +37,7 @@ export const JobSeekerPrefrence = (props) => {
               {...register("employmentTypeId", { required: true })}
               isInvalid={!!errors.employmentTypeId}
             />
-            <label htmlFor="perm">Permanent </label>
+            <label htmlFor="permanent">Permanent </label>
             <input
               className="form-check-input"
               type="radio"
@@ -47,7 +47,7 @@ export const JobSeekerPrefrence = (props) => {
               {...register("employmentTypeId", { required: true })}
               isInvalid={!!errors.employmentTypeId}
             />
-            <label htmlFor="temp">Temporary/Contract</label>
+            <label htmlFor="temporary">Temporary/Contract</label>
             <input
               className="form-check-input"
               type="radio"
@@ -66,30 +66,30 @@ export const JobSeekerPrefrence = (props) => {
             <input
               className="form-check-input"
               type="radio"
-              id="1"
+              id="full"
               value={1}
               name="job-type"
               {...register("jobTypeMasterId", { required: true })}
             />
-            <label htmlFor="perm">Full time </label>
+            <label htmlFor="full">Full time </label>
             <input
               className="form-check-input"
               type="radio"
-              id="2"
+              id="part"
               value={2}
               name="job-type"
               {...register("jobTypeMasterId", { required: true })}
             />
-            <label htmlFor="temp">Part time</label>
+            <label htmlFor="part">Part time</label>
             <input
               className="form-check-input"
               type="radio"
-              id="3"
+              id="remote"
               name="job-type"
               value={3}
               {...register("jobTypeMasterId", { required: true })}
             />
-            <label htmlFor="both">Remote</label>
+            <label htmlFor="remote">Remote</label>
           </div>
           <div className="job-type">
             <h5>
@@ -98,7 +98,7 @@ export const JobSeekerPrefrence = (props) => {
             <input
               className="form-check-input"
               type="radio"
-              id="1"
+              id="perm"
               value={1}
               name="salary"
               {...register("salaryTypeId", { required: true })}
@@ -107,7 +107,7 @@ export const JobSeekerPrefrence = (props) => {
             <input
               className="form-check-input"
               type="radio"
-              id="2"
+              id="temp"
               value={2}
               name="salary"
               {...register("salaryTypeId", { required: true })}
@@ -116,12 +116,12 @@ export const JobSeekerPrefrence = (props) => {
             <input
               className="form-check-input"
               type="radio"
-              id="3"
+              id="annually"
               value={3}
               name="salary"
               {...register("salaryTypeId", { required: true })}
             />
-            <label htmlFor="both">Annually </label>
+            <label htmlFor="annually">Annually </label>
           </div>
 
           <FormLabel>

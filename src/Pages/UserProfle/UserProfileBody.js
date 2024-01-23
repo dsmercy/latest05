@@ -7,40 +7,43 @@ import Services from "../../services/Services";
 import { toast } from 'react-toastify';
 import Pagination from "react-pagination-bootstrap";
 import useJobsStore from "../../store/useJobsStore";
+import { useNavigate } from "react-router-dom";
+import Tooltip from '@mui/material/Tooltip';
 
 
-export const UserProfileBody = ({getJobCount}) => {
+export const UserProfileBody = ({getJobCount}) => {  
+  const navigate = useNavigate();
   const [matchedJob, setMatchedJob] = useState([]);
-  const [color,setColor]=useState(false);
   const getJobsList = useJobsStore((state) => state.getJobsList);
   const jobsList = useJobsStore((state) => state.jobsList);
   const [activePage, setActivePage]=useState(1);
-  const NumOfDataDisplay= 4;
+  const NumOfDataDisplay= 2;
   useEffect(() => {
-     getMatchedJobSkill();
+    getMatchedJobSkill();
     getJobsList();
   }, []);
 
   const getMatchedJobSkill = () => {
-    Services.Profile.getSearchJobSKill().then((response) => setMatchedJob(response?.data)).catch((errors) =>   console.log(errors))
-  };
+    Services.Profile.getSearchJobSKill().then((response) =>{setMatchedJob(response?.data)}).catch((errors) =>   console.log(errors))};
 
    const handleSaveJob = (id) => {
     const body= { jobId: id }
-    Services.Job.postSavedJob(body).then((response) => {console.log(response); toast.success("Job Saved successfully", { position: toast.POSITION.TOP_RIGHT,});
-        const bgcolor="greenyellow";
-        setColor(bgcolor);
+    Services.Job.postSavedJob(body).then((response) => {toast.success("Job Saved successfully", { position: toast.POSITION.TOP_RIGHT,});
         getJobCount();
         getMatchedJobSkill();
       }).catch((errors) =>console.log(errors))};
 
   const handleApplyJob=(id)=>{
     const body= { jobId: id }
-    Services.Job.applyJob(body).then((res)=>{getJobCount();getMatchedJobSkill();}).catch((errors)=>console.log(errors)); 
-
+    console.log(body);
+    Services.Job.applyJob(body).then((res)=>{console.log(res);getJobCount();getMatchedJobSkill();}).catch((errors)=>console.log(errors)); 
   }
   const handlePageChange=(pageNumber)=> {
     setActivePage(pageNumber);
+  };
+  
+  const handleViewAll=()=>{
+    navigate('/view-all-jobs');
   }
     
   return (
@@ -50,18 +53,19 @@ export const UserProfileBody = ({getJobCount}) => {
         <h4>
           Matched <span>Jobs {matchedJob.length}</span>
         </h4>
-        <p> View All</p>
+        <p onClick={handleViewAll}> View All</p>
       </div>
       <Row>
        {jobsList?.slice((activePage-1)*NumOfDataDisplay,activePage*NumOfDataDisplay)?.map((item, index) => {
             return (
-              <Col>
+              <Col lg={6} sm={6}>
                 <div className="visual-card" key={index}>
                   <img src={micro} alt="image" />
+                  <Tooltip title="Click to Save" arrow>
                   <i
-                    className="fa fa-bookmark-o" style={{color:'green',backgroundColor:{color}}}
+                    className="fa fa-bookmark-o" style={{color:'green'}}
                     onClick={()=>handleSaveJob(item?.id)}
-                  ></i>
+                  ></i></Tooltip>
                   <p>
                     3.4 <i className="fa fa-star" />
                   </p>
@@ -77,7 +81,7 @@ export const UserProfileBody = ({getJobCount}) => {
                   </span>
                   <span>
                     <i className="fa fa-map-marker"></i>
-                    New York,NY
+                    {item.city},{item.state}
                   </span>
                   <div className="dash-desc">
                     <p>{item.description}</p>

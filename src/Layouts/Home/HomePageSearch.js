@@ -1,6 +1,5 @@
 import React from "react";
 import group from "../../assets/images/Group 41384.png";
-// import { updateUser } from "../../services/axiosAPI/Registration";
 
 const HomePageSearch = () => {
   
@@ -88,7 +87,6 @@ const HomePageSearch = () => {
             <div className="col-lg-3 col-12">
               <div className="job-title-third">
                 <div className="form__group field">
-                  {/* <i className="fa fa-briefcase" /> */}
                   <select>
                     <option>Select Experience</option>
                     <option>2</option>
@@ -101,7 +99,6 @@ const HomePageSearch = () => {
             <div className="col-lg-3 col-12">
               <div className="job-title-second">
                 <div className="form__group field">
-                  {/* <i className="fa fa-map-marker" /> */}
                   <input
                     type="input"
                     className="form__field"

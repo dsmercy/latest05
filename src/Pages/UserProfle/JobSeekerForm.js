@@ -106,10 +106,8 @@ const JobSeekerForm = () => {
     if (stepIndex === 1) {
       // Manually trigger validation for specific fields
       if (educationData.length === 0) {
-        trigger(["degreeName", "fieldOfStudy", "clgName", "yearOfCompletion"]);
-        toast.error("Please Add Education to List", {
-          position: toast.POSITION.TOP_RIGHT,
-        });
+        trigger(["degreeName", "fieldOfStudy", "collegeName", "yearOfCompletion"]);
+        toast.error("Please Add Education to List", {position: toast.POSITION.TOP_RIGHT,});
         return false;
       } else {
         const formData = educationData.map((obj) => {
@@ -125,9 +123,8 @@ const JobSeekerForm = () => {
           }
           return newObj;
         });
-
-        Services.Profile.setJobSeekerDetails(formData)
-          .then((response) => {
+console.log("formdata",formData)
+        Services.Profile.postJobSeekerDetails(formData).then((response) => {
            setStepIndex((prevStepIndex) => prevStepIndex + 1);
             getEducation();
             return true;
@@ -137,9 +134,7 @@ const JobSeekerForm = () => {
           });
         const skill = selectedOptions.map((item) => item.id);
         const skills = { skillMasterId: skill };
-        Services.Profile.setJobSeekerSkills(skills)
-          .then((res) => console.log(res))
-          .catch((errors) => console.log(errors));
+        Services.Profile.setJobSeekerSkills(skills).then((res) => console.log(res)).catch((errors) => console.log(errors));
         return true;
       }
     }
@@ -165,7 +160,7 @@ const JobSeekerForm = () => {
         "email",
       ]);
     }
-    // if (stepIndex === 2) { trigger(['degreeName', 'fieldOfStudy','clgName','yearOfCompletion']); }
+    // if (stepIndex === 2) { trigger(['degreeName', 'fieldOfStudy','collegeName','yearOfCompletion']); }
     setStepIndex((prevStepIndex) => prevStepIndex - 1);
   };
 
@@ -284,9 +279,9 @@ const JobSeekerForm = () => {
           formValues.fieldOfStudy,
           study.find((obj) => obj.id == formValues.fieldOfStudy).fieldOfStudy,
         ],
-        clgName: [
-          formValues.clgName,
-          university.find((obj) => obj.id == formValues.clgName).university,
+        collegeName: [
+          formValues.collegeName,
+          university.find((obj) => obj.id == formValues.collegeName).university,
         ],
         yearOfCompletion: [
           formValues.yearOfCompletion,
@@ -304,7 +299,7 @@ const JobSeekerForm = () => {
     const edu = educationData.find((item) => item.id === id);
     setValue("degreeName", edu.degreeName[0]);
     setValue("fieldOfStudy", edu.fieldOfStudy[0]);
-    setValue("clgName", edu.clgName[0]);
+    setValue("collegeName", edu.collegeName[0]);
     setValue("yearOfCompletion", edu.yearOfCompletion[0]);
     deleteEducationById(id);
   };
@@ -559,8 +554,8 @@ const JobSeekerForm = () => {
                           <Form.Select
                             aria-label="Default select example"
                             className="mb-3"
-                            {...register("clgName", { required: true })}
-                            isInvalid={!!errors.clgName}
+                            {...register("collegeName", { required: true })}
+                            isInvalid={!!errors.collegeName}
                           >
                             <option value="">Open this select menu </option>
                             {university?.map((item) => (

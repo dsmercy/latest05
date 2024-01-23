@@ -57,7 +57,7 @@ export const JobseekerExperience = (props) => {
     resetField("jobTitle");
     resetField("startDate");
     resetField("endDate");
-    resetField("skill");
+    resetField("skillName");
     resetField("comment");
     resetField("salaryTypeId");
     resetField("salary");
