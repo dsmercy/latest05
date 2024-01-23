@@ -110,20 +110,13 @@ const JobSeekerForm = () => {
         toast.error("Please Add Education to List", {position: toast.POSITION.TOP_RIGHT,});
         return false;
       } else {
-        const formData = educationData.map((obj) => {
-          const newObj = {};
-          for (const key in obj) {
-            if (
-              obj.hasOwnProperty(key) &&
-              Array.isArray(obj[key]) &&
-              obj[key].length > 0
-            ) {
-              newObj[key] = obj[key][0];
-            }
-          }
-          return newObj;
-        });
-console.log("formdata",formData)
+        const formData = educationData.map(item => ({
+          collegeName: item.collegeName,
+          degreeName: item.degreeName,
+          fieldOfStudyName: item.fieldOfStudyName,
+          yearofCompletion: item.yearofCompletion
+        }));
+        
         Services.Profile.postJobSeekerDetails(formData).then((response) => {
            setStepIndex((prevStepIndex) => prevStepIndex + 1);
             getEducation();
@@ -271,22 +264,14 @@ console.log("formdata",formData)
     const formValues = getValues();
     const eduData = [
       {
-        degreeName: [
-          formValues.degreeName,
-          degree.find((obj) => obj.id == formValues.degreeName).degreeName,
-        ],
-        fieldOfStudy: [
-          formValues.fieldOfStudy,
-          study.find((obj) => obj.id == formValues.fieldOfStudy).fieldOfStudy,
-        ],
-        collegeName: [
-          formValues.collegeName,
-          university.find((obj) => obj.id == formValues.collegeName).university,
-        ],
-        yearOfCompletion: [
-          formValues.yearOfCompletion,
-          formValues.yearOfCompletion,
-        ],
+        clgNameId: formValues.collegeName,
+        collegeName: university.find((obj) => obj.id == formValues.collegeName).university,
+        degreeId: formValues.degreeName,
+        degreeName: degree.find((obj) => obj.id == formValues.degreeName).degreeName,
+        fieldOfStudyId: formValues.fieldOfStudy,
+        fieldOfStudyName: study.find((obj) => obj.id == formValues.fieldOfStudy).fieldOfStudy,
+        id: 1,
+        yearofCompletion: 2018
       },
     ];
     saveEducation(eduData);
@@ -297,10 +282,10 @@ console.log("formdata",formData)
   };
   const onEditClick = (id) => {
     const edu = educationData.find((item) => item.id === id);
-    setValue("degreeName", edu.degreeName[0]);
-    setValue("fieldOfStudy", edu.fieldOfStudy[0]);
-    setValue("collegeName", edu.collegeName[0]);
-    setValue("yearOfCompletion", edu.yearOfCompletion[0]);
+    setValue("degreeName", edu.degreeId);
+    setValue("fieldOfStudy", edu.fieldOfStudyId);
+    setValue("collegeName", edu.clgNameId);
+    setValue("yearOfCompletion", edu.yearofCompletion);
     deleteEducationById(id);
   };
   return (
