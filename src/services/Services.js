@@ -68,7 +68,8 @@ const Job={
   searchJob:(values)=>requests.post('Job/FindJobs',(values)),
   jobTypeList:()=>requests.get('Master/GetJobTypesList'),
   industryList:()=>requests.get('Master/GetIndustry'),
-  applyJob:(values)=>requests.post('Job/ApplyJob',(values))
+  applyJob:(values)=>requests.post('Job/ApplyJob',(values)),
+  getJobPostPreview:(id)=>requests.get(`Job/GetJobPost?JobId=${id}`),
 }
 
 

@@ -82,19 +82,11 @@ export const JobseekerExperience = (props) => {
   };
   return (
     <>
-     
-        <h5>Experience</h5>
+     <h5>Experience</h5>
         <span className="bord"></span>
         <div className="experience">
-          {experienceData && experienceData.length > 0
-            ? experienceData.map((edu, index) => (
-                <ExperienceForm
-                  expData={edu}
-                  key={index}
-                  handleEditClick={handleEditClick}
-                />
-              ))
-            : ""}
+          {experienceData && experienceData.length > 0 ? experienceData.map((edu, index) => (
+                <ExperienceForm expData={edu} key={index} handleEditClick={handleEditClick}/>)): ""}
           <Row>
             <Col>
               <div className="fresh">

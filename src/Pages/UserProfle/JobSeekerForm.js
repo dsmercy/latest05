@@ -116,7 +116,6 @@ const JobSeekerForm = () => {
           fieldOfStudyName: item.fieldOfStudyName,
           yearofCompletion: item.yearofCompletion
         }));
-        
         Services.Profile.postJobSeekerDetails(formData).then((response) => {
            setStepIndex((prevStepIndex) => prevStepIndex + 1);
             getEducation();
@@ -488,7 +487,7 @@ const JobSeekerForm = () => {
                             {degree?.map((item) => (
                               <option
                                 id={item.id}
-                                value={item.id}
+                                value={parseInt(item.id)}
                                 key={item?.id}
                               >
                                 {item?.degreeName}

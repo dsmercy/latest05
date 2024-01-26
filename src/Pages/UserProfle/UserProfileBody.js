@@ -36,7 +36,8 @@ export const UserProfileBody = ({getJobCount}) => {
   const handleApplyJob=(id)=>{
     const body= { jobId: id }
     console.log(body);
-    Services.Job.applyJob(body).then((res)=>{console.log(res);getJobCount();getMatchedJobSkill();}).catch((errors)=>console.log(errors)); 
+    Services.Job.applyJob(body).then((res)=>{toast.success("Job Applied Successfully", { position: toast.POSITION.TOP_RIGHT,});
+      getJobCount();getMatchedJobSkill();}).catch((errors)=>console.log(errors)); 
   }
   const handlePageChange=(pageNumber)=> {
     setActivePage(pageNumber);
@@ -58,8 +59,8 @@ export const UserProfileBody = ({getJobCount}) => {
       <Row>
        {jobsList?.slice((activePage-1)*NumOfDataDisplay,activePage*NumOfDataDisplay)?.map((item, index) => {
             return (
-              <Col lg={6} sm={6}>
-                <div className="visual-card" key={index}>
+              <Col lg={6} sm={6} key={index}>
+                <div className="visual-card" >
                   <img src={micro} alt="image" />
                   <Tooltip title="Click to Save" arrow>
                   <i
@@ -67,7 +68,7 @@ export const UserProfileBody = ({getJobCount}) => {
                     onClick={()=>handleSaveJob(item?.id)}
                   ></i></Tooltip>
                   <p>
-                    3.4 <i className="fa fa-star" />
+                  {item.companyName}3.4 <i className="fa fa-star" />
                   </p>
                   <h4>{item.title}</h4>
                   <h5>Full Time</h5>

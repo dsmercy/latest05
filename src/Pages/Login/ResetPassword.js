@@ -55,7 +55,6 @@ const ResetPassword = () => {
         if(response.data.status===200){
           navigate('/login')
          }
-        
       })
       .catch((errors) => {
         console.log(errors);

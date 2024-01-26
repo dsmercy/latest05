@@ -40,7 +40,7 @@ const AppRoutes = () => {
         <Route exact path="/saved-jobs" element={<PrivateRoute><SavedJobList /></PrivateRoute>}/>
         <Route exact path="/search-jobs" element={<PrivateRoute><JobSearchResult /></PrivateRoute>}/>
         <Route exact path="/job-seeker-profile" element={<PrivateRoute><ViewJobSeekerProfileDetails /></PrivateRoute>}/>
-        <Route exact path="/prview-Job-Details" element={<PrivateRoute><PreviewJobinFullScreen /></PrivateRoute>}/>
+        <Route exact path="/preview-Job-Details/:id" element={<PrivateRoute><PreviewJobinFullScreen /></PrivateRoute>}/>
         <Route exact path="/job-seeker-form" element={<PrivateRoute><JobSeekerForm /></PrivateRoute>}/>
         <Route exact path="/userdashboard" element={<PrivateRoute><UserDashboard /></PrivateRoute>}/>
         <Route exact path="/changepassword" element={<PrivateRoute><ChangePassword /></PrivateRoute>}/>

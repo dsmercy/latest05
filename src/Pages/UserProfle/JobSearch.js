@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Services from "../../services/Services";
 import useJobsStore from "../../store/useJobsStore";
 
-export const JobSearch = ({userdashboard}) => {
+export const JobSearch = ({userdashboard,setDisableButtons}) => {
   const [jobType,setJobType]=useState([]);
   const [industryType,setIndustryType]=useState([]);
   const navigate = useNavigate();
@@ -16,21 +16,19 @@ export const JobSearch = ({userdashboard}) => {
   },[]);
 
   const getJobType=()=>{
-    Services.Job.jobTypeList().then((res)=>setJobType(res?.data)).catch((errors)=>console.log(errors));
-    
-  }
+    Services.Job.jobTypeList().then((res)=>setJobType(res?.data)).catch((errors)=>console.log(errors));}
   const getIndustryType=()=>{
-    Services.Job.industryList().then((res)=>setIndustryType(res?.data)).catch((errors)=>console.log(errors));
-    
-  }
+    Services.Job.industryList().then((res)=>setIndustryType(res?.data)).catch((errors)=>console.log(errors));}
   const [formState, setFormState] = useState({
     skill: "",
     experience: "",
     location: "",
     jobType:"",
     jobIndustry:"",
+    jobEducation:"",
     dateOfPosted:"",
     jobTitle:""
+
   });
 
   const handleInputChange = (event) => {
@@ -50,15 +48,19 @@ export const JobSearch = ({userdashboard}) => {
       jobTitle:formState.jobTitle,
       jobIndustry:formState.jobIndustry,
       jobType:formState.jobType,
+      jobEducation:formState.jobEducation,
       dateOfPosted:"2024-01-20"
     }
     filterJobs(body);
-    Services.Job.searchJob(body).then((res)=>{console.log(res);
+    Services.Job.searchJob(body).then((res)=>{console.log(res?.data);
+      // setSearched(res?.data);
+      // setDisableButtons()
       const filteredData = res.data.filter(job => 
         job.skill.includes(body.jobSkill) &&
         job.experience === body.jobExperience &&
         job.location.includes(body.jobLocation) &&
         job.industry === body.jobIndustry &&
+        job.education === body.jobEducation &&
         job.type === body.jobType
       );
       console.log("filteredData", filteredData);
@@ -136,7 +138,7 @@ export const JobSearch = ({userdashboard}) => {
             </Col>
 
             <Col>
-              <select className="form-select" name="education" onChange={handleInputChange}>
+              <select className="form-select" name="jobEducation" onChange={handleInputChange}>
                 <option>Education</option>
                 <option>2</option>
                 <option>3</option>

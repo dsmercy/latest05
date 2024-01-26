@@ -1,11 +1,28 @@
-import React from "react";
+import React, { useEffect,useState } from "react";
 import { Button, Col, Container, Row } from "react-bootstrap";
 import Header from "../../../components/Header/Header";
 import Footer from "../../../components/Footer/Footer";
 import micr from "../../../assets/images/images 3.png";
 import feat from "../../../assets/images/image 16.png";
+import Services from "../../../services/Services";
+import { useParams } from "react-router-dom";
 
 const PreviewJobinFullScreen = () => {
+  const [showPreview, setShowPreview] = useState(false);
+  const {id}= useParams();
+  useEffect(()=>{
+    handlePreviewJob(id);
+  },[id])
+
+  const handlePreviewJob = (id) => {
+    Services.Job.getJobPostPreview(id)
+      .then((res) => {
+        setShowPreview(res.data);
+        console.log(res.data);
+      })
+      .catch((errors) => console.log(errors));
+  };
+  
   return (
     <>
       <Header />
@@ -27,22 +44,23 @@ const PreviewJobinFullScreen = () => {
 
               <div className="sear-loca">
                 <h5>Microsoft</h5>
-                <p>New York, USA</p>
+                <p>{showPreview?.jobLocationDeatilsDTO?.city},{showPreview?.jobLocationDeatilsDTO?.state}</p>
               </div>
 
               <div className="job-save-apply">
                 <Button type="button" varient="" className="btn btn-primary">
-                  Save Job <i class="fa fa-bookmark-o"></i>
+                  Save Job <i className="fa fa-bookmark-o"></i>
                 </Button>
                 <Button type="button" varient="" className="btn btn-primary">
-                  Apply Now <i class="fa fa-chevron-right"></i>
+                  Apply Now <i className="fa fa-chevron-right"></i>
                 </Button>
               </div>
 
               <div className="view-job-contain">
                 <h4>Job Details</h4>
+                {showPreview?.jobDeatilsDTO?.title}
                 <h5>Salary</h5>
-                <p>Not Disclosed</p>
+                <p>{}</p>
                 <h5>Job Type</h5>
                 <p>Part-Time</p>
                 <p>Contract</p>
@@ -55,11 +73,7 @@ const PreviewJobinFullScreen = () => {
                 <div className="view-job-contain-desc">
                   <h4>Description</h4>
                   <p>
-                    WorkIt Labs is seeking a UI/UX Designer with a passion for
-                    creating technology that builds power for working people.
-                    will help scale WorkIt Lab’s suite of products for frontline
-                    labor organizers, workers, and campaign teams. You will wo
-                    closely with the Director of User Experience and the
+                    {showPreview?.jobDeatilsDTO?.description}
                   </p>
 
                   <p>
@@ -90,7 +104,7 @@ const PreviewJobinFullScreen = () => {
               </div>
 
               <h4>Job Posted</h4>
-              <span>2 days ago</span>
+              <span>{showPreview?.startJobDate}</span>
             </div>
           </Col>
 

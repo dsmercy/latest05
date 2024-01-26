@@ -24,11 +24,7 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const {
-    register,
-    formState: { errors },
-    handleSubmit,
-  } = useForm({ mode: "all" });
+  const {register,formState: { errors },handleSubmit,} = useForm({ mode: "all" });
   const [otpField, setOtpField] = useState(false);
   const [selectedRadio, setSelectedRadio] = useState();
   const [checked, setChecked] = useState(true);
