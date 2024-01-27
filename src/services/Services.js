@@ -1,4 +1,5 @@
 import axios from "axios";
+import { toast } from "react-toastify";
 
 axios.defaults.baseURL = "https://localhost:7069/api";
 // axios.defaults.withCredentials= true;
@@ -11,6 +12,45 @@ axios.interceptors.request.use((config) => {
   if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
+
+
+axios.interceptors.response.use(async response => {
+    return response;
+}, (error) => {
+    const { data, status } = error.response;
+    switch (status) {
+        case 400:
+            // if (data.errors) {
+            //     const modelStateErrors = [];
+            //     for (const key in data.errors) {
+            //         if (data.errors[key]) {
+            //             modelStateErrors.push(data.errors[key])
+            //         }
+            //     }
+            //     throw modelStateErrors.flat();
+            // }
+            console.log(data);
+            break;
+        case 401:
+            // console.log(data.message);
+        toast.error(
+          data.message, {
+          position: toast.POSITION.TOP_RIGHT,
+        }
+        );
+            break;
+        case 404:
+            console.log(data);
+            break;
+        case 500:
+            console.log(data);
+            break;
+        default:
+            break;
+    }
+    return Promise.reject(error.response);
+})
+
 
 const requests = {
   get: (url, params) => axios.get(url, { params }).then(responseBody),
@@ -31,6 +71,7 @@ if (storeData) {
 
 const Account = {
   userlogin: (values) => requests.post("Account/Login", values),
+  refreshToken: (values) => requests.post("Account/refreshtoken", values),
   register: (values) => requests.post("Account/SignUp", values),
   forgetPassword: (values) =>requests.post(`Account/ForgotPassword?Email=${values.email}&Domain=${values.domain}`),
   generateOTP: (values) =>requests.post(`Account/GenerateOTP?Email=${values}`, values),
@@ -70,6 +111,7 @@ const Job={
   industryList:()=>requests.get('Master/GetIndustry'),
   applyJob:(values)=>requests.post('Job/ApplyJob',(values)),
   getJobPostPreview:(id)=>requests.get(`Job/GetJobPost?JobId=${id}`),
+  uploadResume:(values)=>requests.post('Job/UploadResume',(values)),
 }
 
 

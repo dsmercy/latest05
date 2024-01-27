@@ -50,7 +50,7 @@ const JobSeekerForm = () => {
     phoneNumber: jobSeekerData.data.phoneNumber,
     currentLocation: jobSeekerData.data.currentLocation,
   };
-  const {register,resetField,getValues,formState: { errors },trigger,handleSubmit,setValue,} = useForm({ defaultValues, mode: "onSubmit" });
+  const {register,resetField,getValues,formState: { errors },trigger,handleSubmit,setValue,} = useForm({ defaultValues, mode: "all" });
   const options = skills.map((item) => [
     {
       value: item.skillName,
@@ -116,8 +116,7 @@ const JobSeekerForm = () => {
           fieldOfStudyName: item.fieldOfStudyName,
           yearofCompletion: item.yearofCompletion
         }));
-        Services.Profile.postJobSeekerDetails(formData).then((response) => {
-           setStepIndex((prevStepIndex) => prevStepIndex + 1);
+        Services.Profile.postJobSeekerDetails(formData).then((response) => {           
             getEducation();
             return true;
           })
@@ -127,18 +126,24 @@ const JobSeekerForm = () => {
         const skill = selectedOptions.map((item) => item.id);
         const skills = { skillMasterId: skill };
         Services.Profile.setJobSeekerSkills(skills).then((res) => console.log(res)).catch((errors) => console.log(errors));
+        setStepIndex((prevStepIndex) => prevStepIndex + 1);
         return true;
       }
     }
 
     if (stepIndex === 2) {
-      setStepIndex((prevStepIndex) => prevStepIndex + 1);
-      getExperience();
-         Services.Profile.setJobSeekerExperience(experienceData)
-        .then((res) => console.log(res))
-        .catch((errors) => console.log(errors));
-       
-      return true;
+      if(experienceData.length===0){
+        trigger(["experience", "currentEmployee", "companyName", "yearOfExperience", "jobTitle","startDate","endDate","skill"]);
+        toast.error("Please Add experience to List", {position: toast.POSITION.TOP_RIGHT,});
+        return false;
+      }else{
+        setStepIndex((prevStepIndex) => prevStepIndex + 1);
+        getExperience();
+           Services.Profile.setJobSeekerExperience(experienceData)
+          .then((res) => console.log(res))
+          .catch((errors) => console.log(errors));
+        return true;
+      }
     }
   };
 

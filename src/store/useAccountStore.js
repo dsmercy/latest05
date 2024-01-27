@@ -23,6 +23,27 @@ const useAccountStore = create(
           return Promise.reject({ error: error.data });
         }
       },
+      getRefreshToken: async (data) => {
+        try {
+          const userDetail = await Services.Account.refreshToken(data);
+          if (userDetail) {
+            localStorage.setItem("token", userDetail.data.accessToken);
+            set((state) => ({
+              signedInUserData: {
+                ...state.signedInUserData,
+                data: {
+                  ...state.signedInUserData.data,
+                  accessToken: userDetail.data.accessToken,
+                  refreshToken:userDetail.data.refreshToken,
+                },
+              },
+            }));
+          }
+          return userDetail;
+        } catch (error) {
+          return Promise.reject({ error: error.data });
+        }
+      },
       getJobSeeker: async () => {
         try {
           const userDetail = await Services.Account.getJobSeeker();

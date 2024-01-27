@@ -3,15 +3,26 @@ import { Button, Col, Container, Row } from "react-bootstrap";
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
 import profile from "../../assets/images/left-side-img.png";
-// import profile from "./assets/images/left-side-img.png";
 import ProgressBar from "react-bootstrap/ProgressBar";
 import Form from "react-bootstrap/Form";
+import Services from "../../services/Services";
+
 const index = () => {
   /* Progress bar value*/
 
   const now = 80;
 
-  /* Progress bar value*/
+
+  const handleFileChange = (event) => {
+      const formData = new FormData();
+      formData.append('file', event.target.files[0]);
+      console.log('file', event.target.files[0]);
+
+      Services.Job.uploadResume(formData).then(
+        (res)=>console.log(res)
+        )
+      .catch((errors)=>console.log(errors))
+  };
 
   return (
     <>
@@ -23,7 +34,7 @@ const index = () => {
               <div className="resume-profile">
                 <img src={profile} alt="image" />
                 <h4>
-                  John Smith <i class="fa fa-edit"></i>
+                  John Smith <i className="fa fa-edit"></i>
                 </h4>
               </div>
 
@@ -31,12 +42,12 @@ const index = () => {
                 <Row>
                   <Col>
                     <p>
-                      <i class="fa fa-map-marker"></i> Add Location
+                      <i className="fa fa-map-marker"></i> Add Location
                     </p>
                   </Col>
                   <Col>
                     <p>
-                      <i class="fa fa-phone"></i> Add Mobile Number
+                      <i className="fa fa-phone"></i> Add Mobile Number
                     </p>
                   </Col>
                 </Row>
@@ -46,12 +57,12 @@ const index = () => {
                 <Row>
                   <Col>
                     <p>
-                      <i class="fa fa-envelope"></i> johnsmith@gmail.com
+                      <i className="fa fa-envelope"></i> johnsmith@gmail.com
                     </p>
                   </Col>
                   <Col>
                     <p>
-                      <i class="fa fa-briefcase"></i> Fresher
+                      <i className="fa fa-briefcase"></i> Fresher
                     </p>
                   </Col>
                 </Row>
@@ -99,7 +110,7 @@ const index = () => {
                 </p>
                 <Form.Group controlId="formFileMultiple" className="mb-3">
                   <Form.Label>Required </Form.Label>
-                  <Form.Control type="file" multiple />
+                  <Form.Control type="file" multiple onChange={handleFileChange}/>
                 </Form.Group>
               </div>
 
@@ -119,7 +130,7 @@ const index = () => {
               <div className="resume-upload-req">
                 <h4>
                   {" "}
-                  Key Skills <i class="fa fa-edit"></i>{" "}
+                  Key Skills <i className="fa fa-edit"></i>{" "}
                 </h4>
                 <div className="resume-skill">
                   <p>Design</p>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../../../components/Header/Header";
 import Footer from "../../../components/Footer/Footer";
 import { Button, Col, Container, Row } from "react-bootstrap";
@@ -17,6 +17,15 @@ const SearchResult = () => {
   const [disableButtons, setDisableButtons] = useState({});
   const [showPreview, setShowPreview] = useState(false);
 
+  useEffect(() => {
+    Services.Job.getJobPostPreview(jobsList[0].id)
+    .then((res) => {
+      setShowPreview(res.data);
+      console.log(res.data);
+    })
+    .catch((errors) => console.log(errors));
+  }, [])
+  
 
   const getJobCount = () => {
     Services.Job.getAppliedJobCount()

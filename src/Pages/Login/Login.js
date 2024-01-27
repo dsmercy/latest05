@@ -45,6 +45,13 @@ const Login = () => {
 
     return () => clearInterval(timerId);
   }, [timer]);
+
+  useEffect(() => {
+    if(signedInUserData){
+      navigate("/userdashboard");
+    }
+  }, []); 
+
   const resendOTP = () => {
     setTimer(60);
   };
@@ -101,11 +108,7 @@ const finalOtp= `${otpValue?.otp1}${otpValue?.otp2}${otpValue?.otp3}${otpValue?.
         }
       })
       .catch((errors) => {
-        console.log(errors, "login error");
-        toast.error(
-          "There is something wrong.",{
-            position: toast.POSITION.TOP_RIGHT,}
-        );
+        setLoading(false);
       });
   };
 

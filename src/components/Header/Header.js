@@ -24,7 +24,7 @@ const Header = () => {
     <>
       <nav className="navbar navbar-expand-lg navbar-light">
         <div className="container">
-          <NavLink className="navbar-brand" to="index.html">
+          <NavLink className="navbar-brand" to="/">
             <img src={logo} alt="logo" className="img-fluid" />
           </NavLink>
           <button

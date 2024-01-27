@@ -7,7 +7,6 @@ import ForgotPassword from "../Pages/Login/ForgetPassword";
 import ResetPassword from "../Pages/Login/ResetPassword";
 import JobSeekerForm from "../Pages/UserProfle/JobSeekerForm";
 import UserDashboard from "../Pages/UserProfle/UserDashboard";
-import BasicDetails from "../Pages/UserProfle/BasicDetails";
 import JobSeekerResumeUplaod from "../Pages/JobSeekerResumeUplaod/index.js";
 import JobSeekerResumTracking from "../Pages/JobSeekerResumTracking/index.js";
 import ChangePassword from "../Pages/Login/ChangePassword";
@@ -33,7 +32,6 @@ const AppRoutes = () => {
         <Route exact path="/forget-password" element={<ResetPassword />} />
         <Route exact path="/ConfirmEmail" element={<VerifyEmail />} />
         <Route exact path="/profile-details" element={<ViewProfileDetail />} />
-        <Route exact path="/job-seeker-details" element={<BasicDetails />} />
         <Route exact path="/job-seeker-resume-uplaod" element={<PrivateRoute><JobSeekerResumeUplaod /></PrivateRoute>}/>
         <Route exact path="/job-seeker-resume-tracking" element={<PrivateRoute><JobSeekerResumTracking/></PrivateRoute>}/>
         <Route exact path="/applied-jobs" element={<PrivateRoute><AppliedJobList /></PrivateRoute>}/>
