@@ -12,19 +12,14 @@ const Header = () => {
   const signOut = useAccountStore((state) => state.signOut);
   // console.log('signedInUserData',signedInUserData);
 
-  const handleChange = () => {
-    navigate("/job-seeker-profile");
-  };
-
-  const handleChangePassword = () => {
-    navigate("/changepassword");
-  };
+  const handleChange = () => {navigate("/job-seeker-profile")};
+  const handleChangePassword = () => {navigate("/changepassword")};
 
   return (
     <>
       <nav className="navbar navbar-expand-lg navbar-light">
         <div className="container">
-          <NavLink className="navbar-brand" to="/">
+        <NavLink className="navbar-brand" to="/">
             <img src={logo} alt="logo" className="img-fluid" />
           </NavLink>
           <button
@@ -77,7 +72,7 @@ const Header = () => {
                 </NavLink>
               </li>
             </ul>
-            <div className="">
+            <div className="head-login">
               {signedInUserData ? (
                 <>
                   <NavDropdown
@@ -95,10 +90,6 @@ const Header = () => {
                     <NavDropdown.Item onClick={signOut}>
                       Logout
                     </NavDropdown.Item>
-                    <NavDropdown.Item
-                      onClick={signOut}
-                      style={{ display: "none" }}
-                    ></NavDropdown.Item>
                   </NavDropdown>
                 </>
               ) : (

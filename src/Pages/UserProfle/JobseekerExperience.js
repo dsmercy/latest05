@@ -11,26 +11,19 @@ import useAccountStore from "../../store/useAccountStore";
 import ExperienceForm from "./ExperienceForm";
 
 export const JobseekerExperience = (props) => {
-  const {
-    changeKeyValue,
-    options,
-    selectedOptions,
-    handleSkills,
-    register,
-    errors,
-    getValues,
-    setValue,
-    resetField,
-  } = props;
+  const {changeKeyValue,options,selectedOptions,handleSkills,register,errors,getValues,setValue,resetField} = props;
   const newOptions = changeKeyValue();
   const [isFresher, setIsFresher] = useState(false);
   const animatedComponents = makeAnimated();
   const experienceData = useAccountStore((state) => state.experienceData);
   const saveExperience = useAccountStore((state) => state.saveExperience);
-  const deleteExperiencById = useAccountStore(
-    (state) => state.deleteExperiencById
+  const deleteExperiencById = useAccountStore((state) => state.deleteExperiencById
   );
+  const [selectedOptions1, setSelectedOptions1] = useState([]);
 
+  const handleSkills1 = (selected) => {
+    setSelectedOptions1(selected);
+  };
   const handleAddPosition = () => {
     const formValues = getValues();
     const skill = selectedOptions.map((item) => item.id);
@@ -61,7 +54,6 @@ export const JobseekerExperience = (props) => {
     resetField("comment");
     resetField("salaryTypeId");
     resetField("salary");
-    console.log("formData", formData);
   };
 
   const handleEditClick = (id) => {
@@ -123,11 +115,7 @@ export const JobseekerExperience = (props) => {
               </div>
             </Col>
           </Row>
-          <div
-            style={{
-              pointerEvents: isFresher ? "none" : "",
-            }}
-          >
+          <div style={{pointerEvents: isFresher ? "none" : "",}}>
             <div className="current-empl">
               <h5>Is this your current employment?</h5>
               <input
@@ -238,12 +226,12 @@ export const JobseekerExperience = (props) => {
                     options={newOptions}
                     isMulti
                     defaultValue={[options[0]]}
-                    value={selectedOptions}
+                    value={selectedOptions1}
                     className="mb-6"
                     classNamePrefix="select"
                     {...register("skillName", { required: true })}
                     isInvalid={!!errors.skillName}
-                    onChange={handleSkills}
+                    onChange={handleSkills1}
                   />
                   <Form.Control.Feedback type="invalid">
                     This field is required.

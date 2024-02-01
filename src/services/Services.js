@@ -1,7 +1,7 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 
-axios.defaults.baseURL = "https://localhost:7069/api";
+axios.defaults.baseURL = "https://vuesharvest-hucm-qa.chetu.com";
 // axios.defaults.withCredentials= true;
 
 const responseBody = (response) => response.data;
@@ -12,45 +12,34 @@ axios.interceptors.request.use((config) => {
   if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
-
-
+//Response interceptors
 axios.interceptors.response.use(async response => {
-    return response;
+  return response;
 }, (error) => {
-    const { data, status } = error.response;
-    switch (status) {
-        case 400:
-            // if (data.errors) {
-            //     const modelStateErrors = [];
-            //     for (const key in data.errors) {
-            //         if (data.errors[key]) {
-            //             modelStateErrors.push(data.errors[key])
-            //         }
-            //     }
-            //     throw modelStateErrors.flat();
-            // }
-            console.log(data);
-            break;
-        case 401:
-            // console.log(data.message);
-        toast.error(
-          data.message, {
-          position: toast.POSITION.TOP_RIGHT,
-        }
-        );
-            break;
-        case 404:
-            console.log(data);
-            break;
-        case 500:
-            console.log(data);
-            break;
-        default:
-            break;
-    }
-    return Promise.reject(error.response);
+  const { data, status } = error.response;
+  switch (status) {
+      case 400:
+          //console.log(data);
+          break;
+      case 401:
+          // console.log(data.message);
+      toast.error(
+        data.message, {
+        position: toast.POSITION.TOP_RIGHT,
+      }
+      );
+          break;
+      case 404:
+          console.log(data);
+          break;
+      case 500:
+          console.log(data);
+          break;
+      default:
+          break;
+  }
+  return Promise.reject(error.response);
 })
-
 
 const requests = {
   get: (url, params) => axios.get(url, { params }).then(responseBody),
@@ -93,7 +82,7 @@ const Profile={
     getJobSeekerDetails:()=>requests.get('JobSeeker/GetJobSeekerDetails'),
     updateJobSeeker:(values)=>requests.post('Account/UpdateUser',(values)),
     getUpdatedUser:()=>requests.get("Account/GetUser"),
-    setJobSeekerExperience: (values)=> requests.post('JobSeeker/PostJobSeekerExperience',(values)),
+    postJobSeekerExperience: (values)=> requests.post('JobSeeker/PostJobSeekerExperience',(values)),
     getJobSeekerExperience:()=>requests.get('JobSeeker/GetJobSeekerExperience'),
     setJobSeekerPreference:(values)=>requests.post('JobSeeker/PostJobSeekerPreference',(values)),
     getJobSeekerPreference:()=>requests.get('JobSeeker/GetJobSeekerPreference'),
@@ -114,11 +103,15 @@ const Job={
   uploadResume:(values)=>requests.post('Job/UploadResume',(values)),
 }
 
+const Recruiter ={
+  getCountJobPost:()=>requests.get('/Job/CountJobPost'),
+}
 
 const Services = {
   Account,
   Profile,
-  Job
+  Job,
+  Recruiter
 };
 
 

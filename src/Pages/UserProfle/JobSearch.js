@@ -37,8 +37,7 @@ export const JobSearch = ({userdashboard,setDisableButtons}) => {
       [event.target.name]: event.target.value,
     });
   };
-  
-  console.log("form", formState)
+  // console.log("form", formState)
 
   const handleSearchClick = () => {
     const body={
@@ -55,15 +54,14 @@ export const JobSearch = ({userdashboard,setDisableButtons}) => {
     Services.Job.searchJob(body).then((res)=>{console.log(res?.data);
       // setSearched(res?.data);
       // setDisableButtons()
-      const filteredData = res.data.filter(job => 
-        job.skill.includes(body.jobSkill) &&
+      const filteredData = res?.data?.filter(job => 
+        job?.skill?.includes(body.jobSkill) &&
         job.experience === body.jobExperience &&
-        job.location.includes(body.jobLocation) &&
+        job?.location?.includes(body.jobLocation) &&
         job.industry === body.jobIndustry &&
         job.education === body.jobEducation &&
         job.type === body.jobType
       );
-      console.log("filteredData", filteredData);
     }).catch((errors) => console.log(errors))
     if(userdashboard){ navigate("/search-jobs"); }
   };

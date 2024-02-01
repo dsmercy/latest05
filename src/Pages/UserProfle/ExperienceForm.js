@@ -12,13 +12,13 @@ export default function ExperienceForm(props) {
     {expData && (
       <div className="edit-educ-sec">
         <h4>
-          {expData.companyName},{expData.jobDescription}
+          {expData.companyName},{expData.jobTitle}
           <span onClick={()=>deleteExperiencById(expData.id)}>
             <i className="fa fa-close"></i>
           </span>
         </h4>
         <p>
-          {expData.yearOfExperience} | {expData.jobTitle}
+          Experience :{expData.yearOfExperience} | {expData.jobTitle}
           <span onClick={()=>handleEditClick(expData.id)}>Edit</span>
         </p>
       </div>

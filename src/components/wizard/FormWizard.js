@@ -1,4 +1,9 @@
-import React, { useState, useEffect, forwardRef, useImperativeHandle } from "react";
+import React, {
+  useState,
+  useEffect,
+  forwardRef,
+  useImperativeHandle,
+} from "react";
 import WizardTab from "./WizardTab";
 import WizardButton from "./WizardButton";
 import "react-form-wizard-component/dist/style.css";
@@ -23,7 +28,7 @@ const FormWizard = forwardRef(
       onComplete,
       onTabChange,
       handleNextButton,
-      handlePrevButton
+      handlePrevButton,
     },
     ref
   ) => {
@@ -155,7 +160,7 @@ const FormWizard = forwardRef(
       borderColor: color,
       borderRadius: "4px",
     };
-    
+
     const isVertical = layout === "vertical" ? "vertical" : "horizontal";
 
     return (
@@ -186,29 +191,29 @@ const FormWizard = forwardRef(
         <div className="wizard-card-footer clearfix">
           {currentStep > 0 && (
             <>
-                <div className="wizard-footer-left" style={fillButtonStyle}>
-                  <WizardButton onClick={handlePrevious}>
-                    {backButtonText}
-                  </WizardButton>
-                </div>
+              <div className="wizard-footer-left" style={fillButtonStyle}>
+                <WizardButton onClick={handlePrevious}>
+                  {backButtonText}
+                </WizardButton>
+              </div>
             </>
           )}
           {currentStep < steps.length - 1 && (
             <>
-                <div className="wizard-footer-right" style={fillButtonStyle}>
-                  <WizardButton onClick={handleNext}>
-                    {nextButtonText}
-                  </WizardButton>
-                </div>
+              <div className="wizard-footer-right" style={fillButtonStyle}>
+                <WizardButton onClick={handleNext}>
+                  {nextButtonText}
+                </WizardButton>
+              </div>
             </>
           )}
           {currentStep === steps.length - 1 && (
             <>
-                <div className="wizard-footer-right" style={fillButtonStyle}>
-                  <WizardButton onClick={handleSubmit}>
-                    {finishButtonText}
-                  </WizardButton>
-                </div>
+              <div className="wizard-footer-right" style={fillButtonStyle}>
+                <WizardButton onClick={handleSubmit}>
+                  {finishButtonText}
+                </WizardButton>
+              </div>
             </>
           )}
         </div>

@@ -19,10 +19,8 @@ import Select from "react-select";
 import makeAnimated from "react-select/animated";
 import { JobSeekerPrefrence } from "./JobSeekerPrefrence";
 import { JobseekerExperience } from "./JobseekerExperience";
-import { useNavigate } from "react-router-dom";
 
 const JobSeekerForm = () => {
-  const navigate = useNavigate();
   const animatedComponents = makeAnimated();
   const [stepIndex, setStepIndex] = useState(0);
   const getUser = useAccountStore((state) => state.getUser);
@@ -36,10 +34,14 @@ const JobSeekerForm = () => {
   const [university, setUniversity] = useState([]);
   const [year, setYear] = useState([]);
   const [skills, setSkills] = useState([]);
+  const [showPopup, setShowPopup] = useState(false);
+
   const jobSeekerData = useAccountStore((state) => state.jobSeekerData);
   const experienceData = useAccountStore((state) => state.experienceData);
-  const savePreference = useAccountStore((state) => state.savePreference); 
-  const deleteEducationById = useAccountStore((state) => state.deleteEducationById);
+  const savePreference = useAccountStore((state) => state.savePreference);
+  const deleteEducationById = useAccountStore(
+    (state) => state.deleteEducationById
+  );
   const getEducation = useAccountStore((state) => state.getEducation);
   const getExperience = useAccountStore((state) => state.getExperience);
   const defaultValues = {
@@ -50,7 +52,15 @@ const JobSeekerForm = () => {
     phoneNumber: jobSeekerData.data.phoneNumber,
     currentLocation: jobSeekerData.data.currentLocation,
   };
-  const {register,resetField,getValues,formState: { errors },trigger,handleSubmit,setValue,} = useForm({ defaultValues, mode: "all" });
+  const {
+    register,
+    resetField,
+    getValues,
+    formState: { errors },
+    trigger,
+    handleSubmit,
+    setValue,
+  } = useForm({ defaultValues, mode: "all" });
   const options = skills.map((item) => [
     {
       value: item.skillName,
@@ -58,108 +68,9 @@ const JobSeekerForm = () => {
     },
   ]);
 
-  const handleSkills = (selected) => {
-    setSelectedOptions(selected);
-  };
-
-  const handleNextButton = () => {
-    if (stepIndex === 0) {
-      const formValues = getValues();
-      if (
-        formValues.firstName == "" ||
-        formValues.lastName == "" ||
-        formValues.phoneNumber == "" ||
-        formValues.currentLocation == "" ||
-        formValues.email == ""
-      ) {
-        trigger([
-          "firstName",
-          "lastName",
-          "phoneNumber",
-          "currentLocation",
-          "email",
-        ]);
-        return false;
-      } else {
-        const formData = {
-          firstName: formValues.firstName,
-          middleName: formValues.middleName,
-          lastName: formValues.lastName,
-          email: formValues.email,
-          phoneNumber: formValues.phoneNumber,
-          currentLocation: formValues.currentLocation,
-        };
-
-        Services.Profile.updateJobSeeker(formData)
-          .then((response) => {
-            getUser();
-            setStepIndex((prevStepIndex) => prevStepIndex + 1);
-            // clearEducation();
-            return true;
-          })
-          .catch((errors) => {
-            console.log(errors);
-          });
-        return true;
-      }
-    }
-    if (stepIndex === 1) {
-      // Manually trigger validation for specific fields
-      if (educationData.length === 0) {
-        trigger(["degreeName", "fieldOfStudy", "collegeName", "yearOfCompletion"]);
-        toast.error("Please Add Education to List", {position: toast.POSITION.TOP_RIGHT,});
-        return false;
-      } else {
-        const formData = educationData.map(item => ({
-          collegeName: item.collegeName,
-          degreeName: item.degreeName,
-          fieldOfStudyName: item.fieldOfStudyName,
-          yearofCompletion: item.yearofCompletion
-        }));
-        Services.Profile.postJobSeekerDetails(formData).then((response) => {           
-            getEducation();
-            return true;
-          })
-          .catch((errors) => {
-            console.log(errors);
-          });
-        const skill = selectedOptions.map((item) => item.id);
-        const skills = { skillMasterId: skill };
-        Services.Profile.setJobSeekerSkills(skills).then((res) => console.log(res)).catch((errors) => console.log(errors));
-        setStepIndex((prevStepIndex) => prevStepIndex + 1);
-        return true;
-      }
-    }
-
-    if (stepIndex === 2) {
-      if(experienceData.length===0){
-        trigger(["experience", "currentEmployee", "companyName", "yearOfExperience", "jobTitle","startDate","endDate","skill"]);
-        toast.error("Please Add experience to List", {position: toast.POSITION.TOP_RIGHT,});
-        return false;
-      }else{
-        setStepIndex((prevStepIndex) => prevStepIndex + 1);
-        getExperience();
-           Services.Profile.setJobSeekerExperience(experienceData)
-          .then((res) => console.log(res))
-          .catch((errors) => console.log(errors));
-        return true;
-      }
-    }
-  };
-
-  const handlePrevButton = () => {
-    if (stepIndex === 1) {
-      trigger([
-        "firstName",
-        "lastName",
-        "phoneNumber",
-        "currentLocation",
-        "email",
-      ]);
-    }
-    // if (stepIndex === 2) { trigger(['degreeName', 'fieldOfStudy','collegeName','yearOfCompletion']); }
-    setStepIndex((prevStepIndex) => prevStepIndex - 1);
-  };
+  const handleSkills = (selected) => {setSelectedOptions(selected)};
+  const handleClose = () => setShowPopup(false);
+  const handleShow = () => setShowPopup(true);
 
   const changeKeyValue = () => {
     let newArray = [];
@@ -171,11 +82,9 @@ const JobSeekerForm = () => {
           newObejct["label"] = item[key];
         } else {
           newObejct[key] = item[key];
-        }
-      }
+        }}
       newArray.push(newObejct);
     }
-
     return newArray;
   };
   const newOptions = changeKeyValue();
@@ -239,29 +148,136 @@ const JobSeekerForm = () => {
         console.log(errors);
       });
   };
-  const handleComplete = (data) => {
-  const formData = getValues();
-  const body = {
-    preferenceLocation: formData.preferenceLocation,
-    jobTypeMasterId: parseInt(formData.jobTypeMasterId), 
-    employmentTypeId: parseInt(formData.employmentTypeId),
-    salaryTypeId: parseInt(formData.salaryTypeId),
-    expectedSalary: formData.expectedSalary,
-  };
-  savePreference(body);
- 
-    Services.Profile.setJobSeekerPreference(body)
-      .then((res) => {
-        console.log(res);
-        navigate("/job-seeker-profile");
-      })
-      .catch((errors) => {
-        console.log(errors);
-      });
+
+  const handleNextButton = () => {
+    if (stepIndex === 0) {
+      const formValues = getValues();
+      if (
+        formValues.firstName == "" ||
+        formValues.lastName == "" ||
+        formValues.phoneNumber == "" ||
+        formValues.currentLocation == "" ||
+        formValues.email == ""
+      ) {
+        trigger([
+          "firstName",
+          "lastName",
+          "phoneNumber",
+          "currentLocation",
+          "email",
+        ]);
+        return false;
+      } else {
+        const formData = {
+          firstName: formValues.firstName,
+          middleName: formValues.middleName,
+          lastName: formValues.lastName,
+          email: formValues.email,
+          phoneNumber: formValues.phoneNumber,
+          currentLocation: formValues.currentLocation,
+        };
+
+        Services.Profile.updateJobSeeker(formData)
+          .then((response) => {
+            getUser();
+            setStepIndex((prevStepIndex) => prevStepIndex + 1);
+            // clearEducation();
+            return true;
+          })
+          .catch((errors) => {
+            console.log(errors);
+          });
+        return true;
+      }
+    }
+    if (stepIndex === 1) {
+      // Manually trigger validation for specific fields
+     
+      if (educationData.length === 0) {
+        trigger([
+          "degreeName",
+          "fieldOfStudy",
+          "collegeName",
+          "yearOfCompletion",
+          "skillName",
+        ]);
+        toast.error("Please Add Education to List", {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+        return false;
+      }
+      if (!selectedOptions.length) {
+        trigger(["skillName"]);
+        toast.error("Please Add Education to List", {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+        return false;
+      } else {
+        // if(educationData.length >0 && skillName==""){ console.log("hhhhhhhhhhhhhhh")}
+        const formData = educationData.map((item) => ({
+          collegeName: item.clgNameId,
+          degreeName: item.degreeId,
+          fieldOfStudyName: item.fieldOfStudyId,
+          yearofCompletion: item.yearofCompletion,
+        }));
+        Services.Profile.postJobSeekerDetails(formData).then((response) => getEducation()).catch((errors) => console.log(errors));
+        const skill = selectedOptions.map((item) => item.id);
+        const skills = { skillMasterId: skill };
+        Services.Profile.setJobSeekerSkills(skills)
+          .then((res) => console.log(res))
+          .catch((errors) => console.log(errors));
+        setStepIndex((prevStepIndex) => prevStepIndex + 1);
+        return true;
+      }
+    }
+    if (stepIndex === 2) {
+      if (experienceData.length === 0) {
+        trigger(["experience","currentEmployee","companyName","yearOfExperience","jobTitle","startDate","endDate","skill",]);
+        toast.error("Please Add experience to List", {position: toast.POSITION.TOP_RIGHT,});
+        return false;
+      } else {
+         setStepIndex((prevStepIndex) => prevStepIndex + 1);
+        Services.Profile.postJobSeekerExperience(experienceData).then((res) => console.log(res)).catch((errors) => console.log(errors.message));
+        return true;
+      }}
   };
 
-  const handleFormSubmit = async () => {
-    setValidated(true);
+  const handlePrevButton = () => {
+    if (stepIndex === 1) {
+      trigger(["firstName","lastName","phoneNumber","currentLocation","email"]);
+    }
+    setStepIndex((prevStepIndex) => prevStepIndex - 1);
+  };
+
+  const handleComplete = () => {
+    const formData = getValues();
+    console.log("formData.jobTypeMasterId", formData.jobTypeMasterId);
+    if (
+      formData.preferenceLocation === "" ||
+      formData.jobTypeMasterId === null ||
+      formData.employmentTypeId === null ||
+      formData.salaryTypeId === null ||
+      formData.expectedSalary == ""
+    ) {
+      trigger(["preferenceLocation","jobTypeMasterId","employmentTypeId","salaryTypeId","expectedSalary"]);
+      setShowPopup(false);
+      return false;
+    } else {
+      const body = {
+        preferenceLocation: formData.preferenceLocation,
+        jobTypeMasterId: parseInt(formData.jobTypeMasterId),
+        employmentTypeId: parseInt(formData.employmentTypeId),
+        salaryTypeId: parseInt(formData.salaryTypeId),
+        expectedSalary: formData.expectedSalary,
+      };
+      savePreference(body);
+      Services.Profile.setJobSeekerPreference(body)
+        .then((res) => {
+          setShowPopup(true);
+          if (res.status === 200) {
+            handleShow();
+          }
+        }).catch((errors) => console.log(errors))}
   };
 
   const handleEductaion = () => {
@@ -269,13 +285,16 @@ const JobSeekerForm = () => {
     const eduData = [
       {
         clgNameId: formValues.collegeName,
-        collegeName: university.find((obj) => obj.id == formValues.collegeName).university,
+        collegeName: university.find((obj) => obj.id == formValues.collegeName)
+          .university,
         degreeId: formValues.degreeName,
-        degreeName: degree.find((obj) => obj.id == formValues.degreeName).degreeName,
+        degreeName: degree.find((obj) => obj.id == formValues.degreeName)
+          .degreeName,
         fieldOfStudyId: formValues.fieldOfStudy,
-        fieldOfStudyName: study.find((obj) => obj.id == formValues.fieldOfStudy).fieldOfStudy,
+        fieldOfStudyName: study.find((obj) => obj.id == formValues.fieldOfStudy)
+          .fieldOfStudy,
         id: 1,
-        yearofCompletion: 2018
+        yearofCompletion: 2018,
       },
     ];
     saveEducation(eduData);
@@ -284,6 +303,7 @@ const JobSeekerForm = () => {
     resetField("universityName");
     resetField("yearOfCompletion");
   };
+
   const onEditClick = (id) => {
     const edu = educationData.find((item) => item.id === id);
     setValue("degreeName", edu.degreeId);
@@ -292,6 +312,7 @@ const JobSeekerForm = () => {
     setValue("yearOfCompletion", edu.yearofCompletion);
     deleteEducationById(id);
   };
+
   return (
     <>
       <Header />
@@ -461,10 +482,7 @@ const JobSeekerForm = () => {
 
                     {/*-------------- Second Form------------*/}
 
-                    <FormWizard.TabContent
-                      title="Education & Skill"
-                      icon="fa fa-check"
-                    >
+                    <FormWizard.TabContent title="Education & Skill" icon="fa fa-check">
                       <h5>Education & Skills</h5>
                       <span className="bord"></span>
                       {educationData && educationData.length > 0
@@ -479,9 +497,7 @@ const JobSeekerForm = () => {
                         : ""}
                       <Row>
                         <Col>
-                          <FormLabel>
-                            Degree <span className="text-danger">*</span>
-                          </FormLabel>
+                          <FormLabel>Degree <span className="text-danger">*</span></FormLabel>
                           <Form.Select
                             aria-label="Default select example"
                             className="mb-3"
@@ -499,18 +515,13 @@ const JobSeekerForm = () => {
                               </option>
                             ))}
                           </Form.Select>
-                          <Form.Control.Feedback type="invalid">
-                            Please select a degree.
-                          </Form.Control.Feedback>
+                          <Form.Control.Feedback type="invalid">Please select a degree.</Form.Control.Feedback>
                         </Col>
                       </Row>
 
                       <Row>
                         <Col>
-                          <FormLabel>
-                            Field of study{" "}
-                            <span className="text-danger">*</span>
-                          </FormLabel>
+                          <FormLabel>Field of study{" "}<span className="text-danger">*</span></FormLabel>
                           <Form.Select
                             aria-label="Default select example"
                             className="mb-3"
@@ -528,9 +539,7 @@ const JobSeekerForm = () => {
                               </option>
                             ))}
                           </Form.Select>
-                          <Form.Control.Feedback type="invalid">
-                            Please select field of study.
-                          </Form.Control.Feedback>
+                          <Form.Control.Feedback type="invalid">Please select field of study.</Form.Control.Feedback>
                         </Col>
                       </Row>
 
@@ -584,16 +593,12 @@ const JobSeekerForm = () => {
                               </option>
                             ))}
                           </Form.Select>
-                          <Form.Control.Feedback type="invalid">
-                            Please select Year of Completion.
-                          </Form.Control.Feedback>
+                          <Form.Control.Feedback type="invalid">Please select Year of Completion.</Form.Control.Feedback>
                         </Col>
                       </Row>
 
                       <div className="add-position" onClick={handleEductaion}>
-                        <h4>
-                          <i className="fa fa-plus-circle"></i> Add Education
-                        </h4>
+                        <h4><i className="fa fa-plus-circle"></i> Add Education</h4>
                       </div>
 
                       <Row>
@@ -614,6 +619,13 @@ const JobSeekerForm = () => {
                             isInvalid={!!errors.skillName}
                             onChange={handleSkills}
                           />
+                          <Form.Control.Feedback type="invalid">
+                            Please select field of study.
+                          </Form.Control.Feedback>
+                          {/* <p>
+                            {errors.skillName &&
+                              "Tell us what is your favourite food"}
+                          </p> */}
                         </Col>
                       </Row>
                     </FormWizard.TabContent>
@@ -640,7 +652,13 @@ const JobSeekerForm = () => {
                       title="Job Preference"
                       icon="fa fa-check"
                     >
-                      <JobSeekerPrefrence register={register} errors={errors} />
+                      <JobSeekerPrefrence
+                        register={register}
+                        errors={errors}
+                        showPopup={showPopup}
+                        setShowPopup={setShowPopup}
+                        handleClose={handleClose}
+                      />
                     </FormWizard.TabContent>
                   </FormWizard>
                 </Form>

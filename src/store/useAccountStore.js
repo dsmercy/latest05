@@ -14,6 +14,7 @@ const useAccountStore = create(
         try {
           const userDetail = await Services.Account.userlogin(data);
           if (userDetail) {
+            // console.log("userDetail",userDetail)
             set((state) => ({
               signedInUserData: userDetail,
             }));
@@ -145,8 +146,6 @@ const useAccountStore = create(
 
       signOut: () => {
         set(() => ({ signedInUserData: null }));
-        // localStorage.removeItem('account');
-        // localStorage.removeItem('token');
         set(() => ({ jobSeekerData: null }));
         set(() => ({ educationData: [] }));
         set(() => ({ experienceData: [] }));

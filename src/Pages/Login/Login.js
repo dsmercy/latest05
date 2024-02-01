@@ -24,65 +24,63 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const {register,formState: { errors },handleSubmit,} = useForm({ mode: "all" });
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+    clearErrors,
+  } = useForm({ mode: "all" });
   const [otpField, setOtpField] = useState(false);
   const [selectedRadio, setSelectedRadio] = useState();
   const [checked, setChecked] = useState(true);
   const [timer, setTimer] = useState(60);
-  const [otpValue, setOtpValue]= useState({otp1:"", otp2:"", otp3:"", otp4:"", otp5:"", otp6:""});
+  const [otpValue, setOtpValue] = useState({
+    otp1: "",
+    otp2: "",
+    otp3: "",
+    otp4: "",
+    otp5: "",
+    otp6: "",
+  });
   const [loading, setLoading] = useState(false);
   const signInUser = useAccountStore((state) => state.signInUser);
   const signOut = useAccountStore((state) => state.signOut);
   const signedInUserData = useAccountStore((state) => state.signedInUserData);
   const getJobSeeker = useAccountStore((state) => state.getJobSeeker);
 
-
   useEffect(() => {
     if (!timer) return;
     const timerId = setInterval(() => {
       setTimer(timer - 1);
     }, 1000);
-
-    return () => clearInterval(timerId);
+    return () => {
+      clearInterval(timerId);
+    };
   }, [timer]);
 
+  const resendOTP = () => {setTimer(60)};
+
   useEffect(() => {
-    if(signedInUserData){
+    if (signedInUserData) {
       navigate("/userdashboard");
-    }
-  }, []); 
+    }}, []);
 
-  const resendOTP = () => {
-    setTimer(60);
-  };
+  const handleForgetPassword = () => {navigate("/forgetpassword")};
 
-  const handleForgetPassword = () => {
-    navigate("/forgetpassword");
-  };
-  const handleRegister = () => {
-    navigate("/register");
-  };
+  const handleRegister = () => {navigate("/register")};
 
-  const handleOtpValue = (e) => {
-    setOtpValue({...otpValue, [e.target.name]: e.target.value})
-  };
+  const handleOtpValue = (e) => {setOtpValue({ ...otpValue, [e.target.name]: e.target.value })};
 
-const finalOtp= `${otpValue?.otp1}${otpValue?.otp2}${otpValue?.otp3}${otpValue?.otp4}${otpValue?.otp5}${otpValue?.otp6}`;
+  const finalOtp = `${otpValue?.otp1}${otpValue?.otp2}${otpValue?.otp3}${otpValue?.otp4}${otpValue?.otp5}${otpValue?.otp6}`;
 
   const showOtpField = () => {
     setOtpField(true);
     setChecked(!checked);
-
-    Services.Account.generateOTP(email)
-      .then((response) => {
-        toast.success(response.message, {
-          position: toast.POSITION.TOP_RIGHT,
-        });
-      })
-      .catch((errors) => {
-        console.log(":error", errors); 
-      });
+    Services.Account.generateOTP(email).then((response) => {
+        toast.success(response.message, { position: toast.POSITION.TOP_RIGHT });
+      }).catch((errors) => console.log(":error", errors));
   };
+
   const showPasswordField = () => {
     setOtpField(false);
     setChecked(!checked);
@@ -91,31 +89,48 @@ const finalOtp= `${otpValue?.otp1}${otpValue?.otp2}${otpValue?.otp3}${otpValue?.
   const handleSubmitForm = async (e) => {
     setValidated(true);
     setLoading(true);
-    if (email === "" ) {
+    if (email.trim() === "" || password.trim() === "") {
       return;
     }
-    const data = { email: email, password: password ? password : finalOtp, isOtp: otpField };
-    
-    await signInUser(data).then((response) => {
-        if (response?.data?.accessToken) {
-           setLoading(false);
-            navigate(`/userdashboard`);
-           localStorage.setItem("token", response.data.accessToken);
+    setValidated(false);
+    const data = {
+      email: email,
+      password: password ? password : finalOtp,
+      isOtp: otpField,
+    };
+
+    await signInUser(data)
+      .then((response) => {
+        if (response?.data?.accessToken && response?.data?.users?.role === "JobSeeker") {
+          setLoading(false);
+          navigate(`/userdashboard`);
+          localStorage.setItem("token", response.data.accessToken);
           toast.success(response.message, {
             position: toast.POSITION.TOP_RIGHT,
           });
           getJobSeeker();
         }
+         if(response?.data?.accessToken && response?.data?.users?.role === "Recruiter"){
+          console.log(response)
+          setLoading(false);
+          navigate(`/recruiterDashboard`);
+          localStorage.setItem("token", response.data.accessToken);
+          toast.success(response.message, {
+            position: toast.POSITION.TOP_RIGHT,
+          });
+        }
       })
       .catch((errors) => {
+        console.log(errors, "login error");
+        toast.error(errors?.error?.message, {
+          position: toast.POSITION.TOP_RIGHT,
+        });
         setLoading(false);
       });
   };
 
-  const handleShowPassword = () => {
-    setShowPassword(!showPassword);
-  };
-  
+  const handleShowPassword = () => {setShowPassword(!showPassword)};
+
   return (
     <>
       {loading ? (
@@ -130,15 +145,11 @@ const finalOtp= `${otpValue?.otp1}${otpValue?.otp2}${otpValue?.otp3}${otpValue?.
               <Form
                 noValidate
                 validated={validated}
-                onSubmit={handleSubmit(handleSubmitForm)}
+                onSubmit={()=>handleSubmit(handleSubmitForm())}
               >
                 <FormLabel>Enter your Email / Phone</FormLabel>
 
-                <InputGroup className="mb-3">
-                  <InputGroup.Text id="basic-addon1">
-                    <i className="fa fa-user"></i>
-                  </InputGroup.Text>
-
+                <InputGroup className="mb-3"><InputGroup.Text id="basic-addon1"><i className="fa fa-user"></i></InputGroup.Text>
                   <Form.Control
                     type="email"
                     placeholder="Enter email"
@@ -150,14 +161,11 @@ const finalOtp= `${otpValue?.otp1}${otpValue?.otp2}${otpValue?.otp3}${otpValue?.
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                   />
-                  <Form.Control.Feedback type="invalid">
-                    Please enter a valid email address.
-                  </Form.Control.Feedback>
+                  <Form.Control.Feedback type="invalid">Please enter a valid email address.</Form.Control.Feedback>
                 </InputGroup>
 
                 <Form.Group>
                   <FormLabel>Login Using</FormLabel>
-
                   {["radio"].map((type) => (
                     <div key={`default-${type}`} className="mb-3">
                       <Form.Check
@@ -187,11 +195,8 @@ const finalOtp= `${otpValue?.otp1}${otpValue?.otp2}${otpValue?.otp3}${otpValue?.
                 {!otpField ? (
                   <Form.Group>
                     <FormLabel>Password</FormLabel>
-
                     <InputGroup className="mb-3">
-                      <InputGroup.Text id="basic-addon1">
-                        <i className="fa fa-lock"></i>
-                      </InputGroup.Text>
+                      <InputGroup.Text id="basic-addon1"><i className="fa fa-lock"></i></InputGroup.Text>
 
                       <Form.Control
                         type={showPassword ? "text" : "password"}
@@ -205,25 +210,11 @@ const finalOtp= `${otpValue?.otp1}${otpValue?.otp2}${otpValue?.otp3}${otpValue?.
                         onChange={(e) => setPassword(e.target.value)}
                       />
                       <InputGroup.Text>
-                        {showPassword ? (
-                          <i
-                            className="fa fa-eye"
-                            onClick={handleShowPassword}
-                          ></i>
-                        ) : (
-                          <i
-                            className="fa fa-eye-slash"
-                            aria-hidden="true"
-                            onClick={handleShowPassword}
-                          ></i>
-                        )}
+                        {showPassword ? (<i className="fa fa-eye" onClick={handleShowPassword}></i>) : (<i className="fa fa-eye-slash" aria-hidden="true" onClick={handleShowPassword}></i>)}
                       </InputGroup.Text>
-                      <Form.Control.Feedback type="invalid">
-                        Please enter a password with at least 8 characters.
-                      </Form.Control.Feedback>
+                      <Form.Control.Feedback type="invalid">Please enter a password with at least 8 characters.</Form.Control.Feedback>
                     </InputGroup>
-                  </Form.Group>
-                ) : (
+                  </Form.Group>) : (
                   <Form className="form-otp">
                     <p>Enter verification code sent by mobile/email</p>
                     <input
@@ -277,21 +268,8 @@ const finalOtp= `${otpValue?.otp1}${otpValue?.otp2}${otpValue?.otp3}${otpValue?.
                   </Form>
                 )}
                 <div style={{ display: "flex" }}>
-                  <p>
-                    {otpField && timer > 0 ? `Time Ramaining ${timer} ` : ""}
-                  </p>
-                  {
-                    <p
-                      style={{
-                        color: timer > 0 ? "#DFE3E8" : "#FF5630",
-                        cursor: "pointer",
-                        marginRight: "20px",
-                      }}
-                      onClick={resendOTP}
-                    >
-                      {otpField ? "Resend OTP" : ""}
-                    </p>
-                  }
+                  <p>{otpField && timer > 0 ? `Time Ramaining ${timer} ` : ""}</p>
+                  {<p style={{ color: timer > 0 ? "#DFE3E8" : "#FF5630",cursor: "pointer", marginRight: "20px"}} onClick={resendOTP}>{otpField ? "Resend OTP" : ""}</p>}
                 </div>
                 <Form.Group className="remember">
                   {["checkbox"].map((type) => (
@@ -307,42 +285,23 @@ const finalOtp= `${otpValue?.otp1}${otpValue?.otp2}${otpValue?.otp3}${otpValue?.
                   ))}
 
                   <span>
-                    <Button variant="link" onClick={handleForgetPassword}>
-                      Forgot Password{" "}
-                    </Button>
+                    <Button variant="link" onClick={handleForgetPassword}>Forgot Password{" "}</Button>
                   </span>
                 </Form.Group>
 
-                <div className="login-btn">
-                  <Button variant="" type="submit">
-                    Login
-                  </Button>
-                </div>
+                <div className="login-btn"><Button variant="" type="submit">Login</Button></div>
               </Form>
 
-              <div className="log-contiune">
-                <p>or contiune with</p>
-              </div>
+              <div className="log-contiune"><p>or contiune with</p></div>
 
               <div className="social-icon text-center1">
-                <div className="">
-                  <img src={google} alt="image" />
-                </div>
-                <div className="">
-                  <img src={facebook} alt="image" />
-                </div>
-                <div className="">
-                  <img src={instagram} alt="image" />
-                </div>
+                <div className=""><img src={google} alt="image" /></div>
+                <div className=""><img src={facebook} alt="image" /></div>
+                <div className=""><img src={instagram} alt="image" /></div>
               </div>
 
               <div className="register-now">
-                <span>
-                  Not a member
-                  <Button variant="link" onClick={handleRegister}>
-                    Register Now
-                  </Button>
-                </span>
+                <span>Not a member<Button variant="link" onClick={handleRegister}>Register Now</Button></span>
               </div>
             </div>
           </div>

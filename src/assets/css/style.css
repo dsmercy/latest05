@@ -509,24 +509,49 @@ body {
 .foot-f p {
     padding-top: 20px;
 }
-
-.social-icon i {
+.footer-social-icon {
+  display: flex;
+}
+.footer-social-icon span {
   background: #adadad;
   font-size: 18px;
   border-radius: 50%;
   padding: 10px;
   margin: 5px;
   color: #fff;
-  font-family: 'FontAwesome';
-  font-style: unset;
+  width: 40px;
+  height: 40px;
+}
+.footer-social-icon  i {
+  /* line-height: 40px; */
+  text-align: center;
 }
 .social-icon a{
   text-decoration: none;
 }
-.social-icon i.fa.fa-facebook {
-  width: 34px;
-  height: 37px;
-  text-align: center;
+.head-login {
+  display: flex;
+}
+
+.head-login a:first-child {
+  background: transparent;
+  border-radius: 6px;
+  text-decoration: none;
+  /* Use class */
+  color: #000;
+  margin-right: 5px;
+  padding: 0 20px;
+  line-height: 40px;
+}
+
+.head-login a:last-child {
+  background: var(--bg-green);
+  border-radius: 6px;
+  text-decoration: none;
+  color: #fff;
+  margin-right: 5px;
+  padding: 0 20px;
+  line-height: 40px;
 }
 .app-icon {
   display: flex;

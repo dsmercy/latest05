@@ -31,19 +31,16 @@ const RegistrationForm = () => {
   const handleFormSubmit = async (formData) => {
     setValidated(true);
 
-    formData.currentLocation = "";
-    formData.middleName = "";
+    formData.currentLocation = "noida";
+    formData.middleName = "fgfghfggf";
     
     Services.Account.register(formData).then(response => {
-      console.log(response);
-      toast.success(response.message, {
-        position: toast.POSITION.TOP_RIGHT,
-      });
+      toast.success(response?.message, { position: toast.POSITION.TOP_RIGHT,});
        navigate("/ConfirmEmail");  
     }) .catch((error) => {
       // Error
-      console.log('error.message', error.response.data.message);
-              toast.error(error.response.data.message, {
+      console.log('error.message', error.data.message);
+              toast.error(error?.data?.message, {
         position: toast.POSITION.TOP_RIGHT,
       });
     });
@@ -51,16 +48,9 @@ const RegistrationForm = () => {
   };
 
 const getRole=()=>{
-  Services.Account.getRole().then(response=>{
-    console.log(response?.data);
-    setRole(response?.data)
-   }).catch((errors)=>{
-    console.log(errors)
-  }) 
+  Services.Account.getRole().then(response=>setRole(response?.data)).catch((errors)=>console.log(errors)) 
 }
-  const backToLogin = () => {
-    navigate("/login");
-  };
+  const backToLogin = () => {navigate("/login")};
 
   return (
     <>

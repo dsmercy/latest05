@@ -17,11 +17,19 @@ const Footer =()=>{
             ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
             aliquip.
           </p>
-          <div className="social-icon">
+          <div className="footer-social-icon">
+            <span>
             <i className="fa fa-facebook" />
+            </span>
+            <span>
             <i className="fa fa-youtube-play" />
+            </span>
+            <span>
             <i className="fa fa-instagram" />
+            </span>
+            <span>
             <i className="fa fa-twitter" />
+            </span>
           </div>
           <div className="app-icon">
             <img src="images/apple-download.png" alt="" />
@@ -34,13 +42,13 @@ const Footer =()=>{
           <h5>Company</h5>
           <ul>
             <li>
-              <NavLink to="#">About Us</NavLink>
+              <NavLink to="/about-us">About Us</NavLink>
             </li>
             <li>
               <NavLink to="#">Blogs</NavLink>
             </li>
             <li>
-              <NavLink to="#">FAQ&apos;s</NavLink>
+              <NavLink to="/frequently-asked-questions">FAQ&apos;s</NavLink>
             </li>
             <li>
               <NavLink to="#">Contact</NavLink>
@@ -72,13 +80,13 @@ const Footer =()=>{
           <h5>Support</h5>
           <ul>
             <li>
-              <NavLink to="#">Terms of use</NavLink>
+              <NavLink to="/term-of-use">Terms of use</NavLink>
             </li>
             <li>
-              <NavLink to="#">Terms &amp; Conditions</NavLink>
+              <NavLink to="/terms-and-conditions">Terms &amp; Conditions</NavLink>
             </li>
             <li>
-              <NavLink to="#">Privacy &amp; Policy</NavLink>
+              <NavLink to="/privacy-policy">Privacy &amp; Policy</NavLink>
             </li>
           </ul>
         </div>

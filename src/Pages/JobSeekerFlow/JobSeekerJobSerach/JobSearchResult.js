@@ -25,7 +25,6 @@ const SearchResult = () => {
     })
     .catch((errors) => console.log(errors));
   }, [])
-  
 
   const getJobCount = () => {
     Services.Job.getAppliedJobCount()
@@ -37,7 +36,6 @@ const SearchResult = () => {
   };
 
   const handlePreviewJob = (id) => {
-    console.log(id);
     Services.Job.getJobPostPreview(id)
       .then((res) => {
         setShowPreview(res.data);
@@ -72,8 +70,6 @@ const SearchResult = () => {
       .catch((errors) => console.log(errors));
   };
 
-  
-  // console.log(showPreview?.jobDeatilsDTO?.jobPostId,"gfgegfgf");
   return (
     <>
       <Header />
@@ -111,7 +107,7 @@ const SearchResult = () => {
                         handlePreviewJob(item?.id);
                       }}
                     >
-                      {item.companyName}
+                      {item.comapanyName}
                       <p style={{ marginLeft: "10px" }}>
                         3.4 <i className="fa fa-star" />
                       </p>
@@ -159,12 +155,13 @@ const SearchResult = () => {
                   <h3>{showPreview.jobDeatilsDTO.title}</h3>
                   <div className="micr-logo">
                     <img src={microl} alt="image" />
+                   
                     <p>3.4 | 22 Reviews</p>
                   </div>
                 </div>
                 <div className="sear-loca">
                   <h5>{showPreview.jobDeatilsDTO.title}</h5>
-                  <h5>{showPreview.jobDeatilsDTO.title}</h5>
+                  <h5>{showPreview.jobDeatilsDTO.department}</h5>
                   <p>{showPreview.jobDeatilsDTO.title}</p>
                 </div>
                 <div className="sear-loca-inner">
