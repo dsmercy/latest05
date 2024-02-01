@@ -60,6 +60,7 @@ const JobSeekerForm = () => {
     trigger,
     handleSubmit,
     setValue,
+    setError
   } = useForm({ defaultValues, mode: "all" });
   const options = skills.map((item) => [
     {
@@ -68,7 +69,17 @@ const JobSeekerForm = () => {
     },
   ]);
 
-  const handleSkills = (selected) => {setSelectedOptions(selected)};
+  const handleSkills = (selected) => {
+    setSelectedOptions(selected)
+    if(selected){
+      setError("skillName", {})
+    }else{
+      setError("skillName", {
+        type: "manual",
+        message: "Please select atleast one skill!",
+      })
+    }
+  };
   const handleClose = () => setShowPopup(false);
   const handleShow = () => setShowPopup(true);
 
@@ -150,8 +161,8 @@ const JobSeekerForm = () => {
   };
 
   const handleNextButton = () => {
-    if (stepIndex === 0) {
-      const formValues = getValues();
+    const formValues = getValues();
+    if (stepIndex === 0) {      
       if (
         formValues.firstName == "" ||
         formValues.lastName == "" ||
@@ -199,7 +210,6 @@ const JobSeekerForm = () => {
           "fieldOfStudy",
           "collegeName",
           "yearOfCompletion",
-          "skillName",
         ]);
         toast.error("Please Add Education to List", {
           position: toast.POSITION.TOP_RIGHT,
@@ -207,13 +217,16 @@ const JobSeekerForm = () => {
         return false;
       }
       if (!selectedOptions.length) {
-        trigger(["skillName"]);
-        toast.error("Please Add Education to List", {
+        setError("skillName", {
+          type: "manual",
+          message: "Please select atleast one skill!",
+        })
+    
+        toast.error("Please Add skill", {
           position: toast.POSITION.TOP_RIGHT,
         });
         return false;
       } else {
-        // if(educationData.length >0 && skillName==""){ console.log("hhhhhhhhhhhhhhh")}
         const formData = educationData.map((item) => ({
           collegeName: item.clgNameId,
           degreeName: item.degreeId,
@@ -251,7 +264,6 @@ const JobSeekerForm = () => {
 
   const handleComplete = () => {
     const formData = getValues();
-    console.log("formData.jobTypeMasterId", formData.jobTypeMasterId);
     if (
       formData.preferenceLocation === "" ||
       formData.jobTypeMasterId === null ||
@@ -615,17 +627,16 @@ const JobSeekerForm = () => {
                             value={selectedOptions}
                             className="mb-3"
                             classNamePrefix="select"
-                            {...register("skillName", { required: true })}
                             isInvalid={!!errors.skillName}
                             onChange={handleSkills}
                           />
                           <Form.Control.Feedback type="invalid">
                             Please select field of study.
                           </Form.Control.Feedback>
-                          {/* <p>
+                          <div style={{color:'#dc3545'}}>
                             {errors.skillName &&
-                              "Tell us what is your favourite food"}
-                          </p> */}
+                              errors.skillName.message}
+                          </div>
                         </Col>
                       </Row>
                     </FormWizard.TabContent>

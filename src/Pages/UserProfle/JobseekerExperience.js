@@ -26,7 +26,7 @@ export const JobseekerExperience = (props) => {
   };
   const handleAddPosition = () => {
     const formValues = getValues();
-    const skill = selectedOptions.map((item) => item.id);
+    const skill = selectedOptions1.map((item) => item.id);
     const formData = [
       {
         expTypes: parseInt(formValues.experience),
