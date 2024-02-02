@@ -39,9 +39,7 @@ const JobSeekerForm = () => {
   const jobSeekerData = useAccountStore((state) => state.jobSeekerData);
   const experienceData = useAccountStore((state) => state.experienceData);
   const savePreference = useAccountStore((state) => state.savePreference);
-  const deleteEducationById = useAccountStore(
-    (state) => state.deleteEducationById
-  );
+  const deleteEducationById = useAccountStore((state) => state.deleteEducationById);
   const getEducation = useAccountStore((state) => state.getEducation);
   const getExperience = useAccountStore((state) => state.getExperience);
   const defaultValues = {
@@ -52,16 +50,7 @@ const JobSeekerForm = () => {
     phoneNumber: jobSeekerData.data.phoneNumber,
     currentLocation: jobSeekerData.data.currentLocation,
   };
-  const {
-    register,
-    resetField,
-    getValues,
-    formState: { errors },
-    trigger,
-    handleSubmit,
-    setValue,
-    setError
-  } = useForm({ defaultValues, mode: "all" });
+  const {register,resetField,getValues,formState: { errors },trigger,handleSubmit,setValue,setError} = useForm({ defaultValues, mode: "all" });
   const options = skills.map((item) => [
     {
       value: item.skillName,
@@ -69,6 +58,7 @@ const JobSeekerForm = () => {
     },
   ]);
 
+  
   const handleSkills = (selected) => {
     setSelectedOptions(selected)
     if(selected){
@@ -162,8 +152,8 @@ const JobSeekerForm = () => {
 
   const handleNextButton = () => {
     const formValues = getValues();
-    if (stepIndex === 0) {      
-      if (
+    if (stepIndex === 0) {
+            if (
         formValues.firstName == "" ||
         formValues.lastName == "" ||
         formValues.phoneNumber == "" ||
@@ -205,15 +195,8 @@ const JobSeekerForm = () => {
       // Manually trigger validation for specific fields
      
       if (educationData.length === 0) {
-        trigger([
-          "degreeName",
-          "fieldOfStudy",
-          "collegeName",
-          "yearOfCompletion",
-        ]);
-        toast.error("Please Add Education to List", {
-          position: toast.POSITION.TOP_RIGHT,
-        });
+        trigger(["degreeName","fieldOfStudy","collegeName","yearOfCompletion","skillName"]);
+        toast.error("Please Add Education to List", {position: toast.POSITION.TOP_RIGHT,});
         return false;
       }
       if (!selectedOptions.length) {
@@ -221,9 +204,7 @@ const JobSeekerForm = () => {
           type: "manual",
           message: "Please select atleast one skill!",
         })
-    
-        toast.error("Please Add skill", {
-          position: toast.POSITION.TOP_RIGHT,
+        toast.error("Please Add skill", { position: toast.POSITION.TOP_RIGHT,
         });
         return false;
       } else {
@@ -236,9 +217,7 @@ const JobSeekerForm = () => {
         Services.Profile.postJobSeekerDetails(formData).then((response) => getEducation()).catch((errors) => console.log(errors));
         const skill = selectedOptions.map((item) => item.id);
         const skills = { skillMasterId: skill };
-        Services.Profile.setJobSeekerSkills(skills)
-          .then((res) => console.log(res))
-          .catch((errors) => console.log(errors));
+        Services.Profile.setJobSeekerSkills(skills).then((res) => console.log(res)).catch((errors) => console.log(errors));
         setStepIndex((prevStepIndex) => prevStepIndex + 1);
         return true;
       }
@@ -257,7 +236,7 @@ const JobSeekerForm = () => {
 
   const handlePrevButton = () => {
     if (stepIndex === 1) {
-      trigger(["firstName","lastName","phoneNumber","currentLocation","email"]);
+      trigger(["firstName","lastName","phoneNumber","currentLocation","email"])
     }
     setStepIndex((prevStepIndex) => prevStepIndex - 1);
   };
@@ -498,15 +477,7 @@ const JobSeekerForm = () => {
                       <h5>Education & Skills</h5>
                       <span className="bord"></span>
                       {educationData && educationData.length > 0
-                        ? educationData.map((edu, index) => (
-                            <EducationForm
-                              eduData={edu}
-                              key={index}
-                              setValue={setValue}
-                              onEditClick={onEditClick}
-                            />
-                          ))
-                        : ""}
+                        ? educationData.map((edu, index) => (<EducationForm eduData={edu} key={index} setValue={setValue} onEditClick={onEditClick}/>)): ""}
                       <Row>
                         <Col>
                           <FormLabel>Degree <span className="text-danger">*</span></FormLabel>
@@ -517,15 +488,7 @@ const JobSeekerForm = () => {
                             isInvalid={!!errors.degreeName}
                           >
                             <option value="">Open this select menu </option>
-                            {degree?.map((item) => (
-                              <option
-                                id={item.id}
-                                value={parseInt(item.id)}
-                                key={item?.id}
-                              >
-                                {item?.degreeName}
-                              </option>
-                            ))}
+                            {degree?.map((item) => ( <option id={item.id} value={parseInt(item.id)} key={item?.id}>{item?.degreeName}</option>))}
                           </Form.Select>
                           <Form.Control.Feedback type="invalid">Please select a degree.</Form.Control.Feedback>
                         </Col>
@@ -541,15 +504,7 @@ const JobSeekerForm = () => {
                             isInvalid={!!errors.fieldOfStudy}
                           >
                             <option value="">Open this select menu </option>
-                            {study.map((item) => (
-                              <option
-                                id={item.id}
-                                value={item.id}
-                                key={item.id}
-                              >
-                                {item.fieldOfStudy}
-                              </option>
-                            ))}
+                            {study.map((item) => (<option id={item.id} value={item.id} key={item.id}>{item.fieldOfStudy}</option>))}
                           </Form.Select>
                           <Form.Control.Feedback type="invalid">Please select field of study.</Form.Control.Feedback>
                         </Col>
@@ -557,10 +512,7 @@ const JobSeekerForm = () => {
 
                       <Row>
                         <Col>
-                          <FormLabel>
-                            School/University{" "}
-                            <span className="text-danger">*</span>
-                          </FormLabel>
+                          <FormLabel>School/University{" "}<span className="text-danger">*</span></FormLabel>
                           <Form.Select
                             aria-label="Default select example"
                             className="mb-3"
@@ -578,24 +530,17 @@ const JobSeekerForm = () => {
                               </option>
                             ))}
                           </Form.Select>
-                          <Form.Control.Feedback type="invalid">
-                            Please select field of School/University.
-                          </Form.Control.Feedback>
+                          <Form.Control.Feedback type="invalid">Please select field of School/University.</Form.Control.Feedback>
                         </Col>
                       </Row>
 
                       <Row>
                         <Col>
-                          <FormLabel>
-                            Year of Completion
-                            <span className="text-danger">*</span>
-                          </FormLabel>
+                          <FormLabel>Year of Completion<span className="text-danger">*</span></FormLabel>
                           <Form.Select
                             aria-label="Default select example"
                             className="mb-3"
-                            {...register("yearOfCompletion", {
-                              required: true,
-                            })}
+                            {...register("yearOfCompletion", {required: true,})}
                             isInvalid={!!errors.yearOfCompletion}
                           >
                             <option value="">Open this select menu </option>
@@ -627,15 +572,14 @@ const JobSeekerForm = () => {
                             value={selectedOptions}
                             className="mb-3"
                             classNamePrefix="select"
+                            {...register("skillName", { required: true })}
                             isInvalid={!!errors.skillName}
                             onChange={handleSkills}
                           />
                           <Form.Control.Feedback type="invalid">
                             Please select field of study.
                           </Form.Control.Feedback>
-                          <div style={{color:'#dc3545'}}>
-                            {errors.skillName &&
-                              errors.skillName.message}
+                          <div style={{color:'#dc3545'}}>{errors.skillName && errors.skillName.message}
                           </div>
                         </Col>
                       </Row>

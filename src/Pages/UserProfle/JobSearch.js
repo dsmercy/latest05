@@ -7,6 +7,8 @@ import useJobsStore from "../../store/useJobsStore";
 export const JobSearch = ({userdashboard,setDisableButtons}) => {
   const [jobType,setJobType]=useState([]);
   const [industryType,setIndustryType]=useState([]);
+  const [errorExp, setErrorExp] = useState('');
+  const [errorSkill, setErrorSkill] = useState('');
   const navigate = useNavigate();
   const filterJobs = useJobsStore((state) => state.filterJobs);
 
@@ -36,10 +38,16 @@ export const JobSearch = ({userdashboard,setDisableButtons}) => {
       ...formState,
       [event.target.name]: event.target.value,
     });
+    setErrorExp('');
+    setErrorSkill('')
   };
-  // console.log("form", formState)
 
   const handleSearchClick = () => {
+    if (!formState.experience || !formState.skill) {
+      setErrorExp('Please select your experience level.');
+      setErrorSkill('Please enter your SKILL.')
+      return
+    }
     const body={
       jobSkill:formState.skill,
       jobLocation:formState.location,
@@ -52,8 +60,11 @@ export const JobSearch = ({userdashboard,setDisableButtons}) => {
     }
     filterJobs(body);
     Services.Job.searchJob(body).then((res)=>{console.log(res?.data);
-      // setSearched(res?.data);
+       //setSearched(res?.data);
       // setDisableButtons()
+      // if(!setSearched){
+      //   setSearched()
+      // }
       const filteredData = res?.data?.filter(job => 
         job?.skill?.includes(body.jobSkill) &&
         job.experience === body.jobExperience &&
@@ -78,18 +89,21 @@ export const JobSearch = ({userdashboard,setDisableButtons}) => {
                 name="skill"
                 onChange={handleInputChange}
               />
+              {errorSkill && <p style={{color:'#dc3545'}}>{errorSkill}</p>}
             </Col>
             <Col lg={3} sm={12}>
               <select
                 className="form-select"
                 name="experience"
                 onChange={handleInputChange}
-              >
+                required
+                >
                 <option>Select Experience</option>
                 <option>2</option>
                 <option>3</option>
                 <option>4</option>
               </select>
+              {errorExp && <p style={{color:'#dc3545'}}>{errorExp}</p>}
             </Col>
 
             <Col lg={3} sm={12}>

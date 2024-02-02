@@ -1,4 +1,4 @@
-import React, { useEffect,useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Col, Container, Row } from "react-bootstrap";
 import Header from "../../../components/Header/Header";
 import Footer from "../../../components/Footer/Footer";
@@ -6,23 +6,47 @@ import micr from "../../../assets/images/images 3.png";
 import feat from "../../../assets/images/image 16.png";
 import Services from "../../../services/Services";
 import { useParams } from "react-router-dom";
+import useAccountStore from "../../../store/useAccountStore";
+import { toast } from "react-toastify";
 
 const PreviewJobinFullScreen = () => {
-  const [showPreview, setShowPreview] = useState(false);
-  const {id}= useParams();
-  useEffect(()=>{
+  const [appliedJob, setAppliedJob] = useState([]);
+  const [appliedFlag, setAppliedFlag] = useState(true);
+  const { setShowPreview, showPreview } = useAccountStore();
+  const { id } = useParams();
+  console.log("showPreview",showPreview);
+  useEffect(() => {
     handlePreviewJob(id);
-  },[id])
+  }, [id]);
+  const getJobCount = () => {
+    Services.Job.getAppliedJobCount().then((res) => setAppliedJob(res.data)).catch((errors) => console.log(errors));
+  };
+
 
   const handlePreviewJob = (id) => {
     Services.Job.getJobPostPreview(id)
-      .then((res) => {
-        setShowPreview(res.data);
-        console.log(res.data);
-      })
+      .then((res) => setShowPreview(res.data))
       .catch((errors) => console.log(errors));
   };
-  
+
+  const handleApplyJob = (id) => {
+    const body = { jobId: id };
+    Services.Job.applyJob(body).then((res) => {
+      setAppliedFlag(false);
+      getJobCount();
+        toast.success("Job Applied successfully", {position: toast.POSITION.TOP_RIGHT});
+      }).catch((errors) => console.log(errors));
+  };
+
+  const handleSaveJob = (id) => {
+    const body = { jobId: id };
+    Services.Job.postSavedJob(body).then((response) => {
+      handlePreviewJob(id)
+        toast.success("Job Saved successfully", {position: toast.POSITION.TOP_RIGHT});
+        getJobCount();
+      }).catch((errors) => console.log(errors));
+  };
+
   return (
     <>
       <Header />
@@ -44,14 +68,29 @@ const PreviewJobinFullScreen = () => {
 
               <div className="sear-loca">
                 <h5>Microsoft</h5>
-                <p>{showPreview?.jobLocationDeatilsDTO?.city},{showPreview?.jobLocationDeatilsDTO?.state}</p>
+                <p>
+                  {showPreview?.jobLocationDeatilsDTO?.city},
+                  {showPreview?.jobLocationDeatilsDTO?.state}
+                </p>
               </div>
 
               <div className="job-save-apply">
-                <Button type="button" varient="" className="btn btn-primary">
+                <Button
+                  type="button"
+                  varient=""
+                  className="btn btn-primary"
+                  disabled={showPreview?.isSaved}
+                  onClick={() => handleSaveJob(id)}
+                >
                   Save Job <i className="fa fa-bookmark-o"></i>
                 </Button>
-                <Button type="button" varient="" className="btn btn-primary">
+                <Button
+                  type="button"
+                  varient=""
+                  className="btn btn-primary"
+                  disabled={showPreview?.isApplied || appliedFlag}
+                  onClick={() => handleApplyJob(id)}
+                >
                   Apply Now <i className="fa fa-chevron-right"></i>
                 </Button>
               </div>
@@ -72,9 +111,7 @@ const PreviewJobinFullScreen = () => {
 
                 <div className="view-job-contain-desc">
                   <h4>Description</h4>
-                  <p>
-                    {showPreview?.jobDeatilsDTO?.description}
-                  </p>
+                  <p>{showPreview?.jobDeatilsDTO?.description}</p>
 
                   <p>
                     cross-functional product team to create designs that will

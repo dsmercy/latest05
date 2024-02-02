@@ -14,26 +14,17 @@ export const UserSideBar = () => {
   const signedInUserData = useAccountStore((state) => state.signedInUserData);
   const [appliedJob, setAppliedJob] = useState([]);
 
-  const completeProfile = () => {
-    navigate("/job-seeker-form");
-  };
-  const handleAppliedJob = () => {
-    navigate("/applied-jobs");
-  };
-  const handleSavedJob = () => {
-    navigate("/saved-jobs");
-  };
-  const navigateHome=()=>{
-    navigate("/userdashboard");
-  }
+  const completeProfile = () => {navigate("/job-seeker-form")};
+  const handleAppliedJob = () => {navigate("/applied-jobs")};
+  const handleSavedJob = () => {navigate("/saved-jobs")};
+  const navigateHome=()=>{navigate("/userdashboard")}
 
   useEffect(() => {
     getJobCount();
   }, []);
 
   const getJobCount = () => {
-    Services.Job.getAppliedJobCount().then((res) => {console.log(res.data);
-    setAppliedJob(res.data)}).catch((errors) =>console.log(errors));
+    Services.Job.getAppliedJobCount().then((res) => setAppliedJob(res.data)).catch((errors) =>console.log(errors));
      };
 
   return (
@@ -47,10 +38,8 @@ export const UserSideBar = () => {
                   <Col lg={3}></Col>
                   <Col>
                     <h4>
-                      {signedInUserData &&
-                        signedInUserData.data?.users?.firstName}{" "}
-                      {signedInUserData &&
-                        signedInUserData.data?.users?.lastName}
+                      {signedInUserData && signedInUserData.data?.users?.firstName}{" "}
+                      {signedInUserData && signedInUserData.data?.users?.lastName}
                     </h4>
                     <p>UI/UX Developer</p>
                   </Col>
@@ -70,9 +59,7 @@ export const UserSideBar = () => {
                 <p><i className="fa fa-check-circle"></i> Job application updates</p>
                 <p><i className="fa fa-check-circle"></i> Direct jobs from recruiter</p>
                 <div className="complete-profile">
-                  <Button variant="" onClick={completeProfile}>
-                    Complete Profile
-                  </Button>
+                  <Button variant="" onClick={completeProfile}>Complete Profile</Button>
                 </div>
               </div>
 
@@ -104,12 +91,7 @@ export const UserSideBar = () => {
                 <Col lg={4} sm={12}>
                   <div className="job-card applied-card">
                     <Row>
-                      <Col>
-                        <div onClick={handleAppliedJob} >
-                          <h4>{appliedJob.jobCount}</h4>
-                          <p>Applied Job</p>
-                        </div>
-                      </Col>
+                      <Col><div onClick={handleAppliedJob} ><h4>{appliedJob.jobCount}</h4><p>Applied Job</p></div></Col>
                       <Col><i className="fa fa-paper-plane" /></Col>
                     </Row>
                   </div>

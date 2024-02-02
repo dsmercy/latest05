@@ -10,64 +10,47 @@ import { JobSearch } from "../../UserProfle/JobSearch";
 import useJobsStore from "../../../store/useJobsStore";
 import Services from "../../../services/Services";
 import { toast } from "react-toastify";
+import Tooltip from '@mui/material/Tooltip';
+import useAccountStore from "../../../store/useAccountStore";
 
 const SearchResult = () => {
   const jobsList = useJobsStore((state) => state.jobsList);
   const [appliedJob, setAppliedJob] = useState([]);
   const [disableButtons, setDisableButtons] = useState({});
-  const [showPreview, setShowPreview] = useState(false);
+  const { setShowPreview, showPreview } = useAccountStore();
 
   useEffect(() => {
-    Services.Job.getJobPostPreview(jobsList[0].id)
+    Services.Job.getJobPostPreview(jobsList[0]?.id)
     .then((res) => {
-      setShowPreview(res.data);
+      setShowPreview(res?.data);
       console.log(res.data);
     })
     .catch((errors) => console.log(errors));
   }, [])
 
   const getJobCount = () => {
-    Services.Job.getAppliedJobCount()
-      .then((res) => {
-        console.log(res.data);
-        setAppliedJob(res.data);
-      })
-      .catch((errors) => console.log(errors));
+    Services.Job.getAppliedJobCount().then((res) => setAppliedJob(res.data)).catch((errors) => console.log(errors));
   };
 
   const handlePreviewJob = (id) => {
-    Services.Job.getJobPostPreview(id)
-      .then((res) => {
-        setShowPreview(res.data);
-        console.log(res.data);
-      })
-      .catch((errors) => console.log(errors));
+    Services.Job.getJobPostPreview(id).then((res) => setShowPreview(res.data)).catch((errors) => console.log(errors));
   };
 
   const handleSaveJob = (id) => {
     const body = { jobId: id };
-    Services.Job.postSavedJob(body)
-      .then((response) => {
-        console.log(response);
-        handlePreviewJob(id)
-        toast.success("Job Saved successfully", {
-          position: toast.POSITION.TOP_RIGHT,
-        });
+    Services.Job.postSavedJob(body).then((response) => {
+      handlePreviewJob(id)
+        toast.success("Job Saved successfully", {position: toast.POSITION.TOP_RIGHT});
         getJobCount();
-      })
-      .catch((errors) => console.log(errors));
+      }).catch((errors) => console.log(errors));
   };
+
   const handleApplyJob = (id) => {
     const body = { jobId: id };
-    Services.Job.applyJob(body)
-      .then((res) => {
-        console.log(res);
-        getJobCount();
-        toast.success("Job Applied successfully", {
-          position: toast.POSITION.TOP_RIGHT,
-        });
-      })
-      .catch((errors) => console.log(errors));
+    Services.Job.applyJob(body).then((res) => {
+      getJobCount();
+        toast.success("Job Applied successfully", {position: toast.POSITION.TOP_RIGHT});
+      }).catch((errors) => console.log(errors));
   };
 
   return (
@@ -84,23 +67,18 @@ const SearchResult = () => {
           <Col>
             <div className="sear-inner">
               <h4>200 Job Visual Designer in New York</h4>
-              <select className="form-select">
-                <option>Sort By Relevence</option>
-                <option>2</option>
-                <option>3</option>
-                <option>4</option>
-              </select>
-            </div>
+             </div>
             {jobsList?.map((item, index) => {
               return (
                 <div key={index}>
                   <div className="search-result-card">
                     <img src={micro} alt="image" />
+                    <Tooltip title="Click to save" arrow>
                     <i
                       className="fa fa-bookmark-o"
                       style={{ color: "green" }}
-                      onClick={() => handleSaveJob(item?.id)}
-                    ></i>
+                      onClick={() => handleSaveJob(item?.id)}>
+                        </i></Tooltip>
                     <div
                       style={{ display: "flex", cursor: "pointer" }}
                       onClick={() => {
@@ -134,6 +112,7 @@ const SearchResult = () => {
                         <Col>
                           <div className="apply-now">
                             <Button
+                              disabled={showPreview?.isApplied}
                               variant=""
                               onClick={() => handleApplyJob(item?.id)}
                             >
@@ -166,9 +145,7 @@ const SearchResult = () => {
                 </div>
                 <div className="sear-loca-inner">
                   <span>
-                    <Link
-                      to={`/preview-Job-Details/${showPreview?.jobDeatilsDTO?.jobPostId}`}
-                    >
+                    <Link to={`/preview-Job-Details/${showPreview?.jobDeatilsDTO?.jobPostId}`}>
                       View on full page{" "}
                       <i className="fa fa-pencil-square-o"></i>
                     </Link>
@@ -186,10 +163,7 @@ const SearchResult = () => {
                     <Button
                       varient=""
                       disabled={showPreview?.isApplied}
-                      onClick={() =>
-                        handleApplyJob(showPreview?.jobDeatilsDTO?.jobPostId)
-                      }
-                    >
+                      onClick={() =>handleApplyJob(showPreview?.jobDeatilsDTO?.jobPostId)}>
                       Apply Now <i className="fa fa-chevron-right"></i>
                     </Button>
                   </div>

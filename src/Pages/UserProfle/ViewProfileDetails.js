@@ -46,15 +46,12 @@ const ViewProfileDetail = () => {
       <Header />
       <Container>
         <div className="view-profile-detail">
-          <h3>
-            <i className="fa fa-arrow-left"></i> User Profile Details
-          </h3>
+          <h3><i className="fa fa-arrow-left"></i> User Profile Details</h3>
             <div className="view-profile-detail-inner">
                 {/* jobseeker personal details */}
 
             <Row>
-              <Col>
-                <h4>Basic Details</h4>
+              <Col><h4>Basic Details</h4>
                 <span className="bord"></span>
               </Col>
               <Col>
@@ -155,16 +152,10 @@ const ViewProfileDetail = () => {
             ))}
             
            {/* Jobseeker experience   */}
-            <Row>
-              <Col>
-                <h4>Experience</h4>
-                <span className="bord"></span>
-              </Col>
+            <Row><Col><h4>Experience</h4><span className="bord"></span></Col>
               <Col>
                 <div className="user-profile-update">
-                  <p className="" onClick={handleEdit}>
-                    <i className="fa fa-edit"></i> Edit
-                  </p>
+                  <p className="" id="exp" onClick={handleEdit}><i className="fa fa-edit"></i> Edit</p>
                 </div>
               </Col>
             </Row>
@@ -173,71 +164,39 @@ const ViewProfileDetail = () => {
                 <div key={index}>
                   <div className="user-basic-detail">
                     <Row className="user-row-border ">
-                      <Col>
-                        <p> Company Name </p>
-                      </Col>
-                      <Col>
-                        <p> {item?.companyName}</p>
-                      </Col>
+                      <Col><p> Company Name </p></Col>
+                      <Col><p> {item?.companyName}</p></Col>
                     </Row>
                     <Row className="user-row-border ">
-                      <Col>
-                        <p> Job Title</p>
-                      </Col>
-                      <Col>
-                        <p> {item?.jobTitle}</p>
-                      </Col>
+                      <Col><p> Job Title</p></Col>
+                      <Col><p> {item?.jobTitle}</p></Col>
                     </Row>
                     <Row className="user-row-border ">
-                      <Col>
-                        <p> Skill used </p>
-                      </Col>
-                      <Col>
-                        <p>
-                          {item.skills.map((element, index) => (
-                            <span key={index}>{element.name}, </span>
-                          ))}
-                        </p>
-                      </Col>
+                      <Col><p> Skill used </p></Col>
+                      <Col><p>{item.skills.map((element, index) => (<span key={index}>{element.name}, </span>))}</p></Col>
                     </Row>
                     <Row className="user-row-border ">
-                      <Col>
-                        <p> Job Description</p>
-                      </Col>
-                      <Col>
-                        <p>{item?.jobDescription}</p>
-                      </Col>
+                      <Col><p> Job Description</p></Col>
+                      <Col><p>{item?.jobDescription}</p></Col>
                     </Row>
                     <Row className="user-row-border ">
-                      <Col>
-                        <p> Current Salary</p>
-                      </Col>
-                      <Col>
-                        <p>${item?.salary}</p>
-                      </Col>
+                      <Col><p> Current Salary</p></Col>
+                      <Col><p>${item?.salary}</p></Col>
                     </Row>
                     <Row className="user-row-border ">
-                      <Col>
-                        <p> Start Date </p>
-                      </Col>
-                      <Col>
-                        <p>{item?.startDate}</p>
-                      </Col>
+                      <Col><p> Start Date </p></Col>
+                      <Col><p>{item?.startDate}</p></Col>
                     </Row>
                     <Row className="user-row-border ">
-                      <Col>
-                        <p> This is your current employee </p>
-                      </Col>
-                      <Col>
-                        <p>{item?.currentEmployee === true ? "Yes" : "No"}</p>
-                      </Col>
+                      <Col><p> This is your current employee </p></Col>
+                      <Col><p>{item?.currentEmployee === true ? "Yes" : "No"}</p></Col>
                     </Row>
                   </div>
                 </div>
               );
             })}
 
-{/* Jobseeker experience   */}
+{/* Jobseeker Preference   */}
             <Row>
               <Col>
                 <h4>Job Preference</h4>

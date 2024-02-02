@@ -1,24 +1,21 @@
 import React from "react";
 import group from "../../assets/images/Group 41384.png";
+import { useNavigate } from "react-router-dom";
 
 const HomePageSearch = () => {
-  
+  const navigate = useNavigate();
+  const handleRegister=()=>{
+    navigate ("/register");
+  }
   return (
     <>
       <div className="container">
         <div className="row">
           <div className="col-lg-4 col-12">
             <div className="left-side">
-              <h4>
-                Stop <span className="sear">Searching</span>
-                <br />
-                Start <span className="work">Working</span>
-              </h4>
-              <p>
-                25000+ jobs listed here! <br />
-                your dream job waiting.
-              </p>
-              <button className="btn bg-dark text-white w-25"> Register</button>
+              <h4>Stop <span className="sear">Searching</span><br />Start <span className="work">Working</span></h4>
+              <p>25000+ jobs listed here! <br />your dream job waiting.</p>
+              <button className="btn bg-dark text-white w-25" onClick={handleRegister}> Register</button>
             </div>
           </div>
           <div className="col-lg-8 col-12">

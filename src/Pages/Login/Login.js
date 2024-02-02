@@ -24,24 +24,12 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const {
-    register,
-    formState: { errors },
-    handleSubmit,
-    clearErrors,
-  } = useForm({ mode: "all" });
+  const {register,formState: { errors },handleSubmit,clearErrors,} = useForm({ mode: "all" });
   const [otpField, setOtpField] = useState(false);
   const [selectedRadio, setSelectedRadio] = useState();
   const [checked, setChecked] = useState(true);
   const [timer, setTimer] = useState(60);
-  const [otpValue, setOtpValue] = useState({
-    otp1: "",
-    otp2: "",
-    otp3: "",
-    otp4: "",
-    otp5: "",
-    otp6: "",
-  });
+  const [otpValue, setOtpValue] = useState({otp1: "",otp2: "",otp3: "",otp4: "",otp5: "",otp6: ""});
   const [loading, setLoading] = useState(false);
   const signInUser = useAccountStore((state) => state.signInUser);
   const signOut = useAccountStore((state) => state.signOut);
@@ -61,9 +49,13 @@ const Login = () => {
   const resendOTP = () => {setTimer(60)};
 
   useEffect(() => {
-    if (signedInUserData) {
+    if (signedInUserData && signedInUserData?.data?.users?.role==="JobSeeker") {
       navigate("/userdashboard");
-    }}, []);
+    }
+    if (signedInUserData && signedInUserData?.data?.users?.role==="Recruiter") {
+      navigate("/recruiterDashboard");
+    }
+  }, []);
 
   const handleForgetPassword = () => {navigate("/forgetpassword")};
 
@@ -93,11 +85,7 @@ const Login = () => {
       return;
     }
     setValidated(false);
-    const data = {
-      email: email,
-      password: password ? password : finalOtp,
-      isOtp: otpField,
-    };
+    const data = {email: email,password: password ? password : finalOtp,isOtp: otpField};
 
     await signInUser(data)
       .then((response) => {
@@ -105,9 +93,7 @@ const Login = () => {
           setLoading(false);
           navigate(`/userdashboard`);
           localStorage.setItem("token", response.data.accessToken);
-          toast.success(response.message, {
-            position: toast.POSITION.TOP_RIGHT,
-          });
+          toast.success(response.message, {position: toast.POSITION.TOP_RIGHT});
           getJobSeeker();
         }
          if(response?.data?.accessToken && response?.data?.users?.role === "Recruiter"){
@@ -115,16 +101,10 @@ const Login = () => {
           setLoading(false);
           navigate(`/recruiterDashboard`);
           localStorage.setItem("token", response.data.accessToken);
-          toast.success(response.message, {
-            position: toast.POSITION.TOP_RIGHT,
-          });
+          toast.success(response.message, {position: toast.POSITION.TOP_RIGHT});
         }
-      })
-      .catch((errors) => {
-        console.log(errors, "login error");
-        toast.error(errors?.error?.message, {
-          position: toast.POSITION.TOP_RIGHT,
-        });
+      }).catch((errors) => {
+        toast.error(errors?.error?.message,{position: toast.POSITION.TOP_RIGHT});
         setLoading(false);
       });
   };

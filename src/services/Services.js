@@ -12,6 +12,7 @@ axios.interceptors.request.use((config) => {
   if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
+
 //Response interceptors
 axios.interceptors.response.use(async response => {
   return response;
@@ -19,10 +20,15 @@ axios.interceptors.response.use(async response => {
   const { data, status } = error.response;
   switch (status) {
       case 400:
-          //console.log(data);
+          console.log("data", data.message);
+          toast.error(
+            data.message, {
+            position: toast.POSITION.TOP_RIGHT,
+          }
+          );
           break;
       case 401:
-          // console.log(data.message);
+          // console.log("data.message",data.message);
       toast.error(
         data.message, {
         position: toast.POSITION.TOP_RIGHT,
@@ -86,19 +92,19 @@ const Profile={
     getJobSeekerExperience:()=>requests.get('JobSeeker/GetJobSeekerExperience'),
     setJobSeekerPreference:(values)=>requests.post('JobSeeker/PostJobSeekerPreference',(values)),
     getJobSeekerPreference:()=>requests.get('JobSeeker/GetJobSeekerPreference'),
-    getSearchJobSKill:()=>requests.get("JobSeeker/SearchJobBasedOnSkill"),
+    getSearchJobSKill:()=>requests.get("Job/SearchJobBasedOnSkill"),
 }
 
 const Job={
-  getAppliedJobCount:()=>requests.get('Job/CountAppliedJob'),
-  getApplyJobList:()=>requests.get("Job/ApplyJobList"),
-  getSavedJobList: ()=>requests.get('Job/SavedJobList'),
-  postSavedJob:(values)=>requests.post("Job/SavedJob",(values)),
-  postUnsavedJob:(values)=>requests.post("Job/UnSavedJob",(values)),
+  getAppliedJobCount:()=>requests.get('JobSeeker/CountAppliedJob'),
+  getApplyJobList:()=>requests.get("JobSeeker/ApplyJobList"),
+  getSavedJobList: ()=>requests.get('JobSeeker/SavedJobList'),
+  postSavedJob:(values)=>requests.post("JobSeeker/SavedJob",(values)),
+  postUnsavedJob:(values)=>requests.post("JobSeeker/UnSavedJob",(values)),
   searchJob:(values)=>requests.post('Job/FindJobs',(values)),
   jobTypeList:()=>requests.get('Master/GetJobTypesList'),
   industryList:()=>requests.get('Master/GetIndustry'),
-  applyJob:(values)=>requests.post('Job/ApplyJob',(values)),
+  applyJob:(values)=>requests.post('JobSeeker/ApplyJob',(values)),
   getJobPostPreview:(id)=>requests.get(`Job/GetJobPost?JobId=${id}`),
   uploadResume:(values)=>requests.post('Job/UploadResume',(values)),
 }

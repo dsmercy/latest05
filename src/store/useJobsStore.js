@@ -7,7 +7,11 @@ const useJobsStore = create(
     devtools((set) => ({
       jobsList: null,
       jobFilters: null,
+      // skill: "",
 
+      // setSkill: function (value) {
+      //   set({ skill: value });
+      // },
       getJobsList: async () => {
         try {
           const allJobsList = await Services.Profile.getSearchJobSKill();

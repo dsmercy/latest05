@@ -46,7 +46,6 @@ export const JobSeekerPrefrence = (props) => {
           {...register("employmentTypeId", { required: true })}
           isInvalid={!!errors.employmentTypeId}
         />
-        {/* <p>{errors.jobTypeMasterId && "Tell us what is your favourite food"}</p> */}
         <label htmlFor="permanent">Permanent </label>
         <input
           className="form-check-input"

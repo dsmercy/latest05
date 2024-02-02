@@ -11,7 +11,7 @@ import useAccountStore from "../../store/useAccountStore";
 import ExperienceForm from "./ExperienceForm";
 
 export const JobseekerExperience = (props) => {
-  const {changeKeyValue,options,selectedOptions,handleSkills,register,errors,getValues,setValue,resetField} = props;
+  const {changeKeyValue,options,register,errors,getValues,setValue,resetField} = props;
   const newOptions = changeKeyValue();
   const [isFresher, setIsFresher] = useState(false);
   const animatedComponents = makeAnimated();
