@@ -90,7 +90,7 @@ const SearchResult = () => {
                         3.4 <i className="fa fa-star" />
                       </p>
                     </div>
-                    <h4>{item.title}</h4>
+                    <h4>{item?.title}</h4>
                     <h6>Full Time</h6>
                     <span>
                       <i className="fa fa-briefcase"></i>
@@ -131,7 +131,7 @@ const SearchResult = () => {
             {showPreview ? (
               <div className="search-right-card">
                 <div className="search-right-card-inner">
-                  <h3>{showPreview.jobDeatilsDTO.title}</h3>
+                  <h3>{showPreview.jobDeatilsDTO?.title}</h3>
                   <div className="micr-logo">
                     <img src={microl} alt="image" />
                    
@@ -139,9 +139,9 @@ const SearchResult = () => {
                   </div>
                 </div>
                 <div className="sear-loca">
-                  <h5>{showPreview.jobDeatilsDTO.title}</h5>
-                  <h5>{showPreview.jobDeatilsDTO.department}</h5>
-                  <p>{showPreview.jobDeatilsDTO.title}</p>
+                  <h5>{showPreview.jobDeatilsDTO?.title}</h5>
+                  <h5>{showPreview.jobDeatilsDTO?.department}</h5>
+                  <p>{showPreview.jobDeatilsDTO?.title}</p>
                 </div>
                 <div className="sear-loca-inner">
                   <span>

@@ -16,8 +16,8 @@ const ViewProfileDetail = () => {
     getAllDetails();
   },[])
 
-  const handleEdit=()=>{
-    navigate('/job-seeker-form');
+  const handleEdit=(stepId)=>{
+    navigate(`/job-seeker-form?stepid=${stepId}`);
   }
 
   const getAllDetails=()=>{
@@ -56,7 +56,7 @@ const ViewProfileDetail = () => {
               </Col>
               <Col>
                 <div className="user-profile-update">
-                  <p className="" onClick={handleEdit}>
+                  <p className="" onClick={()=>handleEdit(0)}>
                     <i className="fa fa-edit"></i> Edit
                   </p>
                 </div>
@@ -108,7 +108,7 @@ const ViewProfileDetail = () => {
               </Col>
               <Col>
                 <div className="user-profile-update">
-                  <p className="" onClick={handleEdit}>
+                  <p className="" onClick={()=>handleEdit(1)}>
                     <i className="fa fa-edit"></i> Edit
                   </p>
                 </div>
@@ -155,7 +155,7 @@ const ViewProfileDetail = () => {
             <Row><Col><h4>Experience</h4><span className="bord"></span></Col>
               <Col>
                 <div className="user-profile-update">
-                  <p className="" id="exp" onClick={handleEdit}><i className="fa fa-edit"></i> Edit</p>
+                  <p className="" id="exp" onClick={()=>handleEdit(2)}><i className="fa fa-edit"></i> Edit</p>
                 </div>
               </Col>
             </Row>
@@ -204,7 +204,7 @@ const ViewProfileDetail = () => {
               </Col>
               <Col>
                 <div className="user-profile-update">
-                  <p className="" onClick={handleEdit}>
+                  <p className="" onClick={()=>handleEdit(3)}>
                     <i className="fa fa-edit"></i> Edit
                   </p>
                 </div>

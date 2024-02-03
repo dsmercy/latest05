@@ -19,6 +19,7 @@ import Select from "react-select";
 import makeAnimated from "react-select/animated";
 import { JobSeekerPrefrence } from "./JobSeekerPrefrence";
 import { JobseekerExperience } from "./JobseekerExperience";
+import { useLocation } from 'react-router-dom';
 
 const JobSeekerForm = () => {
   const animatedComponents = makeAnimated();
@@ -35,6 +36,10 @@ const JobSeekerForm = () => {
   const [year, setYear] = useState([]);
   const [skills, setSkills] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
+  const location = useLocation();
+  const urlParams = new URLSearchParams(location.search);
+    const stepid = urlParams.get('stepid');
+
 
   const jobSeekerData = useAccountStore((state) => state.jobSeekerData);
   const experienceData = useAccountStore((state) => state.experienceData);
@@ -346,6 +351,7 @@ const JobSeekerForm = () => {
                     onComplete={() => handleSubmit(handleComplete())}
                     handleNextButton={handleNextButton}
                     handlePrevButton={handlePrevButton}
+                    startIndex={stepid || 0}
                   >
                     {/* -------------------------First Form---------------- */}
 
